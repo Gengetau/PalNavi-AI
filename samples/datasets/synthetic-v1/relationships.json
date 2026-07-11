@@ -1,9 +1,7 @@
 {
-  "schema_version": 1,
   "dataset_id": "synthetic-v1",
-  "game_data_version": "synthetic-not-game-data",
-  "synthetic": true,
-  "warning": "Fictional test relationships only. These are not Palworld game facts.",
+  "classification": "synthetic",
+  "warning": "Fictional relationships for deterministic tests only; not Palworld game facts.",
   "relationships": [
     {"parent_a": "pal_a", "parent_b": "pal_b", "child": "pal_c"},
     {"parent_a": "pal_b", "parent_b": "pal_c", "child": "pal_d"},

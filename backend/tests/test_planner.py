@@ -1,4 +1,3 @@
-from palnavi.application.fixtures import load_synthetic_dataset
 from palnavi.domain.breeding import (
     BreedingRelationship,
     BreedingRoutePlanner,
@@ -8,6 +7,11 @@ from palnavi.domain.breeding import (
     SpeciesId,
     SuccessfulRouteResult,
     UnreachableRouteResult,
+)
+from palnavi.domain.data import DatasetFound
+from palnavi.infrastructure.json_dataset_repository import (
+    LocalJsonBreedingDatasetRepository,
+    default_dataset_root,
 )
 
 
@@ -23,7 +27,9 @@ def request(target: str, owned: set[str]) -> RoutePlanningRequest:
 
 
 def fixture_relationships() -> tuple[BreedingRelationship, ...]:
-    return load_synthetic_dataset().relationships
+    loaded = LocalJsonBreedingDatasetRepository(default_dataset_root()).load("synthetic-v1")
+    assert isinstance(loaded, DatasetFound)
+    return loaded.snapshot.relationships
 
 
 def test_direct_route() -> None:

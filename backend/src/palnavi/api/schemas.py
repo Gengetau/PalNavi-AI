@@ -19,7 +19,7 @@ class RouteRequestBody(BaseModel):
     target_id: str
     owned_species_ids: list[str] = Field(default_factory=list)
     objective: Literal["minimum_generations"] = "minimum_generations"
-    fixture: Literal["synthetic-v1"] = "synthetic-v1"
+    fixture: str = Field(default="synthetic-v1", min_length=1, max_length=64)
     relationships: list[RelationshipInput] | None = None
 
 
@@ -37,15 +37,63 @@ class RouteCostResponse(BaseModel):
     new_capture_count: int
 
 
+class ValidationIssueResponse(BaseModel):
+    code: str
+    field: str
+    message: str
+
+
+class GameVersionScopeResponse(BaseModel):
+    kind: str
+    value: str | None
+
+
+class ProvenanceResponse(BaseModel):
+    source_id: str
+    source_type: str
+    locator: str
+    retrieved_at: str
+    license_or_usage_note: str
+    evidence_quality: str
+
+
+class DatasetMetadataResponse(BaseModel):
+    dataset_id: str
+    schema_version: int
+    classification: str
+    game_version_scope: GameVersionScopeResponse
+    created_at: str
+    importer_version: str
+    validation_status: str
+    provenance: list[ProvenanceResponse]
+    content_sha256: str
+
+
 class RouteResponse(BaseModel):
     status: Literal["success", "unreachable", "invalid"]
     target_id: str
     data_source: str
+    dataset: DatasetMetadataResponse | None = None
     steps: list[RouteStepResponse] = Field(default_factory=list)
     cost: RouteCostResponse | None = None
     reachable_species_ids: list[str] = Field(default_factory=list)
-    errors: list[str] = Field(default_factory=list)
+    error_category: str | None = None
+    errors: list[ValidationIssueResponse] = Field(default_factory=list)
     message: str | None = None
+
+
+class RequestValidationErrorDetail(BaseModel):
+    """FastAPI-compatible detail item returned before route execution."""
+
+    type: str
+    loc: list[str | int]
+    msg: str
+    input: object | None = None
+    ctx: dict[str, object] | None = None
+
+
+class RequestValidationErrorResponse(BaseModel):
+    detail: list[RequestValidationErrorDetail]
 
 
 class HealthResponse(BaseModel):
