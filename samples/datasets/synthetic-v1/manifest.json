@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "dataset_id": "synthetic-v1",
+  "classification": "synthetic",
+  "game_version_scope": {
+    "kind": "synthetic_test_only",
+    "value": null
+  },
+  "created_at": "2026-07-11T00:00:00Z",
+  "importer_version": "palnavi-json-importer/1",
+  "validation_status": "validated",
+  "provenance": [
+    {
+      "source_id": "palnavi-authored-fictional-fixture",
+      "source_type": "local_synthetic_fixture",
+      "locator": "local:palnavi/synthetic-v1",
+      "retrieved_at": "2026-07-11T00:00:00Z",
+      "license_or_usage_note": "Project-authored fictional data for tests only; not Palworld game knowledge.",
+      "evidence_quality": "synthetic_only"
+    }
+  ],
+  "content_identity": {
+    "algorithm": "sha256",
+    "digest": "3c7efb29e6ca91c6b949ad3bcac1227566d66270cad1b723f077d213e1ccceb5"
+  },
+  "warning": "Synthetic test dataset only. It claims no real Palworld game version or facts."
+}
