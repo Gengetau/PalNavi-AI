@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "dataset_id": "synthetic-v1",
+  "game_data_version": "synthetic-not-game-data",
+  "synthetic": true,
+  "warning": "Fictional test relationships only. These are not Palworld game facts.",
+  "relationships": [
+    {"parent_a": "pal_a", "parent_b": "pal_b", "child": "pal_c"},
+    {"parent_a": "pal_b", "parent_b": "pal_c", "child": "pal_d"},
+    {"parent_a": "pal_a", "parent_b": "pal_c", "child": "pal_e"},
+    {"parent_a": "pal_c", "parent_b": "pal_d", "child": "pal_f"},
+    {"parent_a": "pal_b", "parent_b": "pal_e", "child": "pal_f"},
+    {"parent_a": "pal_d", "parent_b": "pal_e", "child": "pal_a"}
+  ],
+  "unreachable_example": "pal_z"
+}
