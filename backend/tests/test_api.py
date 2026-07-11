@@ -130,7 +130,7 @@ async def test_dataset_invalid_is_structured_and_sanitized() -> None:
                 DatasetValidationIssue(
                     code=DatasetValidationCode.CONTENT_IDENTITY_MISMATCH,
                     field="content_identity.digest",
-                    message="relationship content does not match the declared identity",
+                    message="dataset content does not match the declared identity",
                 ),
             ),
         )

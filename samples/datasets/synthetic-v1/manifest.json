@@ -21,7 +21,7 @@
   ],
   "content_identity": {
     "algorithm": "sha256",
-    "digest": "3c7efb29e6ca91c6b949ad3bcac1227566d66270cad1b723f077d213e1ccceb5"
+    "digest": "4ede4d8fcfbd18d378c92ace7e6a340ddb01006e0256570aa3e5e4dc2940d9e8"
   },
   "warning": "Synthetic test dataset only. It claims no real Palworld game version or facts."
 }

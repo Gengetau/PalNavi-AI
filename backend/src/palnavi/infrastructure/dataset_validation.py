@@ -22,7 +22,7 @@ from palnavi.domain.data import (
     ProvenanceSourceType,
     ValidationStatus,
     VersionScopeKind,
-    relationship_content_sha256,
+    dataset_content_sha256,
     validate_relationship_rows,
 )
 
@@ -188,13 +188,23 @@ class BreedingDatasetImporter:
         if relationship_issues:
             return DatasetInvalid(dataset_id=dataset_id, issues=relationship_issues)
 
-        actual_digest = relationship_content_sha256(relationships)
+        actual_digest = dataset_content_sha256(
+            dataset_id=dataset_id,
+            schema_version=schema_version,
+            classification=classification,
+            game_version_scope=version_scope,
+            created_at=created_at,
+            importer_version=importer_version,
+            validation_status=validation_status,
+            provenance=provenance,
+            relationships=relationships,
+        )
         if actual_digest != content_identity.digest:
             return self._invalid(
                 dataset_id,
                 DatasetValidationCode.CONTENT_IDENTITY_MISMATCH,
                 "content_identity.digest",
-                "relationship content does not match the declared identity",
+                "dataset content does not match the declared identity",
             )
 
         species_ids = frozenset(

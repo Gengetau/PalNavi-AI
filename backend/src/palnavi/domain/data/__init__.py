@@ -21,7 +21,7 @@ from palnavi.domain.data.models import (
 )
 from palnavi.domain.data.validation import (
     DATASET_ID_PATTERN,
-    relationship_content_sha256,
+    dataset_content_sha256,
     validate_relationship_rows,
 )
 
@@ -44,6 +44,6 @@ __all__ = [
     "ValidationStatus",
     "VersionScopeKind",
     "DATASET_ID_PATTERN",
-    "relationship_content_sha256",
+    "dataset_content_sha256",
     "validate_relationship_rows",
 ]

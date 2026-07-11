@@ -6,20 +6,37 @@ import hashlib
 import json
 import re
 from collections.abc import Mapping
+from datetime import datetime
 
 from palnavi.domain.breeding import BreedingRelationship, SpeciesId
-from palnavi.domain.data.models import DatasetValidationCode, DatasetValidationIssue
+from palnavi.domain.data.models import (
+    DatasetClassification,
+    DatasetValidationCode,
+    DatasetValidationIssue,
+    GameVersionScope,
+    ProvenanceRecord,
+    ValidationStatus,
+)
 
 DATASET_ID_PATTERN = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
 RELATIONSHIP_FIELDS = frozenset({"parent_a", "parent_b", "child"})
 
 
-def relationship_content_sha256(
+def dataset_content_sha256(
+    *,
+    dataset_id: str,
+    schema_version: int,
+    classification: DatasetClassification,
+    game_version_scope: GameVersionScope,
+    created_at: datetime,
+    importer_version: str,
+    validation_status: ValidationStatus,
+    provenance: tuple[ProvenanceRecord, ...],
     relationships: tuple[BreedingRelationship, ...],
 ) -> str:
-    """Return a stable digest independent of input row or parent ordering."""
+    """Return a stable digest for canonical metadata, provenance, and relationships."""
 
-    rows = [
+    relationship_rows = [
         {
             "parent_a": relationship.parent_a.value,
             "parent_b": relationship.parent_b.value,
@@ -34,8 +51,42 @@ def relationship_content_sha256(
             ),
         )
     ]
+    provenance_rows = [
+        {
+            "source_id": record.source_id,
+            "source_type": record.source_type.value,
+            "locator": record.locator,
+            "retrieved_at": record.retrieved_at.isoformat(),
+            "license_or_usage_note": record.license_or_usage_note,
+            "evidence_quality": record.evidence_quality.value,
+        }
+        for record in sorted(
+            provenance,
+            key=lambda item: (
+                item.source_id,
+                item.source_type.value,
+                item.locator,
+                item.retrieved_at.isoformat(),
+                item.license_or_usage_note,
+                item.evidence_quality.value,
+            ),
+        )
+    ]
     canonical = json.dumps(
-        {"relationships": rows},
+        {
+            "dataset_id": dataset_id,
+            "schema_version": schema_version,
+            "classification": classification.value,
+            "game_version_scope": {
+                "kind": game_version_scope.kind.value,
+                "value": game_version_scope.value,
+            },
+            "created_at": created_at.isoformat(),
+            "importer_version": importer_version,
+            "validation_status": validation_status.value,
+            "provenance": provenance_rows,
+            "relationships": relationship_rows,
+        },
         sort_keys=True,
         separators=(",", ":"),
         ensure_ascii=True,

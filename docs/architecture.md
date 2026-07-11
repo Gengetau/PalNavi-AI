@@ -39,7 +39,7 @@ validation rule before planning.
 
 `palnavi.infrastructure` contains the JSON importer and local read-only repository. It owns
 filesystem and JSON details, validates the manifest before constructing a snapshot, and
-verifies the declared SHA-256 against canonicalized relationship content. Repository results
+verifies the declared SHA-256 against canonicalized metadata, provenance, and relationships. Repository results
 are immutable and report found, not-found, or structured invalid outcomes.
 
 `palnavi.api` owns HTTP schemas and maps them to application/domain models. FastAPI dependency

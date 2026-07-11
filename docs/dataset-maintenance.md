@@ -12,7 +12,7 @@ fictional data; it does not authorize acquiring or embedding real Palworld data.
    license/usage note, and evidence quality.
 5. Set a timezone-aware creation timestamp, importer version, and validated status.
 6. Canonicalize the relationships using the implementation in
-   `palnavi.domain.data.validation.relationship_content_sha256` and place the resulting
+   `palnavi.domain.data.validation.dataset_content_sha256` and place the resulting
    lowercase SHA-256 in the manifest.
 7. Run the complete import, repository, API, planner, formatter, linter, and type-check suites.
 

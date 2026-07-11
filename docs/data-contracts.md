@@ -12,7 +12,8 @@ The structured-data boundary accepts complete immutable dataset snapshots. The b
   `explicit_game_version` with a non-empty value.
 - `provenance` records where the facts came from. It does not mean they passed validation.
 - `validation_status` states that the importer considers the complete snapshot validated.
-- `content_identity` verifies canonical relationship content independently from filenames.
+- `content_identity` verifies canonical metadata, provenance, and relationships independently
+  from filenames.
 
 ## Stable species and relationship identifiers
 
@@ -54,7 +55,7 @@ Every snapshot requires a manifest equivalent to:
   ],
   "content_identity": {
     "algorithm": "sha256",
-    "digest": "3c7efb29e6ca91c6b949ad3bcac1227566d66270cad1b723f077d213e1ccceb5"
+    "digest": "4ede4d8fcfbd18d378c92ace7e6a340ddb01006e0256570aa3e5e4dc2940d9e8"
   }
 }
 ```
@@ -77,10 +78,12 @@ cannot claim official, community, or real-game applicability.
 ```
 
 For SHA-256 identity, relationships are converted to canonical parent order, deduplicated by
-unordered parent pair, sorted by `(parent_a, parent_b, child)`, and encoded as compact JSON
-with sorted object keys. The importer hashes UTF-8 bytes of
-`{"relationships": <canonical rows>}` and compares the lowercase digest to the manifest.
-Mismatch makes the entire dataset invalid.
+unordered parent pair, and sorted by `(parent_a, parent_b, child)`. Provenance records are
+sorted by their typed fields. The importer then encodes schema version, dataset identity,
+classification, game-version scope, normalized timestamps, importer version, validation
+status, provenance, and relationships as compact JSON with sorted object keys. It hashes the
+UTF-8 bytes and compares the lowercase digest to the manifest. Metadata, source, or relationship
+changes therefore invalidate the identity until a reviewed digest is supplied.
 
 ## Repository result contract
 
@@ -130,7 +133,7 @@ Successful fixture-backed responses retain `data_source` and add validated datas
     "importer_version": "palnavi-json-importer/1",
     "validation_status": "validated",
     "provenance": [],
-    "content_sha256": "3c7efb29e6ca91c6b949ad3bcac1227566d66270cad1b723f077d213e1ccceb5"
+    "content_sha256": "4ede4d8fcfbd18d378c92ace7e6a340ddb01006e0256570aa3e5e4dc2940d9e8"
   },
   "steps": [
     {"order": 1, "generation": 1, "parent_a": "pal_a", "parent_b": "pal_b", "child": "pal_c"}

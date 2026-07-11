@@ -162,6 +162,18 @@ def test_checksum_mismatch_is_rejected(
     )
 
 
+def test_provenance_change_also_invalidates_content_identity(
+    valid_documents: tuple[dict[str, Any], dict[str, Any]],
+) -> None:
+    manifest, relationships = copy.deepcopy(valid_documents)
+    manifest["provenance"][0]["license_or_usage_note"] = "Changed synthetic usage note"
+
+    assert_invalid_code(
+        import_documents(manifest, relationships),
+        DatasetValidationCode.CONTENT_IDENTITY_MISMATCH,
+    )
+
+
 def test_invalid_stable_identifier_is_rejected(
     valid_documents: tuple[dict[str, Any], dict[str, Any]],
 ) -> None:

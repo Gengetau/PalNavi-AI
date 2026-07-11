@@ -64,8 +64,8 @@ synthetic provenance.
 
 The dataset schema version describes this application's contract; it is not a Palworld
 version. The stable dataset identifier is independent from its directory, provenance is
-independent from validation status, and the SHA-256 digest identifies canonical relationship
-content rather than trusting a filename. A future production dataset must use explicit game
+independent from validation status, and the SHA-256 digest identifies the canonical metadata,
+provenance, and relationship content rather than trusting a filename. A future production dataset must use explicit game
 version applicability and separately reviewed, permission-compatible provenance.
 
 See [docs/architecture.md](docs/architecture.md) and
