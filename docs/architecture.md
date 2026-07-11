@@ -1,7 +1,8 @@
 # Foundation Architecture
 
-The current prototype keeps exact route calculation separate from transport and from any
-future language-model orchestration.
+The current prototype keeps exact route calculation separate from transport and model
+generation. The model gateway is an independent application port; it is not wired into route
+planning or the public API.
 
 ```text
 HTTP schemas and FastAPI dependency provider
@@ -18,6 +19,22 @@ local JSON parse -> manifest validation -> immutable dataset snapshot
         +----------+----------+
                    v
 typed breeding domain + deterministic planner
+```
+
+The separate model boundary is:
+
+```text
+provider-neutral ModelRequest / ModelResponse / ModelGateway
+                            |
+                            v
+                 validated runtime configuration
+                            |
+          +-----------------+------------------+
+          |                 |                  |
+          v                 v                  v
+OpenAI Responses    Anthropic Messages   OpenAI-compatible Chat Completions
+                                          |       |       |       |
+                                      DeepSeek  Zhipu  Bailian  custom
 ```
 
 `palnavi.domain.breeding` contains immutable types and the route planner. It imports no
@@ -37,10 +54,19 @@ protocol. It will not call the planner after a dataset lookup or relationship va
 failure. Fixture-backed and explicit-relationship requests converge on the same relationship
 validation rule before planning.
 
+`palnavi.application.model_gateway` defines provider-neutral asynchronous text-generation
+contracts, provider and message-role identifiers, usage data, and normalized failure
+categories. These contracts do not import an HTTP client or provider SDK.
+
 `palnavi.infrastructure` contains the JSON importer and local read-only repository. It owns
 filesystem and JSON details, validates the manifest before constructing a snapshot, and
 verifies the declared SHA-256 against canonicalized metadata, provenance, and relationships. Repository results
 are immutable and report found, not-found, or structured invalid outcomes.
+
+`palnavi.infrastructure.model` loads validated environment or explicit configuration and maps
+the six supported provider identifiers onto three HTTP protocols. Credentials are excluded
+from configuration representations, response bodies are never copied into gateway errors,
+and custom endpoints reject embedded credentials, queries, fragments, and non-loopback HTTP.
 
 `palnavi.api` owns HTTP schemas and maps them to application/domain models. FastAPI dependency
 providers create repository and service instances without a global mutable repository.
@@ -60,4 +86,5 @@ registered component references. FastAPI generates the interactive documentation
 - Dataset identity is metadata, not a filesystem path; paths are never exposed by the API.
 - Schema version and game-version scope are separate mandatory manifest concepts.
 - The only local dataset is classified synthetic, claims no game version, and has synthetic provenance.
-- There is no database, RAG, model provider, frontend, game adapter, save access, or mutation.
+- There is no database, RAG, model orchestration, public model endpoint, frontend, game adapter,
+  save access, or mutation. Model adapters are transport foundations only.

@@ -7,6 +7,18 @@ from palnavi.application.breeding_planning import (
     PlanningOutcome,
     PlanningSuccess,
 )
+from palnavi.application.model_gateway import (
+    ModelErrorCategory,
+    ModelGateway,
+    ModelGatewayError,
+    ModelGenerationService,
+    ModelMessage,
+    ModelMessageRole,
+    ModelProviderId,
+    ModelRequest,
+    ModelResponse,
+    ModelTokenUsage,
+)
 
 __all__ = [
     "BreedingPlanningService",
@@ -14,4 +26,14 @@ __all__ = [
     "PlanningFailureKind",
     "PlanningOutcome",
     "PlanningSuccess",
+    "ModelErrorCategory",
+    "ModelGateway",
+    "ModelGatewayError",
+    "ModelGenerationService",
+    "ModelMessage",
+    "ModelMessageRole",
+    "ModelProviderId",
+    "ModelRequest",
+    "ModelResponse",
+    "ModelTokenUsage",
 ]

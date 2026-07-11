@@ -5,8 +5,10 @@ explainable planning that combines verified game data with a player's own contex
 
 This repository currently contains a **foundation prototype**. It proves that breeding
 routes can be calculated from a validated, versioned dataset by a deterministic typed
-domain service and exposed through a small local API. It does not contain an AI model
-integration, RAG, game-process access, save parsing, or real Palworld breeding data.
+domain service and exposed through a small local API. It also contains a provider-neutral,
+non-streaming model gateway foundation, but no model is connected to route planning or a
+public HTTP endpoint. It does not contain RAG, game-process access, save parsing, or real
+Palworld breeding data.
 
 ## What is implemented
 
@@ -17,6 +19,8 @@ integration, RAG, game-process access, save parsing, or real Palworld breeding d
   status, and a verified SHA-256 content identity;
 - a read-only repository protocol and validated local JSON implementation;
 - a FastAPI health endpoint and breeding-route endpoint;
+- asynchronous model contracts and offline-tested OpenAI, Anthropic, DeepSeek, Zhipu,
+  Bailian, and custom OpenAI-compatible adapters;
 - versioned fictional synthetic data and automated domain/import/repository/API tests.
 
 Exact breeding outcomes must always come from versioned structured data and deterministic
@@ -68,7 +72,9 @@ independent from validation status, and the SHA-256 digest identifies the canoni
 provenance, and relationship content rather than trusting a filename. A future production dataset must use explicit game
 version applicability and separately reviewed, permission-compatible provenance.
 
-See [docs/architecture.md](docs/architecture.md) and
+Model provider setup, security boundaries, and the explicit live smoke command are documented
+in [docs/model-providers.md](docs/model-providers.md). See
+[docs/architecture.md](docs/architecture.md) and
 [docs/data-contracts.md](docs/data-contracts.md) for the current boundaries and schemas.
 Dataset authors should also follow
 [docs/dataset-maintenance.md](docs/dataset-maintenance.md).
