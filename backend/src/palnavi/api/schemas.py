@@ -82,5 +82,19 @@ class RouteResponse(BaseModel):
     message: str | None = None
 
 
+class RequestValidationErrorDetail(BaseModel):
+    """FastAPI-compatible detail item returned before route execution."""
+
+    type: str
+    loc: list[str | int]
+    msg: str
+    input: object | None = None
+    ctx: dict[str, object] | None = None
+
+
+class RequestValidationErrorResponse(BaseModel):
+    detail: list[RequestValidationErrorDetail]
+
+
 class HealthResponse(BaseModel):
     status: Literal["healthy"]

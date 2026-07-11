@@ -151,8 +151,13 @@ responses include the validated structured records.
 
 - HTTP 200: success, unreachable result, or existing request/domain-invalid behavior.
 - HTTP 404: repository returned `dataset_not_found`.
-- HTTP 422: repository returned `dataset_invalid`, explicit relationships failed shared
-  validation, or FastAPI rejected a malformed HTTP schema.
+- HTTP 422 has two typed response variants:
+  - repository `dataset_invalid` or explicit relationship validation returns the structured
+    PalNavi `RouteResponse` with `status`, `error_category`, and typed `errors`;
+  - malformed request bodies rejected by FastAPI before route execution return
+    `RequestValidationErrorResponse` with a non-empty top-level `detail` array.
 
 Dataset/repository errors use `status: "invalid"`, a stable `error_category`, and structured
 `errors`. They are never represented as a successful route and never expose internal paths.
+The generated OpenAPI 422 response uses a union of both component schemas so generated clients
+can distinguish transport/schema validation from PalNavi data validation.

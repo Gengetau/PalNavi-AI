@@ -6,6 +6,7 @@ import pytest
 
 from palnavi.api.dependencies import get_dataset_repository
 from palnavi.api.main import app
+from palnavi.api.schemas import RequestValidationErrorResponse, RouteResponse
 from palnavi.domain.data import (
     DatasetInvalid,
     DatasetLoadResult,
@@ -145,6 +146,7 @@ async def test_dataset_invalid_is_structured_and_sanitized() -> None:
 
     assert response.status_code == 422
     payload = response.json()
+    RouteResponse.model_validate(payload)
     assert payload["error_category"] == "dataset_invalid"
     assert payload["errors"][0]["code"] == "content_identity_mismatch"
     assert "\\" not in response.text
@@ -167,6 +169,7 @@ async def test_explicit_relationships_use_shared_validation() -> None:
 
     assert response.status_code == 422
     payload = response.json()
+    RouteResponse.model_validate(payload)
     assert payload["error_category"] == "relationships_invalid"
     assert payload["errors"][0]["code"] == "conflicting_relationship"
 
@@ -202,4 +205,28 @@ async def test_malformed_relationship_schema_gets_validation_error() -> None:
         )
 
     assert response.status_code == 422
-    assert response.json()["detail"]
+    payload = response.json()
+    RequestValidationErrorResponse.model_validate(payload)
+    assert payload["detail"]
+
+
+async def test_openapi_documents_both_http_422_response_shapes() -> None:
+    async with api_client() as client:
+        response = await client.get("/openapi.json")
+
+    assert response.status_code == 200
+    document = response.json()
+    schema = document["paths"]["/api/v1/breeding/routes"]["post"]["responses"]["422"]["content"][
+        "application/json"
+    ]["schema"]
+    variants = schema.get("anyOf") or schema.get("oneOf")
+    assert variants is not None
+
+    references = {variant["$ref"] for variant in variants}
+    assert references == {
+        "#/components/schemas/RequestValidationErrorResponse",
+        "#/components/schemas/RouteResponse",
+    }
+    components = document["components"]["schemas"]
+    for reference in references:
+        assert reference.removeprefix("#/components/schemas/") in components

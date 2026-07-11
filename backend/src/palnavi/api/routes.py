@@ -10,6 +10,7 @@ from palnavi.api.schemas import (
     GameVersionScopeResponse,
     HealthResponse,
     ProvenanceResponse,
+    RequestValidationErrorResponse,
     RouteCostResponse,
     RouteRequestBody,
     RouteResponse,
@@ -44,7 +45,15 @@ def health() -> HealthResponse:
 @router.post(
     "/api/v1/breeding/routes",
     response_model=RouteResponse,
-    responses={404: {"model": RouteResponse}, 422: {"model": RouteResponse}},
+    responses={
+        404: {"model": RouteResponse},
+        422: {
+            "model": RouteResponse | RequestValidationErrorResponse,
+            "description": (
+                "PalNavi data validation error or FastAPI request-body validation error"
+            ),
+        },
+    },
 )
 def plan_breeding_route(
     body: RouteRequestBody,

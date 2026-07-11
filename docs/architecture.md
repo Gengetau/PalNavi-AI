@@ -45,8 +45,10 @@ are immutable and report found, not-found, or structured invalid outcomes.
 `palnavi.api` owns HTTP schemas and maps them to application/domain models. FastAPI dependency
 providers create repository and service instances without a global mutable repository.
 Endpoint functions do not parse JSON datasets or implement graph search. Dataset not found is
-HTTP 404; dataset or explicit relationship validation failure is HTTP 422; both use sanitized
-structured response bodies. FastAPI generates the OpenAPI schema and interactive documentation.
+HTTP 404. HTTP 422 has two validation layers: repository or explicit-relationship validation
+uses the structured PalNavi `RouteResponse`, while malformed request bodies rejected before
+route execution use FastAPI's `detail` response. OpenAPI declares both shapes as a union with
+registered component references. FastAPI generates the interactive documentation.
 
 ## Current assumptions and boundaries
 
