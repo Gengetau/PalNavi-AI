@@ -1,3 +1,4 @@
+import asyncio
 from dataclasses import asdict
 
 import pytest
@@ -11,6 +12,7 @@ from palnavi.infrastructure.model import (
     SecretValue,
     create_model_gateway,
     load_model_provider_config,
+    smoke,
 )
 
 
@@ -135,6 +137,101 @@ def test_remote_custom_provider_requires_key_but_loopback_does_not() -> None:
         )
     )
     assert isinstance(local, OpenAICompatibleChatAdapter)
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        "https://[::1",
+        "https://api.openai.com:bad/v1",
+        "https://api.openai.com:70000/v1",
+    ],
+)
+def test_malformed_ports_and_ipv6_are_normalized_before_client_creation(
+    base_url: str,
+) -> None:
+    with pytest.raises(ModelGatewayError) as caught:
+        load_model_provider_config(
+            {
+                "PALNAVI_MODEL_PROVIDER": "custom",
+                "PALNAVI_MODEL_NAME": "test-model",
+                "PALNAVI_CUSTOM_BASE_URL": base_url,
+                "PALNAVI_CUSTOM_API_KEY": "test-token",
+            }
+        )
+
+    assert caught.value.category is ModelErrorCategory.CONFIGURATION_INVALID
+    assert str(caught.value) == (
+        "configuration_invalid: provider base URL is malformed: provider=custom"
+    )
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        "https://models.example.test:443/v1",
+        "http://[::1]:8080/v1",
+    ],
+)
+def test_valid_https_and_ipv6_loopback_urls_are_preserved(base_url: str) -> None:
+    config = load_model_provider_config(
+        {
+            "PALNAVI_MODEL_PROVIDER": "custom",
+            "PALNAVI_MODEL_NAME": "test-model",
+            "PALNAVI_CUSTOM_BASE_URL": base_url,
+            "PALNAVI_CUSTOM_API_KEY": "test-token",
+        }
+    )
+
+    assert config.base_url == base_url
+
+
+def test_secret_bearing_malformed_url_is_redacted() -> None:
+    base_url = "https://url-secret-marker@[::1"
+
+    with pytest.raises(ModelGatewayError) as caught:
+        load_model_provider_config(
+            {
+                "PALNAVI_MODEL_PROVIDER": "custom",
+                "PALNAVI_MODEL_NAME": "test-model",
+                "PALNAVI_CUSTOM_BASE_URL": base_url,
+                "PALNAVI_CUSTOM_API_KEY": "api-secret-marker",
+            }
+        )
+
+    rendered = f"{caught.value!s} {caught.value!r}"
+    assert caught.value.category is ModelErrorCategory.CONFIGURATION_INVALID
+    assert base_url not in rendered
+    assert "url-secret-marker" not in rendered
+    assert "api-secret-marker" not in rendered
+
+
+def test_smoke_reports_malformed_url_without_traceback_or_client_creation(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    client_created = False
+
+    def fail_if_client_is_created(config: ModelProviderConfig) -> None:
+        nonlocal client_created
+        client_created = True
+
+    monkeypatch.setenv("PALNAVI_MODEL_PROVIDER", "custom")
+    monkeypatch.setenv("PALNAVI_MODEL_NAME", "test-model")
+    monkeypatch.setenv("PALNAVI_CUSTOM_BASE_URL", "https://url-secret-marker@[::1")
+    monkeypatch.setenv("PALNAVI_CUSTOM_API_KEY", "api-secret-marker")
+    monkeypatch.setattr(smoke, "create_model_gateway", fail_if_client_is_created)
+
+    exit_code = asyncio.run(smoke._run("No request should be sent."))
+    captured = capsys.readouterr()
+
+    assert exit_code == 2
+    assert client_created is False
+    assert captured.err == ""
+    assert "Traceback" not in captured.out
+    assert "url-secret-marker" not in captured.out
+    assert "api-secret-marker" not in captured.out
+    assert "configuration_invalid" in captured.out
 
 
 @pytest.mark.parametrize(

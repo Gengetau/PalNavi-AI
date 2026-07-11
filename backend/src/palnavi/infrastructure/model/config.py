@@ -136,8 +136,13 @@ def normalized_base_url(config: ModelProviderConfig) -> str:
 
 
 def _validated_url(value: str, provider_id: ModelProviderId) -> SplitResult:
-    parsed = urlsplit(value)
-    if not parsed.scheme or not parsed.hostname:
+    try:
+        parsed = urlsplit(value)
+        hostname = parsed.hostname
+        _ = parsed.port
+    except ValueError:
+        _configuration_error("provider base URL is malformed", provider_id)
+    if not parsed.scheme or not hostname:
         _configuration_error("provider base URL must be absolute", provider_id)
     if parsed.username is not None or parsed.password is not None:
         _configuration_error("provider base URL must not contain credentials", provider_id)
