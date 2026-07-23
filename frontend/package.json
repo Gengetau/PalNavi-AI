@@ -1,0 +1,33 @@
+{
+  "name": "palnavi-ai-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.9.0",
+  "engines": {
+    "node": "^22.18.0 || >=24.12.0",
+    "npm": ">=11.9.0 <12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "test:unit": "vitest run",
+    "test:unit:no-network": "node --require ./tests/no-network.cjs ./node_modules/vitest/vitest.mjs run",
+    "test:watch": "vitest",
+    "type-check": "vue-tsc --noEmit -p tsconfig.json",
+    "build": "vite build",
+    "check": "npm run test:unit:no-network && npm run type-check && npm run build"
+  },
+  "dependencies": {
+    "vue": "3.5.40"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "6.0.8",
+    "@types/node": "24.13.3",
+    "@vue/test-utils": "2.4.11",
+    "jsdom": "29.1.1",
+    "typescript": "5.9.3",
+    "vite": "8.1.5",
+    "vitest": "4.1.10",
+    "vue-tsc": "3.3.8"
+  }
+}

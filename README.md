@@ -26,6 +26,8 @@ parsing, or real Palworld breeding or knowledge data.
   and a read-only knowledge search endpoint;
 - a retrieval-first `POST /api/v1/knowledge/explain` endpoint with bounded evidence, canonical
   retrieval-owned citations, and fail-closed validation of untrusted model text;
+- a standalone Vue 3 and TypeScript knowledge workspace that defaults visibly to synthetic-only,
+  preserves typed search and explanation outcomes, and renders backend content as inert text;
 - versioned fictional synthetic data and automated domain/import/repository/API tests.
 
 Exact breeding outcomes must always come from versioned structured data and deterministic
@@ -56,6 +58,20 @@ python -m ruff check .
 python -m mypy src
 ```
 
+The standalone frontend requires Node.js `^22.18.0` or `>=24.12.0`. From the repository root:
+
+```powershell
+cd frontend
+npm ci
+npm run test:unit
+npm run type-check
+npm run build
+```
+
+For local browser development, start the FastAPI service on `127.0.0.1:8000`, then run
+`npm run dev` in `frontend/`. Vite proxies the same-origin `/api` path during development. See
+[frontend/README.md](frontend/README.md) for the complete workflow and safety boundary.
+
 Start the API:
 
 ```powershell
@@ -82,7 +98,8 @@ version applicability and separately reviewed, permission-compatible provenance.
 
 Real Palworld knowledge answers remain unavailable until permission-compatible, reviewed,
 versioned knowledge data is imported. The current explanation endpoint supports only fictional
-synthetic evidence.
+synthetic evidence. The frontend keeps **Synthetic knowledge only** enabled and visibly labeled by
+default and does not claim that its fixtures represent verified game facts.
 
 Model provider setup, security boundaries, and the explicit live smoke command are documented
 in [docs/model-providers.md](docs/model-providers.md). Knowledge ingestion, local database setup,

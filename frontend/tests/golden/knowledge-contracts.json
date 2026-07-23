@@ -1,0 +1,85 @@
+{
+  "request": {
+    "query": "fictional signal route",
+    "language": "en-US",
+    "exact_game_version": "synthetic-0.0.0",
+    "synthetic_only": true,
+    "limit": 3
+  },
+  "search_success": {
+    "status": "success",
+    "results": [
+      {
+        "score": 0.875,
+        "document_id": "synthetic-document-alpha",
+        "chunk_id": "synthetic-document-alpha-0001",
+        "title": "Synthetic Signal Notes",
+        "section_path": [
+          "Invented observations"
+        ],
+        "text": "A fictional signal appears beside an invented arch.",
+        "language": "en",
+        "classification": "synthetic",
+        "game_version_scope": {
+          "kind": "exact",
+          "value": "synthetic-0.0.0"
+        },
+        "citation": {
+          "document_id": "synthetic-document-alpha",
+          "chunk_id": "synthetic-document-alpha-0001",
+          "title": "Synthetic Signal Notes",
+          "section_path": [
+            "Invented observations"
+          ],
+          "source_id": "project-authored-fixture",
+          "source_locator": "project-authored://synthetic-fixture/signal-alpha",
+          "retrieved_at": "2026-07-23T12:00:00+00:00",
+          "license_or_usage_note": "Project-authored synthetic fixture."
+        }
+      }
+    ],
+    "error_category": null,
+    "message": null
+  },
+  "search_error": {
+    "status": "error",
+    "results": [],
+    "error_category": "repository_unavailable",
+    "message": "Knowledge retrieval is unavailable."
+  },
+  "explain_success": {
+    "status": "success",
+    "answer": "A fictional signal is present in the synthetic note. [K1]",
+    "citations": [
+      {
+        "marker": "[K1]",
+        "citation": {
+          "document_id": "synthetic-document-alpha",
+          "chunk_id": "synthetic-document-alpha-0001",
+          "title": "Synthetic Signal Notes",
+          "section_path": [
+            "Invented observations"
+          ],
+          "source_id": "project-authored-fixture",
+          "source_locator": "project-authored://synthetic-fixture/signal-alpha",
+          "retrieved_at": "2026-07-23T12:00:00+00:00",
+          "license_or_usage_note": "Project-authored synthetic fixture."
+        }
+      }
+    ],
+    "usage": {
+      "input_tokens": 12,
+      "output_tokens": 10,
+      "total_tokens": 22
+    }
+  },
+  "explain_unsupported": {
+    "status": "unsupported",
+    "message": "No usable knowledge evidence was found."
+  },
+  "explain_error": {
+    "status": "error",
+    "error_category": "configuration_invalid",
+    "message": "Model provider configuration is unavailable."
+  }
+}
