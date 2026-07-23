@@ -98,3 +98,49 @@ class RequestValidationErrorResponse(BaseModel):
 
 class HealthResponse(BaseModel):
     status: Literal["healthy"]
+
+
+class KnowledgeSearchRequestBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    query: str = Field(min_length=1, max_length=500)
+    language: str | None = Field(
+        default=None,
+        min_length=2,
+        max_length=35,
+        pattern=r"^[A-Za-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})*$",
+    )
+    exact_game_version: str | None = Field(default=None, min_length=1, max_length=64)
+    synthetic_only: bool = False
+    limit: int = Field(default=5, ge=1, le=20)
+
+
+class KnowledgeCitationResponse(BaseModel):
+    document_id: str
+    chunk_id: str
+    title: str
+    section_path: list[str]
+    source_id: str
+    source_locator: str
+    retrieved_at: str
+    license_or_usage_note: str
+
+
+class KnowledgeSearchItemResponse(BaseModel):
+    score: float
+    document_id: str
+    chunk_id: str
+    title: str
+    section_path: list[str]
+    text: str
+    language: str
+    classification: str
+    game_version_scope: GameVersionScopeResponse
+    citation: KnowledgeCitationResponse
+
+
+class KnowledgeSearchResponse(BaseModel):
+    status: Literal["success", "error"]
+    results: list[KnowledgeSearchItemResponse] = Field(default_factory=list)
+    error_category: str | None = None
+    message: str | None = None

@@ -37,6 +37,24 @@ OpenAI Responses    Anthropic Messages   OpenAI-compatible Chat Completions
                                       DeepSeek  Zhipu  Bailian  custom
 ```
 
+The knowledge retrieval boundary is also independent:
+
+```text
+synthetic Markdown + manifest
+            |
+            v
+validation -> NFC/line normalization -> deterministic heading/length chunks
+            |
+            v
+transactional SQLite documents + chunks
+            |
+            v
+deterministic lexical retrieval -> citation-complete application results
+            |
+            v
+POST /api/v1/knowledge/search (retrieval only; no generated answer)
+```
+
 `palnavi.domain.breeding` contains immutable types and the route planner. It imports no
 FastAPI, Pydantic, persistence, model SDK, or game-integration library. The planner accepts
 explicit relationships and an owned-species set, computes reachability, and searches for an
@@ -68,9 +86,16 @@ the six supported provider identifiers onto three HTTP protocols. Credentials ar
 from configuration representations, response bodies are never copied into gateway errors,
 and custom endpoints reject embedded credentials, queries, fragments, and non-loopback HTTP.
 
+`palnavi.domain.knowledge` owns immutable document, chunk, query, repository, result, and
+citation contracts. `palnavi.infrastructure.knowledge_ingestion` owns canonical normalization,
+identity verification, and deterministic Markdown chunking. The SQLite adapter owns only its
+feature tables, replaces updated document chunks transactionally, and performs deterministic
+standard-library lexical scoring so behavior does not depend on optional SQLite FTS5 builds.
+
 `palnavi.api` owns HTTP schemas and maps them to application/domain models. FastAPI dependency
 providers create repository and service instances without a global mutable repository.
-Endpoint functions do not parse JSON datasets or implement graph search. Dataset not found is
+Endpoint functions do not parse JSON datasets, implement graph search, or query SQLite rows
+directly. Dataset not found is
 HTTP 404. HTTP 422 has two validation layers: repository or explicit-relationship validation
 uses the structured PalNavi `RouteResponse`, while malformed request bodies rejected before
 route execution use FastAPI's `detail` response. OpenAPI declares both shapes as a union with
@@ -86,5 +111,8 @@ registered component references. FastAPI generates the interactive documentation
 - Dataset identity is metadata, not a filesystem path; paths are never exposed by the API.
 - Schema version and game-version scope are separate mandatory manifest concepts.
 - The only local dataset is classified synthetic, claims no game version, and has synthetic provenance.
-- There is no database, RAG, model orchestration, public model endpoint, frontend, game adapter,
-  save access, or mutation. Model adapters are transport foundations only.
+- SQLite is used only for the local versioned knowledge feature; no external search service or
+  vector database is present.
+- The knowledge endpoint returns retrieved chunks and citations, never a generated answer.
+- There is no model orchestration, public model endpoint, frontend, game adapter, save access, or
+  mutation. Model adapters and knowledge retrieval remain independent foundations.

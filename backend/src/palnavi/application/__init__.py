@@ -7,6 +7,7 @@ from palnavi.application.breeding_planning import (
     PlanningOutcome,
     PlanningSuccess,
 )
+from palnavi.application.knowledge_retrieval import KnowledgeRetrievalService
 from palnavi.application.model_gateway import (
     ModelErrorCategory,
     ModelGateway,
@@ -36,4 +37,5 @@ __all__ = [
     "ModelRequest",
     "ModelResponse",
     "ModelTokenUsage",
+    "KnowledgeRetrievalService",
 ]

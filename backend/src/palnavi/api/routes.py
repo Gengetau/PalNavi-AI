@@ -4,11 +4,18 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response, status
 
-from palnavi.api.dependencies import get_breeding_planning_service
+from palnavi.api.dependencies import (
+    get_breeding_planning_service,
+    get_knowledge_retrieval_service,
+)
 from palnavi.api.schemas import (
     DatasetMetadataResponse,
     GameVersionScopeResponse,
     HealthResponse,
+    KnowledgeCitationResponse,
+    KnowledgeSearchItemResponse,
+    KnowledgeSearchRequestBody,
+    KnowledgeSearchResponse,
     ProvenanceResponse,
     RequestValidationErrorResponse,
     RouteCostResponse,
@@ -19,6 +26,7 @@ from palnavi.api.schemas import (
 )
 from palnavi.application import (
     BreedingPlanningService,
+    KnowledgeRetrievalService,
     PlanningFailure,
     PlanningFailureKind,
     PlanningSuccess,
@@ -33,6 +41,12 @@ from palnavi.domain.breeding import (
     UnreachableRouteResult,
 )
 from palnavi.domain.data import BreedingDatasetSnapshot, DatasetValidationIssue
+from palnavi.domain.knowledge import (
+    KnowledgeQuery,
+    KnowledgeRepositoryFailure,
+    KnowledgeSearchSuccess,
+    LanguageIdentifier,
+)
 
 router = APIRouter()
 
@@ -40,6 +54,80 @@ router = APIRouter()
 @router.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
     return HealthResponse(status="healthy")
+
+
+@router.post(
+    "/api/v1/knowledge/search",
+    response_model=KnowledgeSearchResponse,
+    responses={
+        422: {"model": KnowledgeSearchResponse | RequestValidationErrorResponse},
+        503: {"model": KnowledgeSearchResponse},
+    },
+)
+def search_knowledge(
+    body: KnowledgeSearchRequestBody,
+    response: Response,
+    service: Annotated[
+        KnowledgeRetrievalService,
+        Depends(get_knowledge_retrieval_service),
+    ],
+) -> KnowledgeSearchResponse:
+    try:
+        query = KnowledgeQuery(
+            text=body.query,
+            language=LanguageIdentifier(body.language) if body.language is not None else None,
+            exact_game_version=body.exact_game_version,
+            synthetic_only=body.synthetic_only,
+            limit=body.limit,
+        )
+    except ValueError:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+        return KnowledgeSearchResponse(
+            status="error",
+            error_category="request_invalid",
+            message="knowledge search request is invalid",
+        )
+
+    outcome = service.search(query)
+    if isinstance(outcome, KnowledgeRepositoryFailure):
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        return KnowledgeSearchResponse(
+            status="error",
+            error_category=outcome.kind.value,
+            message=outcome.message,
+        )
+    if not isinstance(outcome, KnowledgeSearchSuccess):
+        raise AssertionError("knowledge repository returned an unsupported result type")
+    return KnowledgeSearchResponse(
+        status="success",
+        results=[
+            KnowledgeSearchItemResponse(
+                score=item.score,
+                document_id=item.document_id.value,
+                chunk_id=item.chunk_id.value,
+                title=item.title,
+                section_path=list(item.section_path),
+                text=item.text,
+                language=item.language.value,
+                classification=item.classification.value,
+                game_version_scope=GameVersionScopeResponse(
+                    kind=item.game_version_scope.kind.value,
+                    value=item.game_version_scope.value,
+                ),
+                citation=KnowledgeCitationResponse(
+                    document_id=item.citation.document_id.value,
+                    chunk_id=item.citation.chunk_id.value,
+                    title=item.citation.title,
+                    section_path=list(item.citation.section_path),
+                    source_id=item.citation.source_id,
+                    source_locator=item.citation.source_locator,
+                    retrieved_at=item.citation.retrieved_at.isoformat(),
+                    license_or_usage_note=item.citation.license_or_usage_note,
+                ),
+            )
+            for item in outcome.results
+        ],
+    )
 
 
 @router.post(

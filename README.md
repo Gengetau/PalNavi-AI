@@ -7,8 +7,9 @@ This repository currently contains a **foundation prototype**. It proves that br
 routes can be calculated from a validated, versioned dataset by a deterministic typed
 domain service and exposed through a small local API. It also contains a provider-neutral,
 non-streaming model gateway foundation, but no model is connected to route planning or a
-public HTTP endpoint. It does not contain RAG, game-process access, save parsing, or real
-Palworld breeding data.
+public HTTP endpoint. It also contains the deterministic retrieval half of a future RAG flow,
+using local synthetic documents only and generating no answers. It does not contain model
+orchestration, game-process access, save parsing, or real Palworld breeding data.
 
 ## What is implemented
 
@@ -21,6 +22,8 @@ Palworld breeding data.
 - a FastAPI health endpoint and breeding-route endpoint;
 - asynchronous model contracts and offline-tested OpenAI, Anthropic, DeepSeek, Zhipu,
   Bailian, and custom OpenAI-compatible adapters;
+- deterministic Markdown ingestion, citation-ready SQLite knowledge storage, lexical retrieval,
+  and a read-only knowledge search endpoint;
 - versioned fictional synthetic data and automated domain/import/repository/API tests.
 
 Exact breeding outcomes must always come from versioned structured data and deterministic
@@ -57,7 +60,8 @@ python -m uvicorn palnavi.api.main:app --reload
 ```
 
 OpenAPI documentation is available at `http://127.0.0.1:8000/docs`. Health is available
-at `GET /health`; route planning is available at `POST /api/v1/breeding/routes`.
+at `GET /health`; route planning is available at `POST /api/v1/breeding/routes`; citation-ready
+retrieval is available at `POST /api/v1/knowledge/search`.
 
 ## Synthetic data warning
 
@@ -73,7 +77,9 @@ provenance, and relationship content rather than trusting a filename. A future p
 version applicability and separately reviewed, permission-compatible provenance.
 
 Model provider setup, security boundaries, and the explicit live smoke command are documented
-in [docs/model-providers.md](docs/model-providers.md). See
+in [docs/model-providers.md](docs/model-providers.md). Knowledge ingestion, local database setup,
+and filtering behavior are documented in
+[docs/knowledge-retrieval.md](docs/knowledge-retrieval.md). See
 [docs/architecture.md](docs/architecture.md) and
 [docs/data-contracts.md](docs/data-contracts.md) for the current boundaries and schemas.
 Dataset authors should also follow

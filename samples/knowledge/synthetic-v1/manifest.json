@@ -1,0 +1,75 @@
+{
+  "corpus_id": "synthetic-knowledge-v1",
+  "synthetic_warning": "Project-authored fictional fixtures only; this corpus is not Palworld knowledge.",
+  "documents": [
+    {
+      "document_id": "synthetic-guide-a",
+      "title": "Synthetic Wayfinding Guide",
+      "language": "en",
+      "classification": "synthetic",
+      "game_version_scope": {
+        "kind": "explicit_game_version",
+        "value": "synthetic-1.0"
+      },
+      "provenance": {
+        "source_id": "project-synthetic-guide-a",
+        "source_type": "local_synthetic_fixture",
+        "locator": "project-authored://synthetic-knowledge/guide-a",
+        "retrieved_at": "2026-07-11T00:00:00+00:00",
+        "license_or_usage_note": "Project-authored synthetic fixture; repository test use only.",
+        "evidence_quality": "synthetic_only"
+      },
+      "imported_at": "2026-07-11T00:05:00+00:00",
+      "schema_version": 1,
+      "importer_version": "knowledge-markdown-v1",
+      "content_file": "guide-a.md",
+      "content_sha256": "ec7783f06dc7f473eeded4a01a4b1c83c668af8e6baa0ed65ea8318e44b5bf48"
+    },
+    {
+      "document_id": "synthetic-guide-b",
+      "title": "Synthetic Workshop Guide",
+      "language": "en",
+      "classification": "synthetic",
+      "game_version_scope": {
+        "kind": "explicit_game_version",
+        "value": "synthetic-2.0"
+      },
+      "provenance": {
+        "source_id": "project-synthetic-guide-b",
+        "source_type": "local_synthetic_fixture",
+        "locator": "project-authored://synthetic-knowledge/guide-b",
+        "retrieved_at": "2026-07-11T00:00:00+00:00",
+        "license_or_usage_note": "Project-authored synthetic fixture; repository test use only.",
+        "evidence_quality": "synthetic_only"
+      },
+      "imported_at": "2026-07-11T00:05:00+00:00",
+      "schema_version": 1,
+      "importer_version": "knowledge-markdown-v1",
+      "content_file": "guide-b.md",
+      "content_sha256": "0511b1c3b34e14e3bc53bd3010e2ae32c944942ac7447152f9bf50e8884c3c35"
+    },
+    {
+      "document_id": "synthetic-guide-ja",
+      "title": "架空の案内書",
+      "language": "ja",
+      "classification": "synthetic",
+      "game_version_scope": {
+        "kind": "explicit_game_version",
+        "value": "synthetic-1.0"
+      },
+      "provenance": {
+        "source_id": "project-synthetic-guide-ja",
+        "source_type": "local_synthetic_fixture",
+        "locator": "project-authored://synthetic-knowledge/guide-ja",
+        "retrieved_at": "2026-07-11T00:00:00+00:00",
+        "license_or_usage_note": "Project-authored synthetic fixture; repository test use only.",
+        "evidence_quality": "synthetic_only"
+      },
+      "imported_at": "2026-07-11T00:05:00+00:00",
+      "schema_version": 1,
+      "importer_version": "knowledge-markdown-v1",
+      "content_file": "guide-ja.md",
+      "content_sha256": "28c26aa32d30a22fdf1adc3ad93ba28759e013f425170e0c67290818df6c0388"
+    }
+  ]
+}
