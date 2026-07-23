@@ -5,9 +5,11 @@ protocol details in infrastructure. Model identifiers are configuration values r
 allowlist, so a provider can add models without a code change. An unknown provider identifier
 fails with a structured error and never falls back to another provider.
 
-This gateway is not called by breeding planning or by a public API route. Exact breeding data,
-probabilities, and costs remain the responsibility of versioned structured data and the
-deterministic planner.
+`POST /api/v1/knowledge/explain` is the only public route that can call this gateway, and it does
+so only after deterministic retrieval yields usable evidence. Breeding planning and
+`POST /api/v1/knowledge/search` never load provider configuration or call a model. Exact breeding
+data, probabilities, and costs remain the responsibility of versioned structured data and the
+deterministic planner; model output is never their source of truth.
 
 ## Providers and protocols
 
@@ -57,6 +59,12 @@ Provider credentials and optional base overrides:
 | Bailian | `DASHSCOPE_API_KEY` | `PALNAVI_BAILIAN_BASE_URL` (required) |
 | custom | `PALNAVI_CUSTOM_API_KEY` | `PALNAVI_CUSTOM_BASE_URL` (required) |
 
+These variables are optional for the application as a whole. The explanation dependency loads
+them lazily only after retrieval yields usable evidence; an unsupported response therefore causes
+zero configuration, gateway, or HTTP-client calls. Search and breeding never load model settings.
+The explanation service explicitly requests at most 512 output tokens; the 1024 environment
+default remains an adapter fallback and smoke-command setting.
+
 For the selected DeepSeek setup, set `PALNAVI_MODEL_PROVIDER` to `deepseek` and
 `PALNAVI_MODEL_NAME` to `deepseek-v4-flash`; inject `DEEPSEEK_API_KEY` from the local secret
 source. Do not place the key in Python, tests, documentation, command history, or reports.
@@ -64,6 +72,14 @@ source. Do not place the key in Python, tests, documentation, command history, o
 Configuration objects hide their credential field from `repr`. Gateway errors contain only a
 normalized category, safe message, provider ID, status code, and request ID. Provider response
 bodies are deliberately excluded because they can echo request or credential material.
+
+## Explanation request lifecycle
+
+The explanation request dependency creates deferred generation ownership per request. Retrieval
+runs first; when usable evidence exists, configuration is loaded and at most one gateway call is
+made. Missing or invalid configuration becomes a controlled explanation error without affecting
+search or deterministic breeding. Any HTTP client constructed for the request is owned by that
+dependency and closed during cancellation-shielded cleanup.
 
 ## Custom endpoints
 
@@ -74,8 +90,11 @@ or fragments are rejected.
 
 ## Offline tests and explicit live smoke
 
-The automated suite uses `httpx.MockTransport`; it never contacts a provider and never consumes
-paid tokens. Run it from `backend`:
+The adapter suite uses `httpx.MockTransport`, and explanation tests use a deterministic fake
+gateway with synthetic fixtures. Focused guards block TCP connections, UDP sends, forward and
+reverse DNS resolution, and subprocess execution. No automated test contacts a provider, consumes
+paid tokens, loads a real credential, or invokes a filesystem-provider command. Run the adapter
+tests from `backend`:
 
 ```powershell
 python -m pytest tests/test_model_config.py tests/test_model_adapters.py
