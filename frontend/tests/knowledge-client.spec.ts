@@ -336,6 +336,37 @@ describe("knowledge client", () => {
     },
   );
 
+  it.each([201, 206])(
+    "rejects unexpected HTTP %s before a failing response stream is read",
+    async (status) => {
+      const failedStream = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          controller.error(new Error("PRIVATE_STREAM_FAILURE"));
+        },
+      });
+      const client = createKnowledgeClient(
+        createFetchTransport(
+          vi.fn(async () => {
+            return new Response(failedStream, {
+              status,
+              headers: { "Content-Type": "application/json" },
+            });
+          }),
+        ),
+      );
+
+      await expect(
+        client.search(syntheticRequest(), {
+          signal: new AbortController().signal,
+        }),
+      ).resolves.toMatchObject({
+        kind: "http-invalid",
+        reason: "http-status-contract-conflict",
+        httpStatus: status,
+      });
+    },
+  );
+
   it.each([
     {
       status: 201,

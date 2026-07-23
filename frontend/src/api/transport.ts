@@ -35,6 +35,18 @@ export function createFetchTransport(
         redirect: "error",
         cache: "no-store",
       });
+      if (response.ok && response.status !== 200) {
+        cancelBodyWithoutWaiting(response);
+        return {
+          ok: response.ok,
+          status: response.status,
+          statusText: response.statusText,
+          contentType: response.headers.get("content-type"),
+          bodyText: "",
+          bodyTooLarge: false,
+          bodyEncodingInvalid: false,
+        };
+      }
       const responseBody = await readBoundedBody(response);
       return {
         ok: response.ok,
@@ -50,6 +62,14 @@ export function createFetchTransport(
 }
 
 export const MAX_RESPONSE_BYTES = 1_048_576;
+
+function cancelBodyWithoutWaiting(response: Response): void {
+  try {
+    void response.body?.cancel().catch(() => undefined);
+  } catch {
+    // Cancellation is best effort; status rejection must not wait on the body.
+  }
+}
 
 async function readBoundedBody(
   response: Response,
