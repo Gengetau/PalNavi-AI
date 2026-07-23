@@ -28,6 +28,8 @@ parsing, or real Palworld breeding or knowledge data.
   retrieval-owned citations, and fail-closed validation of untrusted model text;
 - a standalone Vue 3 and TypeScript knowledge workspace that defaults visibly to synthetic-only,
   preserves typed search and explanation outcomes, and renders backend content as inert text;
+- a deterministic registry of exact official source URLs plus a credential-free, metadata-only
+  fingerprint boundary with a mandatory synthetic mock fallback;
 - versioned fictional synthetic data and automated domain/import/repository/API tests.
 
 Exact breeding outcomes must always come from versioned structured data and deterministic
@@ -109,3 +111,7 @@ and filtering behavior are documented in
 [docs/data-contracts.md](docs/data-contracts.md) for the current boundaries and schemas.
 Dataset authors should also follow
 [docs/dataset-maintenance.md](docs/dataset-maintenance.md).
+Official-source registry governance, content-free snapshots, the mock-default CLI, and the
+single-attempt live boundary are documented in
+[docs/official-sources.md](docs/official-sources.md). Registering or fingerprinting an official
+source does not approve its page body for knowledge ingestion or factual answers.

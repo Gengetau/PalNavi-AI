@@ -246,3 +246,11 @@ data is imported. The bundled corpus supports only fictional synthetic demonstra
 The explanation endpoint enforces citation mapping rather than semantic fact verification. Model
 output may summarize retrieved evidence, but it never becomes the source of truth for deterministic
 breeding or any other exact mechanic.
+
+# Official source separation
+
+The versioned official-source registry and its metadata-only snapshot manifests are not knowledge
+documents. Acquisition discards every response body after fatal UTF-8 validation and hashing.
+Neither a registered URL nor a successful fingerprint authorizes copying, indexing, chunking,
+summarizing, or answering from that source. A later source-specific review must explicitly approve
+usage scope and version applicability before any production knowledge import.

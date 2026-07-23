@@ -71,6 +71,29 @@ POST /api/v1/knowledge/search   bounded deterministic evidence selection
                              POST /api/v1/knowledge/explain
 ```
 
+The official-source metadata boundary remains disconnected from retrieval:
+
+```text
+versioned exact-URL registry
+            |
+            v
+strict validation -> fixed-host one-request transport -> body discarded
+            |                                             |
+            v                                             v
+synthetic mock fallback                         byte count + SHA-256
+            |                                             |
+            +----------------------+----------------------+
+                                   v
+                     content-free snapshot manifest
+```
+
+`palnavi.domain.official_sources` owns immutable registry, fetch-outcome, and snapshot contracts.
+The application service sequences one source at a time and builds a deterministic identity-bearing
+manifest. Infrastructure strictly loads the checked-in registry, performs optional credential-free
+HTTP metadata acquisition, supplies a deterministic mock transport through the same evaluator, and
+writes manifests atomically. This path does not import a page body into SQLite, expose a FastAPI
+route, call a game server, or provide data to search or explanation.
+
 ```text
 Vue form -> normalized typed request -> request controller -> typed API client
                                                        |
@@ -180,3 +203,5 @@ Source locators remain inert text, and no Markdown or raw HTML path exists.
 - The frontend defaults visibly to synthetic-only and collects no provider credential or endpoint.
 - There is no game adapter, save access, or mutation.
 - Real Palworld explanations remain unavailable until reviewed, versioned knowledge data is imported.
+- Official-source registration and metadata fingerprints are provenance evidence only; page bodies
+  are discarded and never become searchable without a later source-specific usage review.

@@ -37,6 +37,14 @@ from palnavi.application.model_gateway import (
     ModelResponse,
     ModelTokenUsage,
 )
+from palnavi.application.official_source_acquisition import (
+    OfficialSourceAcquisitionService,
+    SystemUtcClock,
+    canonical_json_bytes,
+    format_utc,
+    snapshot_manifest_document,
+    snapshot_manifest_sha256,
+)
 
 __all__ = [
     "BreedingPlanningService",
@@ -70,4 +78,10 @@ __all__ = [
     "ModelRequest",
     "ModelResponse",
     "ModelTokenUsage",
+    "OfficialSourceAcquisitionService",
+    "SystemUtcClock",
+    "canonical_json_bytes",
+    "format_utc",
+    "snapshot_manifest_document",
+    "snapshot_manifest_sha256",
 ]
