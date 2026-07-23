@@ -108,6 +108,7 @@ export type HttpInvalidReason =
   | "malformed-json"
   | "content-type"
   | "response-too-large"
+  | "malformed-encoding"
   | "response-shape"
   | "http-status"
   | "http-status-contract-conflict";

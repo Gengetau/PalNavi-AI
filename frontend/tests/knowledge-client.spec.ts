@@ -1,7 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { createKnowledgeClient } from "../src/api/knowledgeClient";
-import type { HttpResponse, HttpTransport } from "../src/api/transport";
+import {
+  createFetchTransport,
+  type HttpResponse,
+  type HttpTransport,
+} from "../src/api/transport";
 import {
   syntheticExplainCitation,
   syntheticRequest,
@@ -26,6 +30,7 @@ function jsonResponse(
     contentType: "application/json",
     bodyText: JSON.stringify(body),
     bodyTooLarge: false,
+    bodyEncodingInvalid: false,
   };
 }
 
@@ -144,6 +149,7 @@ describe("knowledge client", () => {
         contentType: "text/html",
         bodyText: "<html>secret failure</html>",
         bodyTooLarge: false,
+        bodyEncodingInvalid: false,
       },
       reason: "content-type",
     },
@@ -155,8 +161,9 @@ describe("knowledge client", () => {
         contentType: "application/json",
         bodyText: "",
         bodyTooLarge: false,
+        bodyEncodingInvalid: false,
       },
-      reason: "empty-body",
+      reason: "http-status-contract-conflict",
     },
     {
       response: jsonResponse({ status: "success", results: "wrong" }),
@@ -189,6 +196,7 @@ describe("knowledge client", () => {
         contentType: "text/plain",
         bodyText: JSON.stringify({ status: "success", results: [] }),
         bodyTooLarge: false,
+        bodyEncodingInvalid: false,
       }),
     );
     await expect(
@@ -203,6 +211,7 @@ describe("knowledge client", () => {
           contentType: `application/json; charset=utf-8${separator}`,
           bodyText: JSON.stringify({ status: "success", results: [] }),
           bodyTooLarge: false,
+          bodyEncodingInvalid: false,
         }),
       );
       await expect(
@@ -221,6 +230,7 @@ describe("knowledge client", () => {
         contentType: "application/json",
         bodyText: "",
         bodyTooLarge: true,
+        bodyEncodingInvalid: false,
       }),
     );
     await expect(
@@ -252,6 +262,207 @@ describe("knowledge client", () => {
     });
   });
 
+  it("enforces submitted synthetic scope and explanation citation limit", async () => {
+    const mismatchedSearch = createKnowledgeClient(
+      transportReturning(
+        jsonResponse({
+          status: "success",
+          results: [
+            syntheticSearchItem({ classification: "production" }),
+          ],
+          error_category: null,
+          message: null,
+        }),
+      ),
+    );
+    await expect(
+      mismatchedSearch.search(syntheticRequest({ synthetic_only: true }), {
+        signal: new AbortController().signal,
+      }),
+    ).resolves.toMatchObject({
+      kind: "http-invalid",
+      reason: "response-shape",
+    });
+    await expect(
+      mismatchedSearch.search(syntheticRequest({ synthetic_only: false }), {
+        signal: new AbortController().signal,
+      }),
+    ).resolves.toMatchObject({ kind: "search-success" });
+
+    const tooManyCitations = createKnowledgeClient(
+      transportReturning(
+        jsonResponse({
+          status: "success",
+          answer: "Fictional combined answer. [K1] [K2]",
+          citations: [
+            syntheticExplainCitation("[K1]"),
+            syntheticExplainCitation("[K2]"),
+          ],
+          usage: null,
+        }),
+      ),
+    );
+    await expect(
+      tooManyCitations.explain(syntheticRequest({ limit: 1 }), {
+        signal: new AbortController().signal,
+      }),
+    ).resolves.toMatchObject({
+      kind: "http-invalid",
+      reason: "response-shape",
+    });
+  });
+
+  it.each([201, 204, 206])(
+    "rejects a valid success body with unexpected HTTP %s",
+    async (status) => {
+      const client = createKnowledgeClient(
+        transportReturning(
+          jsonResponse(
+            { status: "success", results: [] },
+            status,
+            true,
+          ),
+        ),
+      );
+      await expect(
+        client.search(syntheticRequest(), {
+          signal: new AbortController().signal,
+        }),
+      ).resolves.toMatchObject({
+        kind: "http-invalid",
+        reason: "http-status-contract-conflict",
+        httpStatus: status,
+      });
+    },
+  );
+
+  it.each([
+    {
+      status: 201,
+      body: {
+        status: "success",
+        answer: "Fictional answer. [K1]",
+        citations: [syntheticExplainCitation()],
+        usage: null,
+      },
+    },
+    {
+      status: 206,
+      body: { status: "unsupported", message: "No evidence." },
+    },
+  ])(
+    "rejects explanation outcome at unexpected HTTP $status",
+    async ({ status, body }) => {
+      const client = createKnowledgeClient(
+        transportReturning(jsonResponse(body, status, true)),
+      );
+      await expect(
+        client.explain(syntheticRequest(), {
+          signal: new AbortController().signal,
+        }),
+      ).resolves.toMatchObject({
+        kind: "http-invalid",
+        reason: "http-status-contract-conflict",
+        httpStatus: status,
+      });
+    },
+  );
+
+  it("rejects a structured error at the wrong HTTP status", async () => {
+    const searchClient = createKnowledgeClient(
+      transportReturning(
+        jsonResponse(
+          {
+            status: "error",
+            results: [],
+            error_category: "repository_unavailable",
+            message: "Repository unavailable.",
+          },
+          422,
+          false,
+        ),
+      ),
+    );
+    await expect(
+      searchClient.search(syntheticRequest(), {
+        signal: new AbortController().signal,
+      }),
+    ).resolves.toMatchObject({
+      kind: "http-invalid",
+      reason: "http-status-contract-conflict",
+    });
+
+    const explainClient = createKnowledgeClient(
+      transportReturning(
+        jsonResponse(
+          {
+            status: "error",
+            error_category: "timeout",
+            message: "Provider timed out.",
+          },
+          503,
+          false,
+        ),
+      ),
+    );
+    await expect(
+      explainClient.explain(syntheticRequest(), {
+        signal: new AbortController().signal,
+      }),
+    ).resolves.toMatchObject({
+      kind: "http-invalid",
+      reason: "http-status-contract-conflict",
+    });
+  });
+
+  it("maps fatal UTF-8 decoding to an invalid response", async () => {
+    const bytes = new Uint8Array([
+      0x7b, 0x22, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x3a,
+      0x22, 0xff, 0x22, 0x7d,
+    ]);
+    const client = createKnowledgeClient(
+      createFetchTransport(
+        vi.fn(async () => {
+          return new Response(bytes, {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }),
+      ),
+    );
+    await expect(
+      client.search(syntheticRequest(), {
+        signal: new AbortController().signal,
+      }),
+    ).resolves.toMatchObject({
+      kind: "http-invalid",
+      reason: "malformed-encoding",
+    });
+  });
+
+  it("keeps a response stream failure distinct from malformed UTF-8", async () => {
+    const failedStream = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        controller.error(new Error("PRIVATE_STREAM_FAILURE"));
+      },
+    });
+    const client = createKnowledgeClient(
+      createFetchTransport(
+        vi.fn(async () => {
+          return new Response(failedStream, {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        }),
+      ),
+    );
+    await expect(
+      client.search(syntheticRequest(), {
+        signal: new AbortController().signal,
+      }),
+    ).resolves.toMatchObject({ kind: "network-error" });
+  });
+
   it("maps transport failures to a generic network error without retrying", async () => {
     const transport: HttpTransport = {
       postJson: vi.fn(async () => {
@@ -280,14 +491,10 @@ describe("knowledge client", () => {
     expect(transport.postJson).not.toHaveBeenCalled();
   });
 
-  it("maps abort rejection to cancellation", async () => {
+  it("does not treat an unsolicited AbortError as cancellation", async () => {
     const transport: HttpTransport = {
-      postJson: vi.fn(async (_url, _body, signal) => {
-        const error = new DOMException("Aborted", "AbortError");
-        if (!signal.aborted) {
-          throw error;
-        }
-        throw error;
+      postJson: vi.fn(async () => {
+        throw new DOMException("Aborted", "AbortError");
       }),
     };
     const client = createKnowledgeClient(transport);
@@ -295,6 +502,28 @@ describe("knowledge client", () => {
       client.search(syntheticRequest(), {
         signal: new AbortController().signal,
       }),
-    ).resolves.toEqual({ kind: "aborted" });
+    ).resolves.toMatchObject({ kind: "network-error" });
+  });
+
+  it("maps an AbortError to cancellation only after its owned signal aborts", async () => {
+    const transport: HttpTransport = {
+      postJson: vi.fn(
+        async (_url, _body, signal) =>
+          await new Promise<HttpResponse>((_resolve, reject) => {
+            signal.addEventListener(
+              "abort",
+              () => reject(new DOMException("Aborted", "AbortError")),
+              { once: true },
+            );
+          }),
+      ),
+    };
+    const client = createKnowledgeClient(transport);
+    const controller = new AbortController();
+    const operation = client.search(syntheticRequest(), {
+      signal: controller.signal,
+    });
+    controller.abort();
+    await expect(operation).resolves.toEqual({ kind: "aborted" });
   });
 });

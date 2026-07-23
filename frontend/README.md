@@ -30,7 +30,7 @@ python -m uvicorn palnavi.api.main:app --reload
 ```
 
 The browser client has no configurable remote API base. Production deployments must serve the
-frontend and `/api/v1` routes behind the same origin.
+frontend and `/api/v1` routes behind the same origin. Requests explicitly omit browser credentials.
 
 ## Checks
 
@@ -55,6 +55,7 @@ The one-page workspace supports:
 - query, optional language, optional exact-version, bounded-limit, and synthetic-only controls;
 - explicit loading, empty, unsupported, backend-error, invalid-response, and network states;
 - request replacement with abort plus a latest-response-wins guard;
+- immutable display and announcement of the scope submitted with each request;
 - canonical citation details and optional sanitized token usage;
 - retrying the last request without clearing form input.
 
@@ -65,7 +66,9 @@ configured locally in the backend; the browser never asks for or stores a provid
 
 Backend answers, result text, titles, IDs, locators, and error messages are untrusted text. The UI
 does not parse Markdown or HTML, does not use `v-html`, and does not turn source locators into links.
-All locators remain inert code text.
+All locators remain inert code text. Response bodies are byte-bounded and decoded as strict UTF-8;
+malformed encoding, unexpected successful HTTP statuses, contradictory outcome fields, and results
+that violate the submitted synthetic-only or citation-limit constraints fail closed.
 
 The frontend does not access a game installation, game process, save, mod loader, or multiplayer
 session. It contains no game artwork, external fonts, analytics, trackers, or CDN runtime assets.

@@ -144,13 +144,19 @@ registered component references. FastAPI generates the interactive documentation
 
 `frontend/src/api` mirrors only the accepted public knowledge schema in TypeScript. Its replaceable
 transport is the sole `fetch` boundary, endpoints are fixed origin-relative paths, and small manual
-decoders reconstruct trusted objects without spreading unknown fields. HTTP, response-shape,
-backend, network, unsupported, and abort outcomes remain distinct.
+decoders reconstruct trusted objects without spreading unknown fields. The transport omits ambient
+browser credentials, bounds response bytes, and decodes UTF-8 in fatal mode. Successful and
+unsupported outcomes require their exact HTTP status; contradictory discriminant fields and
+outcomes that exceed the submitted synthetic-only or citation-limit scope fail closed. HTTP,
+response-shape, backend, network, unsupported, and authentically signaled abort outcomes remain
+distinct.
 
 `frontend/src/composables/useKnowledgeRequest.ts` owns one active `AbortController` and a monotonic
 request ID. A replacement request aborts the previous signal, and the ID guard prevents a transport
-that ignores cancellation from writing stale state. Components render backend strings only through
-Vue text interpolation. Source locators remain inert text, and no Markdown or raw HTML path exists.
+that ignores cancellation from writing stale state. Abort-shaped failures are cancellation only
+when that owned signal is aborted. Components render backend strings only through Vue text
+interpolation and preserve the immutable submitted request scope in visible and live status text.
+Source locators remain inert text, and no Markdown or raw HTML path exists.
 
 ## Current assumptions and boundaries
 

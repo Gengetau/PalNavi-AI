@@ -5,6 +5,11 @@ import SearchResults from "./SearchResults.vue";
 
 defineProps<{ state: ViewState }>();
 defineEmits<{ retry: [] }>();
+
+const submittedScope = (syntheticOnly: boolean): string =>
+  syntheticOnly
+    ? "Synthetic knowledge only"
+    : "Synthetic-only filter off";
 </script>
 
 <template>
@@ -13,6 +18,12 @@ defineEmits<{ retry: [] }>();
     aria-label="Knowledge response"
     :aria-busy="state.kind === 'loading'"
   >
+    <p
+      v-if="state.kind !== 'idle'"
+      class="submitted-scope"
+    >
+      Submitted scope: {{ submittedScope(state.request.synthetic_only) }}
+    </p>
     <div v-if="state.kind === 'idle'" class="state-card idle-state">
       <p class="eyebrow">SYSTEM READY</p>
       <h2>Ready to navigate</h2>
@@ -24,7 +35,9 @@ defineEmits<{ retry: [] }>();
       <h2>
         {{
           state.operation === "search"
-            ? "Searching synthetic knowledge…"
+            ? state.request.synthetic_only
+              ? "Searching synthetic knowledge…"
+              : "Searching available knowledge…"
             : "Building a grounded explanation…"
         }}
       </h2>

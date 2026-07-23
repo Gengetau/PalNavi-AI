@@ -193,7 +193,51 @@ describe("synthetic knowledge UI", () => {
     expect(cards[1]!.get(".citation-details").text()).toContain(
       "synthetic-document-beta",
     );
+    expect(wrapper.get(".submitted-scope").text()).toContain(
+      "Synthetic knowledge only",
+    );
+    expect(wrapper.get('[role="status"]').text()).toContain(
+      "Submitted scope: synthetic knowledge only",
+    );
     expect(wrapper.text()).toContain("Synthetic corpus only");
+  });
+
+  it("announces and preserves the immutable submitted mixed scope", async () => {
+    let resolveSearch!: (value: SearchCallResult) => void;
+    const pending = new Promise<SearchCallResult>((resolve) => {
+      resolveSearch = resolve;
+    });
+    const client = clientWith({
+      search: vi.fn(() => pending),
+    });
+    wrapper = mount(App, { props: { client } });
+    await enterQuestion("mixed fictional scope");
+    await wrapper.get("#synthetic-only").setValue(false);
+    await wrapper.get("form").trigger("submit");
+
+    expect(wrapper.text()).toContain("Searching available knowledge");
+    expect(wrapper.get('[role="status"]').text()).toContain(
+      "synthetic-only filter off",
+    );
+
+    resolveSearch({
+      kind: "search-success",
+      results: [],
+      message: null,
+    });
+    await flushPromises();
+    expect(wrapper.get(".submitted-scope").text()).toContain(
+      "Synthetic-only filter off",
+    );
+    expect(wrapper.get('[role="status"]').text()).toContain(
+      "Submitted scope: synthetic-only filter off",
+    );
+
+    await wrapper.get("#synthetic-only").setValue(true);
+    expect(wrapper.get('label[for="synthetic-only"]').text()).toContain("ON");
+    expect(wrapper.get(".submitted-scope").text()).toContain(
+      "Synthetic-only filter off",
+    );
   });
 
   it("renders explanation and hostile-looking backend values as inert text", async () => {
@@ -279,6 +323,9 @@ describe("synthetic knowledge UI", () => {
     await wrapper.get("button[type=button]").trigger("click");
     await flushPromises();
     expect(wrapper.text()).toContain(copy);
+    expect(wrapper.get(".submitted-scope").text()).toContain(
+      "Synthetic knowledge only",
+    );
     expect(wrapper.find('[role="alert"]').exists()).toBe(alert);
   });
 

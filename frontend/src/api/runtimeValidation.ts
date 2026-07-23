@@ -17,6 +17,8 @@ type UnknownRecord = Record<string, unknown>;
 
 const own = (value: UnknownRecord, key: string): boolean =>
   Object.prototype.hasOwnProperty.call(value, key);
+const ownsAny = (value: UnknownRecord, keys: readonly string[]): boolean =>
+  keys.some((key) => own(value, key));
 
 const isRecord = (value: unknown): value is UnknownRecord =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -174,6 +176,9 @@ export function decodeSearchResponse(
   if (!Array.isArray(value.results)) {
     return fail("search response results must be an array");
   }
+  if (ownsAny(value, ["answer", "citations", "usage"])) {
+    return fail("search response contains contradictory outcome fields");
+  }
   if (value.results.length > 20) {
     return fail("search response contains too many results");
   }
@@ -270,6 +275,9 @@ export function decodeExplainResponse(
     return fail("explanation response is invalid");
   }
   if (value.status === "success") {
+    if (ownsAny(value, ["message", "error_category", "results"])) {
+      return fail("explanation success contains contradictory outcome fields");
+    }
     const answer = stringValue(value, "answer");
     if (
       answer === null ||
@@ -293,15 +301,14 @@ export function decodeExplainResponse(
     if (allowedMarkers.size !== citations.length) {
       return fail("explanation citations must use unique markers");
     }
-    const kLikeMarkers = answer.match(/\[K[^\]\r\n]*\]/g) ?? [];
+    const canonicalMarkers = answer.match(/\[K[1-9]\d*\]/g) ?? [];
+    const residualMarkerText = answer.replace(/\[K[1-9]\d*\]/g, "");
     const normalizedParagraphs = answer
       .replaceAll("\r\n", "\n")
       .replace(/[\r\u2028\u2029]/g, "\n\n");
     if (
-      kLikeMarkers.some(
-        (marker) =>
-          !/^\[K[1-9]\d*\]$/.test(marker) || !allowedMarkers.has(marker),
-      ) ||
+      /\[[Kk]/.test(residualMarkerText) ||
+      canonicalMarkers.some((marker) => !allowedMarkers.has(marker)) ||
       citations.some((item) => !answer.includes(item.marker)) ||
       normalizedParagraphs
         .split(/\r?\n\s*\r?\n/)
@@ -327,12 +334,18 @@ export function decodeExplainResponse(
     });
   }
   if (value.status === "unsupported") {
+    if (ownsAny(value, ["answer", "citations", "usage", "error_category", "results"])) {
+      return fail("unsupported response contains contradictory outcome fields");
+    }
     const message = stringValue(value, "message");
     return message === null
       ? fail("unsupported response message is invalid")
       : pass({ status: "unsupported", message });
   }
   if (value.status === "error") {
+    if (ownsAny(value, ["answer", "citations", "usage", "results"])) {
+      return fail("explanation error contains contradictory outcome fields");
+    }
     const message = stringValue(value, "message");
     const category = value.error_category;
     if (

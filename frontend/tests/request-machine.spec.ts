@@ -209,7 +209,7 @@ describe("knowledge request state machine", () => {
     expect(machine.state.value).toBe(newestState);
   });
 
-  it("restores the previous stable state for a current cancellation", async () => {
+  it("maps an unsolicited current aborted result to a network failure", async () => {
     const client: KnowledgeClient = {
       search: vi.fn(
         async (): Promise<SearchCallResult> => ({ kind: "aborted" }),
@@ -223,13 +223,15 @@ describe("knowledge request state machine", () => {
     };
     const machine = useKnowledgeRequest(client);
     await machine.run("explain", syntheticRequest({ query: "settled query" }));
-    const settledState = machine.state.value;
-    expect(settledState).toMatchObject({
+    expect(machine.state.value).toMatchObject({
       kind: "unsupported",
       message: "unused",
     });
     await machine.run("search", syntheticRequest());
-    expect(machine.state.value).toBe(settledState);
+    expect(machine.state.value).toMatchObject({
+      kind: "network-error",
+      requestId: 2,
+    });
   });
 
   it("does not resurrect a pending predecessor when the current request cancels", async () => {
@@ -260,7 +262,11 @@ describe("knowledge request state machine", () => {
       syntheticRequest({ query: "pending predecessor" }),
     );
     await machine.run("explain", syntheticRequest({ query: "new query" }));
-    expect(machine.state.value).toBe(settledState);
+    expect(machine.state.value).toMatchObject({
+      kind: "network-error",
+      requestId: 3,
+    });
+    const cancellationFailure = machine.state.value;
 
     predecessor.resolve({
       kind: "search-success",
@@ -268,7 +274,7 @@ describe("knowledge request state machine", () => {
       message: null,
     });
     await oldRun;
-    expect(machine.state.value).toBe(settledState);
+    expect(machine.state.value).toBe(cancellationFailure);
   });
 
   it("maps an unexpected current client rejection to a generic network failure", async () => {

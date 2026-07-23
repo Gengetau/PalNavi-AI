@@ -86,7 +86,18 @@ export function useKnowledgeRequest(
         return;
       }
       if (result.kind === "aborted") {
-        state.value = lastSettledState;
+        if (controller.signal.aborted) {
+          state.value = lastSettledState;
+          return;
+        }
+        const nextState: ViewState = {
+          ...context,
+          kind: "network-error",
+          message:
+            "The knowledge service could not be reached. Check your connection and try again.",
+        };
+        state.value = nextState;
+        lastSettledState = nextState;
         return;
       }
       let nextState: ViewState;

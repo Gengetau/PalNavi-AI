@@ -14,25 +14,34 @@ import { useKnowledgeRequest } from "./composables/useKnowledgeRequest";
 const props = defineProps<{ client?: KnowledgeClient }>();
 const controller = useKnowledgeRequest(props.client ?? createKnowledgeClient());
 
+const announcedScope = (syntheticOnly: boolean): string =>
+  syntheticOnly
+    ? "Submitted scope: synthetic knowledge only."
+    : "Submitted scope: synthetic-only filter off.";
+
 const announcement = computed(() => {
   const state = controller.state.value;
+  if (state.kind === "idle") {
+    return "Knowledge navigator ready.";
+  }
+  const scope = announcedScope(state.request.synthetic_only);
   switch (state.kind) {
-    case "idle":
-      return "Knowledge navigator ready.";
     case "loading":
-      return state.operation === "search"
-        ? "Searching synthetic knowledge."
-        : "Building a grounded explanation.";
+      return `${state.operation === "search"
+        ? state.request.synthetic_only
+          ? "Searching synthetic knowledge."
+          : "Searching available knowledge with the synthetic-only filter off."
+        : "Building a grounded explanation."} ${scope}`;
     case "search-success":
-      return `${state.results.length} knowledge results loaded.`;
+      return `${state.results.length} knowledge results loaded. ${scope}`;
     case "explain-success":
-      return `Grounded explanation loaded with ${state.citations.length} citations.`;
+      return `Grounded explanation loaded with ${state.citations.length} citations. ${scope}`;
     case "unsupported":
-      return "Grounded explanation is unavailable for this query.";
+      return `Grounded explanation is unavailable for this query. ${scope}`;
     case "backend-error":
     case "http-invalid":
     case "network-error":
-      return "";
+      return scope;
   }
 });
 

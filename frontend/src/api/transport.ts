@@ -5,6 +5,7 @@ export interface HttpResponse {
   contentType: string | null;
   bodyText: string;
   bodyTooLarge: boolean;
+  bodyEncodingInvalid: boolean;
 }
 
 export interface HttpTransport {
@@ -29,7 +30,7 @@ export function createFetchTransport(
         },
         body: JSON.stringify(body),
         signal,
-        credentials: "same-origin",
+        credentials: "omit",
         mode: "same-origin",
         redirect: "error",
         cache: "no-store",
@@ -42,6 +43,7 @@ export function createFetchTransport(
         contentType: response.headers.get("content-type"),
         bodyText: responseBody.text,
         bodyTooLarge: responseBody.tooLarge,
+        bodyEncodingInvalid: responseBody.encodingInvalid,
       };
     },
   };
@@ -51,7 +53,7 @@ export const MAX_RESPONSE_BYTES = 1_048_576;
 
 async function readBoundedBody(
   response: Response,
-): Promise<{ text: string; tooLarge: boolean }> {
+): Promise<{ text: string; tooLarge: boolean; encodingInvalid: boolean }> {
   const declaredLength = response.headers.get("content-length");
   if (
     declaredLength !== null &&
@@ -59,27 +61,41 @@ async function readBoundedBody(
     Number(declaredLength) > MAX_RESPONSE_BYTES
   ) {
     await response.body?.cancel();
-    return { text: "", tooLarge: true };
+    return { text: "", tooLarge: true, encodingInvalid: false };
   }
   if (response.body === null) {
-    return { text: "", tooLarge: false };
+    return { text: "", tooLarge: false, encodingInvalid: false };
   }
 
   const reader = response.body.getReader();
-  const decoder = new TextDecoder();
+  const decoder = new TextDecoder("utf-8", { fatal: true });
   const parts: string[] = [];
   let received = 0;
   while (true) {
     const chunk = await reader.read();
     if (chunk.done) {
-      parts.push(decoder.decode());
-      return { text: parts.join(""), tooLarge: false };
+      try {
+        parts.push(decoder.decode());
+        return {
+          text: parts.join(""),
+          tooLarge: false,
+          encodingInvalid: false,
+        };
+      } catch {
+        await reader.cancel().catch(() => undefined);
+        return { text: "", tooLarge: false, encodingInvalid: true };
+      }
     }
     received += chunk.value.byteLength;
     if (received > MAX_RESPONSE_BYTES) {
       await reader.cancel();
-      return { text: "", tooLarge: true };
+      return { text: "", tooLarge: true, encodingInvalid: false };
     }
-    parts.push(decoder.decode(chunk.value, { stream: true }));
+    try {
+      parts.push(decoder.decode(chunk.value, { stream: true }));
+    } catch {
+      await reader.cancel().catch(() => undefined);
+      return { text: "", tooLarge: false, encodingInvalid: true };
+    }
   }
 }

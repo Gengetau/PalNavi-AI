@@ -5,6 +5,7 @@ import {
   type KnowledgeFormModel,
   validateAndBuildRequest,
 } from "../src/form/knowledgeRequest";
+import goldenContracts from "./golden/knowledge-contracts.json";
 
 const valid = (
   overrides: Partial<KnowledgeFormModel> = {},
@@ -121,6 +122,25 @@ describe("knowledge request validation", () => {
         limit: 20,
       },
     });
+  });
+
+  it("normalizes and serializes the exact backend-owned golden request", () => {
+    const result = validateAndBuildRequest(
+      valid({
+        query: "fictional signal route",
+        language: "en-US",
+        exactGameVersion: "synthetic-0.0.0",
+        syntheticOnly: true,
+        limit: "3",
+      }),
+    );
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.request).toEqual(goldenContracts.request);
+      expect(JSON.parse(JSON.stringify(result.request))).toEqual(
+        goldenContracts.request,
+      );
+    }
   });
 
   it("reports every invalid field together", () => {

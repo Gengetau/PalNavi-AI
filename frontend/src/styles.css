@@ -334,6 +334,15 @@ legend {
   padding: clamp(1rem, 3vw, 2.5rem);
 }
 
+.submitted-scope {
+  margin: 0 0 1rem;
+  color: var(--signal);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .state-card {
   display: grid;
   align-content: center;

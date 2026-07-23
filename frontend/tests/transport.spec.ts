@@ -33,7 +33,7 @@ describe("fetch transport", () => {
         },
         body: JSON.stringify(request),
         signal: controller.signal,
-        credentials: "same-origin",
+        credentials: "omit",
         mode: "same-origin",
         redirect: "error",
         cache: "no-store",
@@ -46,6 +46,7 @@ describe("fetch transport", () => {
       contentType: "application/json; charset=utf-8",
       bodyText: '{"status":"success","results":[]}',
       bodyTooLarge: false,
+      bodyEncodingInvalid: false,
     });
   });
 

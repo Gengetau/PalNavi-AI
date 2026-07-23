@@ -1,9 +1,11 @@
 import type {
   BackendFailure,
+  ExplainErrorCategory,
   ExplainCallResult,
   HttpInvalidFailure,
   KnowledgeClient,
   KnowledgeRequest,
+  SearchErrorCategory,
   SearchCallResult,
 } from "./contract";
 import {
@@ -26,18 +28,27 @@ const INVALID_MESSAGE =
 const BACKEND_MESSAGE = "The knowledge service reported an error.";
 const UNSUPPORTED_MESSAGE =
   "A grounded explanation is not supported for this query.";
+const SEARCH_ERROR_STATUSES: Record<SearchErrorCategory, readonly number[]> = {
+  request_invalid: [422],
+  repository_unavailable: [503],
+  repository_invalid_state: [503],
+};
+const EXPLAIN_ERROR_STATUSES: Record<ExplainErrorCategory, readonly number[]> = {
+  request_invalid: [422, 502],
+  repository_unavailable: [503],
+  repository_invalid_state: [503],
+  configuration_invalid: [503],
+  authentication_rejected: [502],
+  rate_limited: [503],
+  timeout: [504],
+  provider_unavailable: [503],
+  malformed_response: [502],
+  unknown_provider: [503],
+  invalid_grounded_output: [502],
+};
 
-function aborted(error: unknown, signal: AbortSignal): boolean {
-  return (
-    signal.aborted ||
-    (typeof DOMException !== "undefined" &&
-      error instanceof DOMException &&
-      error.name === "AbortError") ||
-    (typeof error === "object" &&
-      error !== null &&
-      "name" in error &&
-      error.name === "AbortError")
-  );
+function aborted(_error: unknown, signal: AbortSignal): boolean {
+  return signal.aborted;
 }
 
 function parseBody(response: HttpResponse):
@@ -49,6 +60,17 @@ function parseBody(response: HttpResponse):
       failure: {
         kind: "http-invalid",
         reason: "response-too-large",
+        httpStatus: response.status,
+        message: INVALID_MESSAGE,
+      },
+    };
+  }
+  if (response.bodyEncodingInvalid) {
+    return {
+      ok: false,
+      failure: {
+        kind: "http-invalid",
+        reason: "malformed-encoding",
         httpStatus: response.status,
         message: INVALID_MESSAGE,
       },
@@ -159,6 +181,14 @@ export function createKnowledgeClient(
       if (operation.kind !== "response") {
         return operation;
       }
+      if (operation.response.ok && operation.response.status !== 200) {
+        return {
+          kind: "http-invalid",
+          reason: "http-status-contract-conflict",
+          httpStatus: operation.response.status,
+          message: INVALID_MESSAGE,
+        };
+      }
       const parsed = parseBody(operation.response);
       if (!parsed.ok) {
         return parsed.failure;
@@ -166,6 +196,18 @@ export function createKnowledgeClient(
       const decoded = decodeSearchResponse(parsed.value);
       if (!operation.response.ok) {
         if (decoded.ok && decoded.value.status === "error") {
+          if (
+            !SEARCH_ERROR_STATUSES[decoded.value.error_category].includes(
+              operation.response.status,
+            )
+          ) {
+            return {
+              kind: "http-invalid",
+              reason: "http-status-contract-conflict",
+              httpStatus: operation.response.status,
+              message: INVALID_MESSAGE,
+            };
+          }
           return backendFailure(
             decoded.value.error_category,
             decoded.value.message,
@@ -190,31 +232,52 @@ export function createKnowledgeClient(
           message: INVALID_MESSAGE,
         };
       }
-      if (decoded.value.status === "success" && decoded.value.results.length > request.limit) {
+      if (
+        decoded.value.status === "success" &&
+        (operation.response.status !== 200 ||
+          decoded.value.results.length > request.limit ||
+          (request.synthetic_only &&
+            decoded.value.results.some(
+              (item) => item.classification !== "synthetic",
+            )))
+      ) {
         return {
           kind: "http-invalid",
-          reason: "response-shape",
+          reason:
+            operation.response.status === 200
+              ? "response-shape"
+              : "http-status-contract-conflict",
           httpStatus: operation.response.status,
           message: INVALID_MESSAGE,
         };
       }
-      return decoded.value.status === "error"
-        ? backendFailure(
-            decoded.value.error_category,
-            decoded.value.message,
-            operation.response.status,
-          )
-        : {
-            kind: "search-success",
-            results: decoded.value.results,
-            message: decoded.value.message ?? null,
-          };
+      if (decoded.value.status === "error") {
+        return {
+          kind: "http-invalid",
+          reason: "http-status-contract-conflict",
+          httpStatus: operation.response.status,
+          message: INVALID_MESSAGE,
+        };
+      }
+      return {
+        kind: "search-success",
+        results: decoded.value.results,
+        message: decoded.value.message ?? null,
+      };
     },
 
     async explain(request, { signal }): Promise<ExplainCallResult> {
       const operation = await post(transport, EXPLAIN_URL, request, signal);
       if (operation.kind !== "response") {
         return operation;
+      }
+      if (operation.response.ok && operation.response.status !== 200) {
+        return {
+          kind: "http-invalid",
+          reason: "http-status-contract-conflict",
+          httpStatus: operation.response.status,
+          message: INVALID_MESSAGE,
+        };
       }
       const parsed = parseBody(operation.response);
       if (!parsed.ok) {
@@ -223,6 +286,18 @@ export function createKnowledgeClient(
       const decoded = decodeExplainResponse(parsed.value);
       if (!operation.response.ok) {
         if (decoded.ok && decoded.value.status === "error") {
+          if (
+            !EXPLAIN_ERROR_STATUSES[decoded.value.error_category].includes(
+              operation.response.status,
+            )
+          ) {
+            return {
+              kind: "http-invalid",
+              reason: "http-status-contract-conflict",
+              httpStatus: operation.response.status,
+              message: INVALID_MESSAGE,
+            };
+          }
           return backendFailure(
             decoded.value.error_category,
             decoded.value.message,
@@ -247,12 +322,24 @@ export function createKnowledgeClient(
           message: INVALID_MESSAGE,
         };
       }
+      if (
+        decoded.value.status !== "error" &&
+        operation.response.status !== 200
+      ) {
+        return {
+          kind: "http-invalid",
+          reason: "http-status-contract-conflict",
+          httpStatus: operation.response.status,
+          message: INVALID_MESSAGE,
+        };
+      }
       if (decoded.value.status === "error") {
-        return backendFailure(
-          decoded.value.error_category,
-          decoded.value.message,
-          operation.response.status,
-        );
+        return {
+          kind: "http-invalid",
+          reason: "http-status-contract-conflict",
+          httpStatus: operation.response.status,
+          message: INVALID_MESSAGE,
+        };
       }
       if (decoded.value.status === "unsupported") {
         return {
@@ -260,6 +347,14 @@ export function createKnowledgeClient(
           message: decoded.value.message.trim()
             ? decoded.value.message
             : UNSUPPORTED_MESSAGE,
+        };
+      }
+      if (decoded.value.citations.length > Math.min(request.limit, 5)) {
+        return {
+          kind: "http-invalid",
+          reason: "response-shape",
+          httpStatus: operation.response.status,
+          message: INVALID_MESSAGE,
         };
       }
       return {

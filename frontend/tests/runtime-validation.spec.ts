@@ -49,6 +49,30 @@ describe("search response decoder", () => {
   });
 
   it.each([
+    {
+      status: "success",
+      results: [],
+      error_category: "repository_unavailable",
+      message: null,
+    },
+    {
+      status: "success",
+      results: [],
+      error_category: null,
+      message: "Contradictory error message.",
+    },
+    {
+      status: "error",
+      results: [],
+      error_category: "repository_unavailable",
+      message: "Controlled error.",
+      answer: "Contradictory explanation.",
+    },
+  ])("rejects contradictory search outcome fields", (candidate) => {
+    expect(decodeSearchResponse(candidate).ok).toBe(false);
+  });
+
+  it.each([
     { status: "success" },
     { status: "unknown", results: [] },
     { status: "success", results: [{ ...syntheticSearchItem(), score: NaN }] },
@@ -135,6 +159,28 @@ describe("explanation response decoder", () => {
     }
   });
 
+  it.each([
+    {
+      status: "success",
+      answer: "Synthetic answer. [K1]",
+      citations: [syntheticExplainCitation()],
+      error_category: "invalid_grounded_output",
+    },
+    {
+      status: "unsupported",
+      message: "No evidence.",
+      citations: [syntheticExplainCitation()],
+    },
+    {
+      status: "error",
+      error_category: "provider_unavailable",
+      message: "Controlled error.",
+      answer: "Contradictory answer. [K1]",
+    },
+  ])("rejects contradictory explanation outcome fields", (candidate) => {
+    expect(decodeExplainResponse(candidate).ok).toBe(false);
+  });
+
   it.each(["K1", "[K0]", "[K01]", "[K-1]", "[X1]"])(
     "rejects malformed marker %s",
     (marker) => {
@@ -168,6 +214,22 @@ describe("explanation response decoder", () => {
         status: "success",
         answer: "Synthetic answer. [K2]",
         citations: [syntheticExplainCitation("[K1]")],
+      }).ok,
+    ).toBe(false);
+  });
+
+  it.each([
+    "Supported claim. [K1] trailing [K999",
+    "Supported claim. [K1] trailing [k2]",
+    "Supported claim. [K1] trailing [K+2]",
+    "Supported claim. [K1] trailing [K02]",
+    "Supported claim. [K1] trailing [K2]",
+  ])("rejects incomplete, malformed, or unknown marker text", (answer) => {
+    expect(
+      decodeExplainResponse({
+        status: "success",
+        answer,
+        citations: [syntheticExplainCitation()],
       }).ok,
     ).toBe(false);
   });
