@@ -6,7 +6,7 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import datetime
-from pathlib import Path, PurePosixPath
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 from palnavi.domain.knowledge import (
     KnowledgeClassification,
@@ -31,8 +31,9 @@ class LocalSyntheticKnowledgeCorpus:
 
     def load(self) -> tuple[KnowledgeImportOutcome, ...]:
         try:
-            manifest = json.loads((self.root / "manifest.json").read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            resolved_root = self.root.resolve(strict=True)
+            manifest = json.loads((resolved_root / "manifest.json").read_text(encoding="utf-8"))
+        except (OSError, RuntimeError, ValueError):
             return (_manifest_failure("synthetic knowledge manifest is unreadable or malformed"),)
         if not isinstance(manifest, Mapping):
             return (_manifest_failure("synthetic knowledge manifest must be an object"),)
@@ -48,7 +49,7 @@ class LocalSyntheticKnowledgeCorpus:
 
         outcomes: list[KnowledgeImportOutcome] = []
         for index, record in enumerate(records):
-            source = self._source_from_record(record)
+            source = self._source_from_record(record, resolved_root)
             if source is None:
                 outcomes.append(
                     _manifest_failure(f"synthetic knowledge document {index} is malformed")
@@ -57,19 +58,40 @@ class LocalSyntheticKnowledgeCorpus:
                 outcomes.append(self.importer.import_document(source))
         return tuple(outcomes)
 
-    def _source_from_record(self, record: object) -> KnowledgeDocumentInput | None:
+    def _source_from_record(
+        self,
+        record: object,
+        resolved_root: Path,
+    ) -> KnowledgeDocumentInput | None:
         if not isinstance(record, Mapping):
             return None
         try:
-            content_file = str(record["content_file"])
+            content_file = record["content_file"]
+            if (
+                not isinstance(content_file, str)
+                or not content_file.strip()
+                or "\\" in content_file
+            ):
+                return None
+
             relative = PurePosixPath(content_file)
+            windows_path = PureWindowsPath(content_file)
+            components = content_file.split("/")
             if (
                 relative.is_absolute()
-                or ".." in relative.parts
+                or windows_path.drive
+                or windows_path.root
+                or any(PureWindowsPath(component).anchor for component in components)
+                or any(component in {".", ".."} for component in components)
                 or relative.suffix.lower() not in {".md", ".txt"}
             ):
                 return None
-            content = (self.root / Path(*relative.parts)).read_text(encoding="utf-8")
+
+            candidate = resolved_root.joinpath(*relative.parts).resolve(strict=True)
+            if not _is_path_within_resolved_root(candidate, resolved_root):
+                return None
+            content = candidate.read_text(encoding="utf-8")
+
             provenance = record["provenance"]
             version_scope = record["game_version_scope"]
             if not isinstance(provenance, Mapping) or not isinstance(version_scope, Mapping):
@@ -100,8 +122,12 @@ class LocalSyntheticKnowledgeCorpus:
                 content=content,
                 declared_content_sha256=str(record["content_sha256"]),
             )
-        except (KeyError, OSError, TypeError, ValueError):
+        except (KeyError, OSError, RuntimeError, TypeError, ValueError):
             return None
+
+
+def _is_path_within_resolved_root(candidate: Path, resolved_root: Path) -> bool:
+    return candidate.is_relative_to(resolved_root)
 
 
 def default_synthetic_knowledge_root() -> Path:
