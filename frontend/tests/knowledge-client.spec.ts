@@ -368,7 +368,7 @@ describe("knowledge client", () => {
     },
   );
 
-  it("rejects a structured error at the wrong HTTP status", async () => {
+  it("preserves structured backend errors across non-success statuses", async () => {
     const searchClient = createKnowledgeClient(
       transportReturning(
         jsonResponse(
@@ -378,7 +378,7 @@ describe("knowledge client", () => {
             error_category: "repository_unavailable",
             message: "Repository unavailable.",
           },
-          422,
+          502,
           false,
         ),
       ),
@@ -387,9 +387,11 @@ describe("knowledge client", () => {
       searchClient.search(syntheticRequest(), {
         signal: new AbortController().signal,
       }),
-    ).resolves.toMatchObject({
-      kind: "http-invalid",
-      reason: "http-status-contract-conflict",
+    ).resolves.toEqual({
+      kind: "backend-error",
+      errorCategory: "repository_unavailable",
+      message: "Repository unavailable.",
+      httpStatus: 502,
     });
 
     const explainClient = createKnowledgeClient(
@@ -400,7 +402,7 @@ describe("knowledge client", () => {
             error_category: "timeout",
             message: "Provider timed out.",
           },
-          503,
+          429,
           false,
         ),
       ),
@@ -409,9 +411,11 @@ describe("knowledge client", () => {
       explainClient.explain(syntheticRequest(), {
         signal: new AbortController().signal,
       }),
-    ).resolves.toMatchObject({
-      kind: "http-invalid",
-      reason: "http-status-contract-conflict",
+    ).resolves.toEqual({
+      kind: "backend-error",
+      errorCategory: "timeout",
+      message: "Provider timed out.",
+      httpStatus: 429,
     });
   });
 
