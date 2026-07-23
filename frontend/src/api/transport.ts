@@ -80,7 +80,7 @@ async function readBoundedBody(
     /^\d+$/.test(declaredLength) &&
     Number(declaredLength) > MAX_RESPONSE_BYTES
   ) {
-    await response.body?.cancel();
+    cancelBodyWithoutWaiting(response);
     return { text: "", tooLarge: true, encodingInvalid: false };
   }
   if (response.body === null) {
@@ -102,20 +102,30 @@ async function readBoundedBody(
           encodingInvalid: false,
         };
       } catch {
-        await reader.cancel().catch(() => undefined);
+        cancelReaderWithoutWaiting(reader);
         return { text: "", tooLarge: false, encodingInvalid: true };
       }
     }
     received += chunk.value.byteLength;
     if (received > MAX_RESPONSE_BYTES) {
-      await reader.cancel();
+      cancelReaderWithoutWaiting(reader);
       return { text: "", tooLarge: true, encodingInvalid: false };
     }
     try {
       parts.push(decoder.decode(chunk.value, { stream: true }));
     } catch {
-      await reader.cancel().catch(() => undefined);
+      cancelReaderWithoutWaiting(reader);
       return { text: "", tooLarge: false, encodingInvalid: true };
     }
+  }
+}
+
+function cancelReaderWithoutWaiting(
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+): void {
+  try {
+    void reader.cancel().catch(() => undefined);
+  } catch {
+    // Invalid-response classification must not wait on untrusted cleanup.
   }
 }

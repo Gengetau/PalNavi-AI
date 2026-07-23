@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { createFetchTransport } from "../src/api/transport";
+import {
+  createFetchTransport,
+  MAX_RESPONSE_BYTES,
+} from "../src/api/transport";
 import { syntheticRequest } from "./fixtures";
 
 describe("fetch transport", () => {
@@ -93,5 +96,95 @@ describe("fetch transport", () => {
     );
     expect(response.bodyTooLarge).toBe(true);
     expect(response.bodyText).toBe("");
+  });
+
+  it("does not let rejected cleanup mask a declared oversized response", async () => {
+    const body = new ReadableStream<Uint8Array>({
+      cancel() {
+        return Promise.reject(new Error("PRIVATE_CANCEL_FAILURE"));
+      },
+    });
+    const transport = createFetchTransport(
+      vi.fn(async () => {
+        return new Response(body, {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Content-Length": String(MAX_RESPONSE_BYTES + 1),
+          },
+        });
+      }),
+    );
+
+    await expect(
+      transport.postJson(
+        "/api/v1/knowledge/search",
+        syntheticRequest(),
+        new AbortController().signal,
+      ),
+    ).resolves.toMatchObject({
+      bodyTooLarge: true,
+      bodyText: "",
+    });
+  });
+
+  it("does not let rejected cleanup mask a streamed oversized response", async () => {
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new Uint8Array(MAX_RESPONSE_BYTES + 1));
+      },
+      cancel() {
+        return Promise.reject(new Error("PRIVATE_CANCEL_FAILURE"));
+      },
+    });
+    const transport = createFetchTransport(
+      vi.fn(async () => {
+        return new Response(body, {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }),
+    );
+
+    await expect(
+      transport.postJson(
+        "/api/v1/knowledge/search",
+        syntheticRequest(),
+        new AbortController().signal,
+      ),
+    ).resolves.toMatchObject({
+      bodyTooLarge: true,
+      bodyText: "",
+    });
+  });
+
+  it("does not wait for cleanup after fatal UTF-8 decoding fails", async () => {
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(new Uint8Array([0x7b, 0x22, 0xff]));
+      },
+      cancel() {
+        return new Promise<void>(() => undefined);
+      },
+    });
+    const transport = createFetchTransport(
+      vi.fn(async () => {
+        return new Response(body, {
+          status: 200,
+          headers: { "Content-Type": "application/json" },
+        });
+      }),
+    );
+
+    await expect(
+      transport.postJson(
+        "/api/v1/knowledge/search",
+        syntheticRequest(),
+        new AbortController().signal,
+      ),
+    ).resolves.toMatchObject({
+      bodyEncodingInvalid: true,
+      bodyText: "",
+    });
   });
 });
