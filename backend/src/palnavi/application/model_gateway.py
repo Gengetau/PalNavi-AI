@@ -101,6 +101,16 @@ class ModelGateway(Protocol):
     async def generate(self, request: ModelRequest) -> ModelResponse: ...
 
 
+class ModelGeneration(Protocol):
+    async def generate(
+        self,
+        messages: tuple[ModelMessage, ...],
+        *,
+        temperature: float | None = None,
+        max_output_tokens: int | None = None,
+    ) -> ModelResponse: ...
+
+
 @dataclass(frozen=True, slots=True)
 class ModelGenerationService:
     gateway: ModelGateway

@@ -3,9 +3,11 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response, status
+from fastapi.responses import JSONResponse
 
 from palnavi.api.dependencies import (
     get_breeding_planning_service,
+    get_knowledge_explanation_service,
     get_knowledge_retrieval_service,
 )
 from palnavi.api.schemas import (
@@ -13,6 +15,13 @@ from palnavi.api.schemas import (
     GameVersionScopeResponse,
     HealthResponse,
     KnowledgeCitationResponse,
+    KnowledgeExplanationCitationResponse,
+    KnowledgeExplanationErrorCategory,
+    KnowledgeExplanationErrorResponse,
+    KnowledgeExplanationRequestBody,
+    KnowledgeExplanationSuccessResponse,
+    KnowledgeExplanationTokenUsageResponse,
+    KnowledgeExplanationUnsupportedResponse,
     KnowledgeSearchItemResponse,
     KnowledgeSearchRequestBody,
     KnowledgeSearchResponse,
@@ -26,7 +35,15 @@ from palnavi.api.schemas import (
 )
 from palnavi.application import (
     BreedingPlanningService,
+    KnowledgeExplanationInvalidOutputFailure,
+    KnowledgeExplanationModelFailure,
+    KnowledgeExplanationRequest,
+    KnowledgeExplanationRetrievalFailure,
+    KnowledgeExplanationService,
+    KnowledgeExplanationSuccess,
+    KnowledgeExplanationUnsupported,
     KnowledgeRetrievalService,
+    ModelErrorCategory,
     PlanningFailure,
     PlanningFailureKind,
     PlanningSuccess,
@@ -44,11 +61,79 @@ from palnavi.domain.data import BreedingDatasetSnapshot, DatasetValidationIssue
 from palnavi.domain.knowledge import (
     KnowledgeQuery,
     KnowledgeRepositoryFailure,
+    KnowledgeRepositoryFailureKind,
     KnowledgeSearchSuccess,
     LanguageIdentifier,
 )
 
 router = APIRouter()
+
+_RETRIEVAL_FAILURE_RESPONSES: dict[
+    KnowledgeRepositoryFailureKind,
+    tuple[int, KnowledgeExplanationErrorCategory, str],
+] = {
+    KnowledgeRepositoryFailureKind.UNAVAILABLE: (
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "repository_unavailable",
+        "Knowledge retrieval is unavailable.",
+    ),
+    KnowledgeRepositoryFailureKind.INVALID_STATE: (
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "repository_invalid_state",
+        "Knowledge retrieval could not use the repository state.",
+    ),
+}
+
+_MODEL_FAILURE_RESPONSES: dict[
+    ModelErrorCategory,
+    tuple[int, KnowledgeExplanationErrorCategory, str],
+] = {
+    ModelErrorCategory.CONFIGURATION_INVALID: (
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "configuration_invalid",
+        "Model generation is not configured.",
+    ),
+    ModelErrorCategory.AUTHENTICATION_REJECTED: (
+        status.HTTP_502_BAD_GATEWAY,
+        "authentication_rejected",
+        "Model authentication was rejected.",
+    ),
+    ModelErrorCategory.RATE_LIMITED: (
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "rate_limited",
+        "Model generation is temporarily rate limited.",
+    ),
+    ModelErrorCategory.REQUEST_INVALID: (
+        status.HTTP_502_BAD_GATEWAY,
+        "request_invalid",
+        "The model request was rejected.",
+    ),
+    ModelErrorCategory.TIMEOUT: (
+        status.HTTP_504_GATEWAY_TIMEOUT,
+        "timeout",
+        "Model generation timed out.",
+    ),
+    ModelErrorCategory.PROVIDER_UNAVAILABLE: (
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "provider_unavailable",
+        "The model provider is unavailable.",
+    ),
+    ModelErrorCategory.MALFORMED_RESPONSE: (
+        status.HTTP_502_BAD_GATEWAY,
+        "malformed_response",
+        "The model provider returned an unusable response.",
+    ),
+    ModelErrorCategory.UNKNOWN_PROVIDER: (
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "unknown_provider",
+        "The configured model provider is unsupported.",
+    ),
+}
+
+_INVALID_GROUNDED_OUTPUT_MESSAGE = (
+    "The model response could not be safely grounded in retrieved evidence."
+)
+_UNSUPPORTED_EXPLANATION_MESSAGE = "No usable knowledge evidence was found."
 
 
 @router.get("/health", response_model=HealthResponse)
@@ -127,6 +212,121 @@ def search_knowledge(
             )
             for item in outcome.results
         ],
+    )
+
+
+@router.post(
+    "/api/v1/knowledge/explain",
+    response_model=(KnowledgeExplanationSuccessResponse | KnowledgeExplanationUnsupportedResponse),
+    responses={
+        422: {
+            "model": (KnowledgeExplanationErrorResponse | RequestValidationErrorResponse),
+            "description": (
+                "Knowledge explanation application validation error or FastAPI "
+                "request-body validation error"
+            ),
+        },
+        502: {
+            "model": KnowledgeExplanationErrorResponse,
+            "description": "Model provider or grounded-output failure",
+        },
+        503: {
+            "model": KnowledgeExplanationErrorResponse,
+            "description": "Knowledge retrieval or model availability failure",
+        },
+        504: {
+            "model": KnowledgeExplanationErrorResponse,
+            "description": "Model provider timeout",
+        },
+    },
+)
+async def explain_knowledge(
+    body: KnowledgeExplanationRequestBody,
+    service: Annotated[
+        KnowledgeExplanationService,
+        Depends(get_knowledge_explanation_service),
+    ],
+) -> KnowledgeExplanationSuccessResponse | KnowledgeExplanationUnsupportedResponse | JSONResponse:
+    try:
+        query = KnowledgeQuery(
+            text=body.query,
+            language=(LanguageIdentifier(body.language) if body.language is not None else None),
+            exact_game_version=body.exact_game_version,
+            synthetic_only=body.synthetic_only,
+            limit=body.limit,
+        )
+    except ValueError:
+        return _knowledge_explanation_error_response(
+            status.HTTP_422_UNPROCESSABLE_CONTENT,
+            "request_invalid",
+            "Knowledge explanation request is invalid.",
+        )
+
+    outcome = await service.explain(KnowledgeExplanationRequest(query))
+    if isinstance(outcome, KnowledgeExplanationSuccess):
+        usage = (
+            KnowledgeExplanationTokenUsageResponse(
+                input_tokens=outcome.usage.input_tokens,
+                output_tokens=outcome.usage.output_tokens,
+                total_tokens=outcome.usage.total_tokens,
+            )
+            if outcome.usage is not None
+            else None
+        )
+        return KnowledgeExplanationSuccessResponse(
+            status="success",
+            answer=outcome.answer,
+            citations=[
+                KnowledgeExplanationCitationResponse(
+                    marker=item.marker,
+                    citation=KnowledgeCitationResponse(
+                        document_id=item.citation.document_id.value,
+                        chunk_id=item.citation.chunk_id.value,
+                        title=item.citation.title,
+                        section_path=list(item.citation.section_path),
+                        source_id=item.citation.source_id,
+                        source_locator=item.citation.source_locator,
+                        retrieved_at=item.citation.retrieved_at.isoformat(),
+                        license_or_usage_note=item.citation.license_or_usage_note,
+                    ),
+                )
+                for item in outcome.citations
+            ],
+            usage=usage,
+        )
+    if isinstance(outcome, KnowledgeExplanationUnsupported):
+        return KnowledgeExplanationUnsupportedResponse(
+            status="unsupported",
+            message=_UNSUPPORTED_EXPLANATION_MESSAGE,
+        )
+    if isinstance(outcome, KnowledgeExplanationRetrievalFailure):
+        response_spec = _RETRIEVAL_FAILURE_RESPONSES[outcome.kind]
+        return _knowledge_explanation_error_response(*response_spec)
+    if isinstance(outcome, KnowledgeExplanationModelFailure):
+        response_spec = _MODEL_FAILURE_RESPONSES[outcome.category]
+        return _knowledge_explanation_error_response(*response_spec)
+    if isinstance(outcome, KnowledgeExplanationInvalidOutputFailure):
+        return _knowledge_explanation_error_response(
+            status.HTTP_502_BAD_GATEWAY,
+            "invalid_grounded_output",
+            _INVALID_GROUNDED_OUTPUT_MESSAGE,
+        )
+    raise AssertionError("knowledge explanation service returned an unsupported outcome")
+
+
+def _knowledge_explanation_error_response(
+    status_code: int,
+    error_category: KnowledgeExplanationErrorCategory,
+    message: str,
+) -> JSONResponse:
+    payload = KnowledgeExplanationErrorResponse(
+        status="error",
+        error_category=error_category,
+        message=message,
+    )
+    return JSONResponse(
+        status_code=status_code,
+        content=payload.model_dump(mode="json"),
     )
 
 
