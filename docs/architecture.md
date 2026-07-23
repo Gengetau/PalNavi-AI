@@ -4,6 +4,9 @@ The current prototype keeps exact route calculation separate from transport and 
 generation. The model gateway remains independent of route planning and is used only by the
 retrieval-first knowledge explanation endpoint.
 
+The standalone Vue client is another transport-facing boundary. It uses only the public search and
+explanation schemas and never imports Python, repository, provider, or game-integration types.
+
 ```text
 HTTP schemas and FastAPI dependency provider
              |
@@ -68,6 +71,19 @@ POST /api/v1/knowledge/search   bounded deterministic evidence selection
                              POST /api/v1/knowledge/explain
 ```
 
+```text
+Vue form -> normalized typed request -> request controller -> typed API client
+                                                       |
+                                                       v
+                                         same-origin /api/v1 routes
+                                                       |
+                                                       v
+                                      strict runtime response decoder
+                                                       |
+                                                       v
+                                      inert result and citation rendering
+```
+
 `palnavi.domain.breeding` contains immutable types and the route planner. It imports no
 FastAPI, Pydantic, persistence, model SDK, or game-integration library. The planner accepts
 explicit relationships and an owned-species set, computes reachability, and searches for an
@@ -126,6 +142,16 @@ uses the structured PalNavi `RouteResponse`, while malformed request bodies reje
 route execution use FastAPI's `detail` response. OpenAPI declares both shapes as a union with
 registered component references. FastAPI generates the interactive documentation.
 
+`frontend/src/api` mirrors only the accepted public knowledge schema in TypeScript. Its replaceable
+transport is the sole `fetch` boundary, endpoints are fixed origin-relative paths, and small manual
+decoders reconstruct trusted objects without spreading unknown fields. HTTP, response-shape,
+backend, network, unsupported, and abort outcomes remain distinct.
+
+`frontend/src/composables/useKnowledgeRequest.ts` owns one active `AbortController` and a monotonic
+request ID. A replacement request aborts the previous signal, and the ID guard prevents a transport
+that ignores cancellation from writing stale state. Components render backend strings only through
+Vue text interpolation. Source locators remain inert text, and no Markdown or raw HTML path exists.
+
 ## Current assumptions and boundaries
 
 - Inventory is species-level; individual sex, traits, quantities, and availability are future work.
@@ -144,5 +170,7 @@ registered component references. FastAPI generates the interactive documentation
   success, unsupported, or a controlled error.
 - Explanation does not retry, fan out, stream, call tools, or run an agent loop.
 - Model output is never the source of truth for deterministic breeding or other exact mechanics.
-- There is no frontend, game adapter, save access, or mutation.
+- The standalone frontend covers search and explanation with deterministic mock-tested behavior.
+- The frontend defaults visibly to synthetic-only and collects no provider credential or endpoint.
+- There is no game adapter, save access, or mutation.
 - Real Palworld explanations remain unavailable until reviewed, versioned knowledge data is imported.
