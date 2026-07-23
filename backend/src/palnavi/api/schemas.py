@@ -144,3 +144,58 @@ class KnowledgeSearchResponse(BaseModel):
     results: list[KnowledgeSearchItemResponse] = Field(default_factory=list)
     error_category: str | None = None
     message: str | None = None
+
+
+KnowledgeExplanationErrorCategory = Literal[
+    "request_invalid",
+    "repository_unavailable",
+    "repository_invalid_state",
+    "configuration_invalid",
+    "authentication_rejected",
+    "rate_limited",
+    "timeout",
+    "provider_unavailable",
+    "malformed_response",
+    "unknown_provider",
+    "invalid_grounded_output",
+]
+
+
+class KnowledgeExplanationRequestBody(KnowledgeSearchRequestBody):
+    pass
+
+
+class KnowledgeExplanationCitationResponse(BaseModel):
+    marker: str = Field(pattern=r"^\[K[1-9][0-9]*\]$")
+    citation: KnowledgeCitationResponse
+
+
+class KnowledgeExplanationTokenUsageResponse(BaseModel):
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    total_tokens: int | None = None
+
+
+class KnowledgeExplanationSuccessResponse(BaseModel):
+    status: Literal["success"]
+    answer: str = Field(min_length=1)
+    citations: list[KnowledgeExplanationCitationResponse] = Field(min_length=1)
+    usage: KnowledgeExplanationTokenUsageResponse | None = None
+
+
+class KnowledgeExplanationUnsupportedResponse(BaseModel):
+    status: Literal["unsupported"]
+    message: str
+
+
+class KnowledgeExplanationErrorResponse(BaseModel):
+    status: Literal["error"]
+    error_category: KnowledgeExplanationErrorCategory
+    message: str
+
+
+KnowledgeExplanationResponse = (
+    KnowledgeExplanationSuccessResponse
+    | KnowledgeExplanationUnsupportedResponse
+    | KnowledgeExplanationErrorResponse
+)
