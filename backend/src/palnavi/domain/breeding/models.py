@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 
 SPECIES_ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
+INSTANCE_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 SOURCE_RECORD_HASH_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -155,6 +156,150 @@ DirectBreedingResult = (
     | DirectBreedingGenderRequired
     | DirectBreedingInvalid
     | DirectBreedingNotFound
+)
+
+
+@dataclass(frozen=True, slots=True)
+class SpeciesGenderFeasibility:
+    """Validated probability values used only to decide possible offspring genders."""
+
+    species: SpeciesId
+    male_probability: float
+    female_probability: float
+
+    def __post_init__(self) -> None:
+        if not 0.0 < self.male_probability <= 1.0:
+            raise ValueError("male probability must be in (0, 1]")
+        if not 0.0 < self.female_probability <= 1.0:
+            raise ValueError("female probability must be in (0, 1]")
+        if abs(self.male_probability + self.female_probability - 1.0) > 1e-12:
+            raise ValueError("male and female probabilities must sum to one")
+
+    def supports(self, gender: InventoryGender) -> bool:
+        if gender is InventoryGender.MALE:
+            return self.male_probability > 0.0
+        if gender is InventoryGender.FEMALE:
+            return self.female_probability > 0.0
+        return False
+
+
+@dataclass(frozen=True, slots=True)
+class OwnedBreedingCandidate:
+    """One concrete inventory candidate with a stable caller-owned identity."""
+
+    instance_id: str
+    species: SpeciesId
+    gender: InventoryGender
+
+    def __post_init__(self) -> None:
+        if not INSTANCE_ID_PATTERN.fullmatch(self.instance_id):
+            raise ValueError("instance identifiers contain unsupported characters")
+
+
+@dataclass(frozen=True, order=True, slots=True)
+class GenderRouteState:
+    """One gender-capable route node with explicit future constraint dimensions."""
+
+    species: SpeciesId
+    gender: InventoryGender
+    required_passive_set: frozenset[str] = field(default_factory=frozenset)
+    required_iv_constraints: tuple[str, ...] = ()
+    generation_depth: int = 0
+
+    def __post_init__(self) -> None:
+        if self.gender is InventoryGender.UNKNOWN:
+            raise ValueError("route states require a concrete gender")
+        if self.required_passive_set or self.required_iv_constraints:
+            raise ValueError("passive and IV route constraints are not supported")
+        if self.generation_depth < 0:
+            raise ValueError("route generation depth cannot be negative")
+
+
+@dataclass(frozen=True, slots=True)
+class GenderRoutePlanningRequest:
+    target_species: SpeciesId
+    target_gender: InventoryGender
+    inventory: tuple[OwnedBreedingCandidate, ...]
+
+    def __post_init__(self) -> None:
+        if self.target_gender is InventoryGender.UNKNOWN:
+            raise ValueError("route targets require a concrete gender")
+        instance_ids = [candidate.instance_id for candidate in self.inventory]
+        if len(instance_ids) != len(set(instance_ids)):
+            raise ValueError("route inventory contains duplicate instance identifiers")
+
+
+@dataclass(frozen=True, slots=True)
+class GenderRouteStep:
+    order: int
+    generation: int
+    parent_a: GenderRouteState
+    parent_b: GenderRouteState
+    child: GenderRouteState
+    result_kind: BreedingResultKind
+    source_record_hash: str
+
+    def __post_init__(self) -> None:
+        if self.order < 1 or self.generation < 1:
+            raise ValueError("route step order and generation must be positive")
+        if self.parent_a.gender is self.parent_b.gender:
+            raise ValueError("route steps require opposite parent genders")
+        if not SOURCE_RECORD_HASH_PATTERN.fullmatch(self.source_record_hash):
+            raise ValueError("route steps require a source-record SHA-256")
+        if self.child.generation_depth != self.generation:
+            raise ValueError("child generation depth must match the route step")
+
+
+@dataclass(frozen=True, slots=True)
+class GenderRouteCost:
+    generations: int
+    breeding_steps: int
+    probability_dependent_cost_available: bool = field(default=False, init=False)
+    expected_attempts: None = field(default=None, init=False)
+
+
+class GenderRouteStatus(StrEnum):
+    SUCCESS = "success"
+    GENDER_REQUIRED = "gender_required"
+    UNREACHABLE = "unreachable"
+    INVALID = "invalid"
+
+
+@dataclass(frozen=True, slots=True)
+class SuccessfulGenderRouteResult:
+    target: GenderRouteState
+    steps: tuple[GenderRouteStep, ...]
+    cost: GenderRouteCost
+    status: GenderRouteStatus = field(default=GenderRouteStatus.SUCCESS, init=False)
+
+
+@dataclass(frozen=True, slots=True)
+class GenderRequiredRouteResult:
+    unknown_instance_ids: tuple[str, ...]
+    reason: str
+    status: GenderRouteStatus = field(default=GenderRouteStatus.GENDER_REQUIRED, init=False)
+
+
+@dataclass(frozen=True, slots=True)
+class UnreachableGenderRouteResult:
+    target: GenderRouteState
+    reachable_states: tuple[GenderRouteState, ...]
+    reason: str
+    status: GenderRouteStatus = field(default=GenderRouteStatus.UNREACHABLE, init=False)
+
+
+@dataclass(frozen=True, slots=True)
+class InvalidGenderRouteResult:
+    target_species: SpeciesId
+    errors: tuple[str, ...]
+    status: GenderRouteStatus = field(default=GenderRouteStatus.INVALID, init=False)
+
+
+GenderRouteResult = (
+    SuccessfulGenderRouteResult
+    | GenderRequiredRouteResult
+    | UnreachableGenderRouteResult
+    | InvalidGenderRouteResult
 )
 
 

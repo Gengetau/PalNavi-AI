@@ -7,7 +7,12 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Protocol
 
-from palnavi.domain.breeding import BreedingRelationship, BreedingRule, SpeciesId
+from palnavi.domain.breeding import (
+    BreedingRelationship,
+    BreedingRule,
+    SpeciesGenderFeasibility,
+    SpeciesId,
+)
 
 
 class DatasetClassification(StrEnum):
@@ -90,6 +95,7 @@ class GenderAwareBreedingDatasetSnapshot:
     gender_data_identity: ContentIdentity
     species_ids: frozenset[SpeciesId]
     rules: tuple[BreedingRule, ...]
+    gender_feasibility: tuple[SpeciesGenderFeasibility, ...]
 
 
 class DatasetValidationCode(StrEnum):

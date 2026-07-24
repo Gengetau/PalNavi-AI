@@ -142,6 +142,70 @@ class DirectBreedingResponse(BaseModel):
     message: str | None = None
 
 
+class GenderRouteTargetInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    species_id: str
+    gender: Literal["male", "female"]
+
+
+class GenderRouteInventoryInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    instance_id: str
+    species_id: str
+    gender: Literal["male", "female", "unknown"]
+
+
+class GenderRouteRequestBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dataset_id: str = Field(min_length=1, max_length=128)
+    target: GenderRouteTargetInput
+    inventory: list[GenderRouteInventoryInput] = Field(max_length=299)
+    objective: Literal["minimum_generations"] = "minimum_generations"
+
+
+class GenderRouteStateResponse(BaseModel):
+    species_id: str
+    gender: Literal["male", "female"]
+    required_passive_ids: list[str] = Field(default_factory=list)
+    required_iv_constraints: list[str] = Field(default_factory=list)
+    generation_depth: int
+
+
+class GenderRouteStepResponse(BaseModel):
+    order: int
+    generation: int
+    parent_a: GenderRouteStateResponse
+    parent_b: GenderRouteStateResponse
+    child: GenderRouteStateResponse
+    result_kind: BreedingResultKindValue
+    source_record_hash: str
+
+
+class GenderRouteCostResponse(BaseModel):
+    generations: int
+    breeding_steps: int
+    probability_dependent_cost_available: Literal[False] = False
+    expected_attempts: None = None
+
+
+class GenderRouteResponse(BaseModel):
+    status: Literal["success", "gender_required", "unreachable", "invalid"]
+    dataset_id: str
+    content_sha256: str | None = None
+    gender_data_content_sha256: str | None = None
+    target: GenderRouteStateResponse | None = None
+    steps: list[GenderRouteStepResponse] = Field(default_factory=list)
+    cost: GenderRouteCostResponse | None = None
+    reachable_states: list[GenderRouteStateResponse] = Field(default_factory=list)
+    unknown_instance_ids: list[str] = Field(default_factory=list)
+    error_category: str | None = None
+    errors: list[ValidationIssueResponse] = Field(default_factory=list)
+    message: str | None = None
+
+
 class RequestValidationErrorDetail(BaseModel):
     """FastAPI-compatible detail item returned before route execution."""
 

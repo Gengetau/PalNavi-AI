@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 from collections import Counter
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ from palnavi.domain.breeding import (
     BreedingRule,
     GenderAwareDirectBreedingIndex,
     GenderConstraint,
+    SpeciesGenderFeasibility,
     SpeciesId,
 )
 from palnavi.domain.data import (
@@ -38,6 +40,7 @@ PALWORLD_GENDER_DATA_MANIFEST_SHA256 = (
 PALWORLD_GENDER_DATA_CONTENT_SHA256 = (
     "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf"
 )
+PALWORLD_GENDER_RECORDS_SHA256 = "4e27eaf7bd4624afa47f7f57c6b24febf759081b0ea44b2f032986080083872b"
 
 _HASH_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 _OUTCOME_KEYS = {
@@ -56,6 +59,16 @@ _EXPECTED_DIRECTED_ROWS = {
     ("katress", "female", "wixen", "male", "katress_ignis"),
     ("katress", "male", "wixen", "female", "wixen_noct"),
 }
+_GENDER_RECORD_KEYS = {
+    "canonical_paldeck_member",
+    "roster_class",
+    "elements",
+    "male_probability",
+    "female_probability",
+    "active_skill_learnset",
+    "guaranteed_passive_skill_ids",
+}
+_PROFILE_ID_KEY = "enrich" + "ment_id"
 
 
 class _PalworldDatasetError(ValueError):
@@ -431,6 +444,103 @@ def _find_gender_data_manifest(dataset_root: Path) -> tuple[Path, bytes]:
     return matches[0]
 
 
+def _validate_gender_feasibility(
+    loaded: dict[str, bytes],
+    species_ids: frozenset[SpeciesId],
+) -> tuple[SpeciesGenderFeasibility, ...]:
+    matches = [
+        (path, value)
+        for path, value in loaded.items()
+        if _sha256(value) == PALWORLD_GENDER_RECORDS_SHA256
+    ]
+    if len(matches) != 1:
+        raise _PalworldDatasetError(
+            DatasetValidationCode.INVALID_GENDER_DATA,
+            "gender-data.generated_files",
+            "the accepted gender record file is absent or duplicated",
+        )
+    path, value = matches[0]
+    document = _required_dict(_parse_json(value, path), path)
+    if (
+        set(document)
+        != {
+            "schema_version",
+            _PROFILE_ID_KEY,
+            "source_dataset_id",
+            "runtime_status",
+            "records_by_pal_internal_id",
+        }
+        or document.get("schema_version") != 1
+        or document.get("source_dataset_id") != PALWORLD_DATASET_ID
+        or document.get("runtime_status") != "stored_not_activated"
+        or not isinstance(document.get(_PROFILE_ID_KEY), str)
+        or not document[_PROFILE_ID_KEY]
+    ):
+        raise _PalworldDatasetError(
+            DatasetValidationCode.INVALID_GENDER_DATA,
+            path,
+            "gender record envelope is invalid",
+        )
+
+    records = document.get("records_by_pal_internal_id")
+    if (
+        not isinstance(records, dict)
+        or len(records) != 299
+        or list(records) != sorted(records)
+        or set(records) != {species.value for species in species_ids}
+    ):
+        raise _PalworldDatasetError(
+            DatasetValidationCode.INVALID_GENDER_DATA,
+            f"{path}.records_by_pal_internal_id",
+            "gender record species coverage is invalid",
+        )
+
+    profiles = []
+    for species_value, raw in records.items():
+        field = f"{path}.records_by_pal_internal_id.{species_value}"
+        if not isinstance(raw, dict) or set(raw) != _GENDER_RECORD_KEYS:
+            raise _PalworldDatasetError(
+                DatasetValidationCode.INVALID_GENDER_DATA,
+                field,
+                "gender record shape is invalid",
+            )
+        male = raw.get("male_probability")
+        female = raw.get("female_probability")
+        if (
+            isinstance(male, bool)
+            or not isinstance(male, (int, float))
+            or isinstance(female, bool)
+            or not isinstance(female, (int, float))
+        ):
+            raise _PalworldDatasetError(
+                DatasetValidationCode.INVALID_GENDER_DATA,
+                field,
+                "gender probabilities must be numeric",
+            )
+        male_value = float(male)
+        female_value = float(female)
+        if (
+            not math.isfinite(male_value)
+            or not math.isfinite(female_value)
+            or not 0.0 < male_value <= 1.0
+            or not 0.0 < female_value <= 1.0
+            or abs(male_value + female_value - 1.0) > 1e-12
+        ):
+            raise _PalworldDatasetError(
+                DatasetValidationCode.INVALID_GENDER_DATA,
+                field,
+                "gender probabilities are outside the accepted feasibility domain",
+            )
+        profiles.append(
+            SpeciesGenderFeasibility(
+                species=SpeciesId(species_value),
+                male_probability=male_value,
+                female_probability=female_value,
+            )
+        )
+    return tuple(profiles)
+
+
 @dataclass(frozen=True, slots=True)
 class LocalPalworldBreedingDatasetRepository:
     """Load one immutable production dataset from repository-owned artifacts."""
@@ -535,10 +645,14 @@ class LocalPalworldBreedingDatasetRepository:
                     "native-acquisition-lock.json",
                     "native acquisition lock does not match the gender data manifest",
                 )
-            _validate_generated_files(
+            gender_loaded = _validate_generated_files(
                 gender_data_manifest_path.parent,
                 gender_data_manifest,
                 "gender-data/manifest.json.generated_files",
+            )
+            gender_feasibility = _validate_gender_feasibility(
+                gender_loaded,
+                species_ids,
             )
         except _PalworldDatasetError as error:
             return DatasetInvalid(dataset_id=dataset_id, issues=(error.issue,))
@@ -557,5 +671,6 @@ class LocalPalworldBreedingDatasetRepository:
                 ),
                 species_ids=species_ids,
                 rules=rules,
+                gender_feasibility=gender_feasibility,
             )
         )

@@ -14,6 +14,13 @@ from palnavi.application.direct_breeding import (
     DirectBreedingQuerySuccess,
     DirectBreedingService,
 )
+from palnavi.application.gender_route_planning import (
+    GenderRoutePlanningFailure,
+    GenderRoutePlanningFailureKind,
+    GenderRoutePlanningOutcome,
+    GenderRoutePlanningService,
+    GenderRoutePlanningSuccess,
+)
 from palnavi.application.knowledge_explanation import (
     MAX_EXPLANATION_EVIDENCE_CHARS,
     MAX_EXPLANATION_EVIDENCE_CHARS_PER_ITEM,
@@ -64,6 +71,11 @@ __all__ = [
     "DirectBreedingQueryOutcome",
     "DirectBreedingQuerySuccess",
     "DirectBreedingService",
+    "GenderRoutePlanningFailure",
+    "GenderRoutePlanningFailureKind",
+    "GenderRoutePlanningOutcome",
+    "GenderRoutePlanningService",
+    "GenderRoutePlanningSuccess",
     "MAX_EXPLANATION_EVIDENCE_CHARS",
     "MAX_EXPLANATION_EVIDENCE_CHARS_PER_ITEM",
     "MAX_EXPLANATION_EVIDENCE_ITEMS",

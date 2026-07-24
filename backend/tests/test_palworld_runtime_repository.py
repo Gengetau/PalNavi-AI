@@ -87,6 +87,47 @@ def _rewrite_outcome(
     monkeypatch.setattr(repository_module, "PALWORLD_MANIFEST_SHA256", _sha256(manifest_bytes))
 
 
+def _rewrite_gender_record(
+    dataset: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mutate: Callable[[dict[str, object]], None],
+) -> None:
+    record_path = dataset / "enrichment" / "pal-enrichment.json"
+    document = json.loads(record_path.read_text(encoding="utf-8"))
+    records = document["records_by_pal_internal_id"]
+    assert isinstance(records, dict)
+    target = records["katress"]
+    assert isinstance(target, dict)
+    mutate(target)
+    record_bytes = (json.dumps(document, ensure_ascii=False, indent=2) + "\n").encode()
+    record_path.write_bytes(record_bytes)
+
+    manifest_path = dataset / "enrichment" / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    generated = next(
+        entry for entry in manifest["generated_files"] if entry["path"] == "pal-enrichment.json"
+    )
+    generated["bytes"] = len(record_bytes)
+    generated["sha256"] = _sha256(record_bytes)
+    unsigned = copy.deepcopy(manifest)
+    unsigned.pop("content_identity")
+    content_digest = _canonical_sha256(unsigned)
+    manifest["content_identity"]["digest"] = content_digest
+    manifest_bytes = (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode()
+    manifest_path.write_bytes(manifest_bytes)
+    monkeypatch.setattr(repository_module, "PALWORLD_GENDER_RECORDS_SHA256", _sha256(record_bytes))
+    monkeypatch.setattr(
+        repository_module,
+        "PALWORLD_GENDER_DATA_CONTENT_SHA256",
+        content_digest,
+    )
+    monkeypatch.setattr(
+        repository_module,
+        "PALWORLD_GENDER_DATA_MANIFEST_SHA256",
+        _sha256(manifest_bytes),
+    )
+
+
 def test_exact_production_snapshot_loads_all_bound_records() -> None:
     loaded = _load(default_palworld_dataset_root())
 
@@ -97,6 +138,14 @@ def test_exact_production_snapshot_loads_all_bound_records() -> None:
     assert snapshot.gender_data_identity.digest == PALWORLD_GENDER_DATA_CONTENT_SHA256
     assert len(snapshot.species_ids) == 299
     assert len(snapshot.rules) == 44_851
+    assert len(snapshot.gender_feasibility) == 299
+    assert [item.species for item in snapshot.gender_feasibility] == sorted(snapshot.species_ids)
+    assert all(
+        item.male_probability > 0
+        and item.female_probability > 0
+        and item.male_probability + item.female_probability == pytest.approx(1.0)
+        for item in snapshot.gender_feasibility
+    )
     assert (
         sum(rule.result_kind is BreedingResultKind.GENDER_DIRECTED for rule in snapshot.rules) == 2
     )
@@ -200,6 +249,29 @@ def test_altered_enrichment_identity_fails_closed(
 
     assert isinstance(loaded, DatasetInvalid)
     assert loaded.issues[0].code.value == "file_integrity_mismatch"
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda row: row.__setitem__("male_probability", True),
+        lambda row: row.__setitem__("male_probability", 0),
+        lambda row: row.__setitem__("female_probability", 0.6),
+        lambda row: row.pop("female_probability"),
+    ],
+)
+def test_manifest_retargeted_invalid_gender_probability_fails_inner_validation(
+    copied_dataset: tuple[Path, Path],
+    monkeypatch: pytest.MonkeyPatch,
+    mutate: Callable[[dict[str, object]], None],
+) -> None:
+    root, dataset = copied_dataset
+    _rewrite_gender_record(dataset, monkeypatch, mutate)
+
+    loaded = _load(root)
+
+    assert isinstance(loaded, DatasetInvalid)
+    assert loaded.issues[0].code.value == "invalid_gender_data"
 
 
 def test_altered_native_acquisition_lock_fails_closed(
