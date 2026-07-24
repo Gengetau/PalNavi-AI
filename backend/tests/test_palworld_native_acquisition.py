@@ -148,3 +148,64 @@ def test_generation_commands_pin_manifest_and_omit_mappings() -> None:
     assert '"--mappings"' not in source
     assert '"-manifest",\n            "latest"' not in source
     assert "optional unpinned Oodle binary was unavailable" in source
+
+
+def test_generation_resolves_cli_paths_before_subprocess_cwd_changes(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    tool = _load_tool()
+    captured: dict[str, Any] = {}
+
+    def capture_generate_lock(**arguments: object) -> dict[str, object]:
+        captured.update(arguments)
+        return {}
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(tool, "generate_lock", capture_generate_lock)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            str(TOOL_PATH),
+            "--lock",
+            "output/lock.json",
+            "--work-dir",
+            "work",
+            "--observed-at",
+            "2026-07-24T08:27:26Z",
+            "--depot-downloader",
+            "tools/DepotDownloader",
+            "--depot-downloader-archive",
+            "archives/depot.zip",
+            "--atlas-repo",
+            "sources/atlas",
+            "--dotnet",
+            "runtimes/dotnet",
+            "--dotnet-sdk-archive",
+            "archives/dotnet.tar.gz",
+            "--nuget-packages",
+            "packages",
+        ],
+    )
+
+    assert tool.main() == 0
+    for name, value in captured.items():
+        if name == "observed_at":
+            continue
+        assert isinstance(value, Path)
+        assert value.is_absolute()
+        assert (
+            value
+            == tmp_path
+            / {
+                "lock_path": "output/lock.json",
+                "work_directory": "work",
+                "depot_downloader": "tools/DepotDownloader",
+                "depot_downloader_archive": "archives/depot.zip",
+                "atlas_repository": "sources/atlas",
+                "dotnet": "runtimes/dotnet",
+                "dotnet_archive": "archives/dotnet.tar.gz",
+                "nuget_packages": "packages",
+            }[name]
+        )
