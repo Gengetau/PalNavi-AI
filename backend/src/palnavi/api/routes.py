@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from palnavi.api.dependencies import (
     get_breeding_planning_service,
     get_direct_breeding_service,
+    get_gender_route_planning_service,
     get_knowledge_explanation_service,
     get_knowledge_retrieval_service,
 )
@@ -17,6 +18,11 @@ from palnavi.api.schemas import (
     DirectBreedingRequestBody,
     DirectBreedingResponse,
     GameVersionScopeResponse,
+    GenderRouteCostResponse,
+    GenderRouteRequestBody,
+    GenderRouteResponse,
+    GenderRouteStateResponse,
+    GenderRouteStepResponse,
     HealthResponse,
     KnowledgeCitationResponse,
     KnowledgeExplanationCitationResponse,
@@ -43,6 +49,10 @@ from palnavi.application import (
     DirectBreedingQueryFailureKind,
     DirectBreedingQuerySuccess,
     DirectBreedingService,
+    GenderRoutePlanningFailure,
+    GenderRoutePlanningFailureKind,
+    GenderRoutePlanningService,
+    GenderRoutePlanningSuccess,
     KnowledgeExplanationInvalidOutputFailure,
     KnowledgeExplanationModelFailure,
     KnowledgeExplanationRequest,
@@ -62,13 +72,20 @@ from palnavi.domain.breeding import (
     DirectBreedingNotFound,
     DirectBreedingRequest,
     DirectBreedingSuccess,
+    GenderRequiredRouteResult,
+    GenderRoutePlanningRequest,
+    GenderRouteState,
+    InvalidGenderRouteResult,
     InvalidRouteResult,
     InventoryGender,
+    OwnedBreedingCandidate,
     OwnedSpeciesInventory,
     RouteObjective,
     RoutePlanningRequest,
     SpeciesId,
+    SuccessfulGenderRouteResult,
     SuccessfulRouteResult,
+    UnreachableGenderRouteResult,
     UnreachableRouteResult,
 )
 from palnavi.domain.data import BreedingDatasetSnapshot, DatasetValidationIssue
@@ -292,6 +309,157 @@ def query_direct_breeding(
             message=result.reason,
         )
     raise AssertionError("direct breeding index returned an unsupported result type")
+
+
+@router.post(
+    "/api/v1/breeding/gender-aware-routes",
+    response_model=GenderRouteResponse,
+    responses={
+        404: {"model": GenderRouteResponse},
+        422: {
+            "model": GenderRouteResponse | RequestValidationErrorResponse,
+            "description": (
+                "Palworld data validation error or FastAPI request-body validation error"
+            ),
+        },
+    },
+)
+def plan_gender_aware_route(
+    body: GenderRouteRequestBody,
+    response: Response,
+    service: Annotated[
+        GenderRoutePlanningService,
+        Depends(get_gender_route_planning_service),
+    ],
+) -> GenderRouteResponse:
+    try:
+        request = GenderRoutePlanningRequest(
+            target_species=SpeciesId(body.target.species_id),
+            target_gender=InventoryGender(body.target.gender),
+            inventory=tuple(
+                OwnedBreedingCandidate(
+                    instance_id=item.instance_id,
+                    species=SpeciesId(item.species_id),
+                    gender=InventoryGender(item.gender),
+                )
+                for item in body.inventory
+            ),
+        )
+    except ValueError:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+        return GenderRouteResponse(
+            status="invalid",
+            dataset_id=body.dataset_id,
+            error_category="request_invalid",
+            errors=[
+                ValidationIssueResponse(
+                    code="invalid_route_request",
+                    field="target_or_inventory",
+                    message="gender-aware route request contains invalid identifiers",
+                )
+            ],
+            message="gender-aware route request is invalid",
+        )
+
+    outcome = service.plan(body.dataset_id, request)
+    if isinstance(outcome, GenderRoutePlanningFailure):
+        if outcome.kind is GenderRoutePlanningFailureKind.DATASET_NOT_FOUND:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            issues = [
+                ValidationIssueResponse(
+                    code="dataset_not_found",
+                    field="dataset_id",
+                    message="requested dataset was not found",
+                )
+            ]
+        else:
+            response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+            issues = [_validation_issue_response(issue) for issue in outcome.issues]
+        return GenderRouteResponse(
+            status="invalid",
+            dataset_id=outcome.dataset_id,
+            error_category=outcome.kind.value,
+            errors=issues,
+            message="gender-aware route data could not be validated",
+        )
+    if not isinstance(outcome, GenderRoutePlanningSuccess):
+        raise AssertionError("gender route service returned an unsupported result type")
+
+    result = outcome.result
+    if isinstance(result, SuccessfulGenderRouteResult):
+        return GenderRouteResponse(
+            status="success",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            target=_gender_route_state_response(result.target),
+            steps=[
+                GenderRouteStepResponse(
+                    order=step.order,
+                    generation=step.generation,
+                    parent_a=_gender_route_state_response(step.parent_a),
+                    parent_b=_gender_route_state_response(step.parent_b),
+                    child=_gender_route_state_response(step.child),
+                    result_kind=step.result_kind.value,
+                    source_record_hash=step.source_record_hash,
+                )
+                for step in result.steps
+            ],
+            cost=GenderRouteCostResponse(
+                generations=result.cost.generations,
+                breeding_steps=result.cost.breeding_steps,
+            ),
+        )
+    if isinstance(result, GenderRequiredRouteResult):
+        return GenderRouteResponse(
+            status="gender_required",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            unknown_instance_ids=list(result.unknown_instance_ids),
+            message=result.reason,
+        )
+    if isinstance(result, UnreachableGenderRouteResult):
+        return GenderRouteResponse(
+            status="unreachable",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            target=_gender_route_state_response(result.target),
+            reachable_states=[
+                _gender_route_state_response(item) for item in result.reachable_states
+            ],
+            message=result.reason,
+        )
+    if isinstance(result, InvalidGenderRouteResult):
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+        return GenderRouteResponse(
+            status="invalid",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            error_category="route_invalid",
+            errors=[
+                ValidationIssueResponse(
+                    code="invalid_gender_route",
+                    field="target_or_inventory_or_rules",
+                    message=message,
+                )
+                for message in result.errors
+            ],
+            message="gender-aware route request or graph is invalid",
+        )
+    raise AssertionError("gender route planner returned an unsupported result type")
+
+
+def _gender_route_state_response(state: GenderRouteState) -> GenderRouteStateResponse:
+    return GenderRouteStateResponse(
+        species_id=state.species.value,
+        gender=cast(Literal["male", "female"], state.gender.value),
+        required_passive_ids=sorted(state.required_passive_set),
+        required_iv_constraints=list(state.required_iv_constraints),
+        generation_depth=state.generation_depth,
+    )
 
 
 @router.post(
