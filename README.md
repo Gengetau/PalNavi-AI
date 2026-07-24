@@ -34,6 +34,9 @@ access, save parsing, or production-searchable Palworld knowledge prose.
   fingerprint boundary with a mandatory synthetic mock fallback;
 - an exact-source, MIT-attributed Palworld v1 dataset with 299 calculation records and 44,851
   normalized outcomes, stored but not yet enabled for runtime planning;
+- a deterministic native Linux-server acquisition lock that binds exact Steam Build, depot
+  manifest, PAK, acquisition tool, extractor dependency graph, and a successful no-mappings
+  probe without committing proprietary game bytes;
 - versioned fictional synthetic data and automated domain/import/repository/API tests.
 
 Exact breeding outcomes must always come from versioned structured data and deterministic
@@ -118,6 +121,9 @@ Dataset authors should also follow
 [docs/dataset-maintenance.md](docs/dataset-maintenance.md).
 The reviewed Palworld source locks, normalized data schema, known gaps, and activation boundary
 are documented in [docs/palworld-data.md](docs/palworld-data.md).
+The exact native server acquisition procedure, offline validator, probe result, and
+client-claim limits are documented in
+[docs/palworld-native-acquisition.md](docs/palworld-native-acquisition.md).
 Official-source registry governance, content-free snapshots, the mock-default CLI, and the
 single-attempt live boundary are documented in
 [docs/official-sources.md](docs/official-sources.md). Registering or fingerprinting an official

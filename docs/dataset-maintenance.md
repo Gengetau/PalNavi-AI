@@ -55,3 +55,30 @@ reviewed contract and planner change.
 Every future Palworld patch requires a newly pinned extraction or independently reproducible
 audit, a complete field and outcome diff, a new compatibility decision, and regenerated
 identities. Patch notes alone do not extend the compatibility window.
+
+## Native server acquisition provenance
+
+The versioned Palworld dataset now includes a separate, sanitized acquisition
+lock for public Linux dedicated-server Build `24181105`. This lock establishes
+that the exact depot manifest and selected server PAK can be acquired and
+verified, and that the pinned Atlas extractor can parse its required tables
+without mappings.
+
+The acquisition tool is intentionally separate from
+`build_palworld_dataset.py`:
+
+- `tools/lock_palworld_server_acquisition.py` is a one-time, explicitly
+  networked operator boundary that downloads proprietary bytes only into a
+  caller-selected disposable directory and emits a content-only lock.
+- `tools/build_palworld_dataset.py` remains fully offline and builds the
+  reviewed normalized dataset from its six caller-supplied source files.
+
+Normal tests use only `--validate-only`; they must not connect to Steam,
+download an SDK, restore packages, run an extractor, or retain a PAK. See
+`docs/palworld-native-acquisition.md` for pinned identities, prerequisites,
+the exact generation command, cleanup expectations, and failure rules.
+
+An accepted acquisition lock authorizes no field extraction by itself. A
+later loop must define the source table, row identity, field normalization,
+diff policy, and generated-file contract before storing newly extracted facts.
+Runtime activation remains a separate review.

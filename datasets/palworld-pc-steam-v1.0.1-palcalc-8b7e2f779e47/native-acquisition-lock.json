@@ -1,0 +1,325 @@
+{
+  "schema": "palnavi-native-acquisition-lock/v1",
+  "lock_id": "palworld-linux-server-build-24181105",
+  "observed_at": "2026-07-24T08:27:26Z",
+  "scope": {
+    "game": "Palworld",
+    "platform": "Linux dedicated server",
+    "source_patch_context": "v1.0.1",
+    "runtime_status": "acquisition_provenance_only_not_activated",
+    "claim_limits": [
+      "This lock does not describe PC client-only assets or behavior.",
+      "This lock does not activate or enrich the PalNavi runtime dataset.",
+      "This lock contains no proprietary game bytes or extracted table rows."
+    ]
+  },
+  "steam": {
+    "app_id": "2394010",
+    "branch": "public",
+    "build_id": "24181105",
+    "depot_id": "2394012",
+    "manifest_id": "2167164727892555341",
+    "manifest": {
+      "timestamp": "2026-07-13T09:20:38Z",
+      "binary_sha256": "3bab93b8c70d612ca5bd1a827be3d7f2d1bf92a2c1829507eca60c81a8f605ca",
+      "text_sha256": "fbcadb5fc783a410adf72ce2d4f4145b50c1abfe12059d3457e82054d70e89e9",
+      "total_files": 31,
+      "total_bytes_on_disk": 5046643016,
+      "total_bytes_compressed": 4726439856,
+      "selected_file_chunks": 4622
+    },
+    "selected_file": {
+      "path": "Pal/Content/Paks/Pal-LinuxServer.pak",
+      "size_bytes": 4797040962,
+      "steam_manifest_sha1": "b81698aff4e50356b9c2672ecadc59a2dd840ea3",
+      "local_sha256": "cad80fe15c38d74a795779fbab31f04bc2c15c37fb8a2188e4d89f3800fb0e68"
+    }
+  },
+  "acquisition_tool": {
+    "name": "DepotDownloader",
+    "version": "3.4.0",
+    "informational_version": "3.4.0+c553ef4d60c00a4f5fd16c9fe017f569001589ff",
+    "runtime": ".NET 9.0.0",
+    "asset": "DepotDownloader-linux-x64.zip",
+    "asset_url": "https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_3.4.0/DepotDownloader-linux-x64.zip",
+    "archive_sha256": "a999dec66b4850fc961bd50366696d23c2d0fad7b18790e6a5647b2f19097a53",
+    "executable_sha256": "d62a1721564bdb96bacd9285bb5f96180a45202e82a9f85c6a88e5e8ee5f992c"
+  },
+  "extractor": {
+    "repository": "https://github.com/Awy64/palworld-atlas-data.git",
+    "commit": "0385b3fd8bd757240d4a2c79615145122669abd5",
+    "project": "src/PalworldAtlas.Extractor/PalworldAtlas.Extractor.csproj",
+    "project_sha256": "3e40be050b850c887a9416c25d8be6d8b5cf437c7d0ca0cbf006588d86d9932a",
+    "dependency_lock": {
+      "format": "sanitized-nuget-project-assets/v1",
+      "package_count": 32,
+      "packages": [
+        {
+          "identity": "Blake3/2.2.1",
+          "content_sha512": "HfNW2Iiy4hCaVDVGFEyk0mks+M5HSU3O8O517LyYkI6FFuj2jpvNlag4kGQFDSRmJi4/axgOei8k02NKq/uoDg=="
+        },
+        {
+          "identity": "BouncyCastle.Cryptography/2.6.2",
+          "content_sha512": "7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w=="
+        },
+        {
+          "identity": "CUE4Parse/1.2.2.202607",
+          "content_sha512": "Ib4wDgajCPXwzR6kPZ6tTUVpHRRVqrPYHBjMz+IYhGwLNt3JgK9QB0es7RntK0YPD3VaI8FFIt16qSkORqp45A=="
+        },
+        {
+          "identity": "CommunityToolkit.HighPerformance/8.4.2",
+          "content_sha512": "2hmtrrU18x6NL3mbuAqwy0KpnoEEJOuK6sH5RKQfD/jHijn2pqvqBUC7WGy9dgNBL9BDA7eOC0kirsNPMp2f4Q=="
+        },
+        {
+          "identity": "FixedMathSharp/4.0.1",
+          "content_sha512": "eUZzaWGXfPitqyJvF+6IFGaYRwWfg65Ia6I7bRbcF7U8Yw2BKBQ1vFl6qE/NGKaapMBVjQ+liDkvRSkwMuRR3w=="
+        },
+        {
+          "identity": "Fmod5Sharp/3.1.0",
+          "content_sha512": "DPM710gixvM3GrF5FTceXgaAZmH4B3amo92HNIJHiXHUJdeIF3R/cZKDrZzc4A5gzX/M1MbqWBphR90e/b6HxQ=="
+        },
+        {
+          "identity": "GenericReader/2.3.0",
+          "content_sha512": "JeTTJenG7Ys+d+qSpO5xlg07oCC7Xg+tCNYuJOzBcw3v1IPivsbix9jF0odM8EtviL74vC/zRE3V/tm6WPnxZw=="
+        },
+        {
+          "identity": "IndexRange/1.1.0",
+          "content_sha512": "fG+2WP1e3Fg3ZVq85XAdiwG9t0twi3r0LvOrTjtbH/31Rd5gLnV5APOD2JHAowbZYDgj9D3rXRbUvIL+ew0WZQ=="
+        },
+        {
+          "identity": "Infrablack.UE4Config/0.7.2.97",
+          "content_sha512": "ZjCEAqkSSr2Z8Rp82wo6ME98WJ0P2DyKrr+11X2KqZ/q/rzloyv6rJ+m45J2qWY1Piu2E9XcJ2gvRHQCapuTQQ=="
+        },
+        {
+          "identity": "K4os.Compression.LZ4.Streams/1.3.8",
+          "content_sha512": "P15qr8dZAeo9GvYbUIPEYFQ0MEJ0i5iqr37wsYeRC3la2uCldOoeCa6to0CZ1taiwxIV+Mk8NGuZi+4iWivK9w=="
+        },
+        {
+          "identity": "K4os.Compression.LZ4/1.3.8",
+          "content_sha512": "LhwlPa7c1zs1OV2XadMtAWdImjLIsqFJPoRcIWAadSRn0Ri1DepK65UbWLPmt4riLqx2d40xjXRk0ogpqNtK7g=="
+        },
+        {
+          "identity": "K4os.Hash.xxHash/1.0.8",
+          "content_sha512": "Wp2F7BamQ2Q/7Hk834nV9vRQapgcr8kgv9Jvfm8J3D0IhDqZMMl+a2yxUq5ltJitvXvQfB8W6K4F4fCbw/P6YQ=="
+        },
+        {
+          "identity": "LZMA-SDK/22.1.1",
+          "content_sha512": "lxG8/H53OCqebnDFlTStwzbgtmUN/DqnXN8kffa/ctHcSEHhIPDyEa3jLzpZxVX5F8bmJgvb1mna6gnhetykIw=="
+        },
+        {
+          "identity": "MemoryPack.Core/1.21.4",
+          "content_sha512": "6RszGorZ0ejNmp37ZcboPBMvvPCuNW2jlrdQfcs/lMzE5b3pmPF6hsm/laDc34hRlbAST1ZxaX/DvYu2DF5sBQ=="
+        },
+        {
+          "identity": "MemoryPack.Generator/1.21.4",
+          "content_sha512": "g14EsSS85yn0lHTi0J9ivqlZMf09A2iI51fmI+0KkzIzyCbWOBWPi5mdaY7YWmXprk12aYh9u/qfWHQUYthlwg=="
+        },
+        {
+          "identity": "MemoryPack/1.21.4",
+          "content_sha512": "wy3JTBNBsO8LfQcBvvYsWr3lm2Oakolrfu0UQ3oSJSEiD+7ye0GUhYTaXuYYBowqsXBXWD9gf2218ae0JRiYVQ=="
+        },
+        {
+          "identity": "Microsoft.Bcl.Memory/10.0.10",
+          "content_sha512": "/PxGfVdy8P15x9TUyAyWfzR92DcRVRCMs4nMnVS6bldRaDTJJPG9ECJPlF0lbkeZdqwM5eSkOQ214YwvcimAWQ=="
+        },
+        {
+          "identity": "Microsoft.NETCore.Platforms/1.1.0",
+          "content_sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A=="
+        },
+        {
+          "identity": "NAudio.Core/2.2.1",
+          "content_sha512": "GgkdP6K/7FqXFo7uHvoqGZTJvW4z8g2IffhOO4JHaLzKCdDOUEzVKtveoZkCuUX8eV2HAINqi7VFqlFndrnz/g=="
+        },
+        {
+          "identity": "NETStandard.Library/1.6.1",
+          "content_sha512": "WcSp3+vP+yHNgS8EV5J7pZ9IRpeDuARBPN28by8zqff1wJQXm26PVU8L3/fYLBJVU7BtDyqNVWq2KlCVvSSR4A=="
+        },
+        {
+          "identity": "Newtonsoft.Json/13.0.4",
+          "content_sha512": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
+        },
+        {
+          "identity": "OffiUtils/3.2.0",
+          "content_sha512": "sejwMr+CWLla0wzpvQSBSe+xCUk01XeKh39R/aG7a//ZHzp7twxPcnbz634w+Rk3bLRVsuL9Jp49RFw42MGjUw=="
+        },
+        {
+          "identity": "OggVorbisEncoder/1.2.2",
+          "content_sha512": "MZMa5URyED82nJUfGCbulS/1/Np+zhE2mt3h9TuAPOurVN3rYHEaVc7cKd7IK1vROB4UMdTgSoPCW3EJCNmHJw=="
+        },
+        {
+          "identity": "Oodle.NET/2.2.0",
+          "content_sha512": "6+rGT+Y2dBkACr2dQ0+NBm5mpDJ66ec8X2RFLyNjm1pRojMK5DcRiA8iqVdMgYue7OPMUhN7ViSn0iu0X4NmRQ=="
+        },
+        {
+          "identity": "OodleSharp/0.0.1",
+          "content_sha512": "8XioZSNsed2bv0ouBOqgHDH1guZepf844lCQGndo4jqzuFAiuurIlZ1my/3vXdN3aXdhe3jPrWQzDjXZqxZH7Q=="
+        },
+        {
+          "identity": "Serilog.Sinks.Console/6.1.1",
+          "content_sha512": "8jbqgjUyZlfCuSTaJk6lOca465OndqOz3KZP6Cryt/IqZYybyBu7GP0fE/AXBzrrQB3EBmQntBFAvMVz1COvAA=="
+        },
+        {
+          "identity": "Serilog/4.3.1",
+          "content_sha512": "savYe7h5yRlkqBVOwP8cIRDOdqKiPmYCU4W87JH38sBmcKD5EBoXvQIw6bNEvZ/pTe1gsiye3VFCzBsoppGkXQ=="
+        },
+        {
+          "identity": "SubstreamSharp/1.0.3",
+          "content_sha512": "XV/cpJkajpqg2qMYAZzXFcklLy4KvFEiWQFE+amUAzLzQqk/nyAdQp0gXX2rGz5F/ALkvd8bgKBiDW+QuKOXDQ=="
+        },
+        {
+          "identity": "System.IO.Hashing/10.0.8",
+          "content_sha512": "+dJsbPJ3FyUbTZNplFj0RCKePFizmv6ewDV46JE9q/IVH4c3xTCftHfHelLsAKf0jryIPqgMb5GpS0x7TAY3mg=="
+        },
+        {
+          "identity": "VGAudio/2.2.1",
+          "content_sha512": "eg8TusdIdla4XejVolG3da6UtshRQPmjCoTxejBff4sJf0wgI1Ic6vvNiYjb96gX21kvWLONRgyvc3NVHP6TYg=="
+        },
+        {
+          "identity": "Zlib-ng.NET/1.2.0",
+          "content_sha512": "W97KdZxrekUMf9DjO9xSb7YzL0H642Hc3ACqABThY3z5M5+wPeFG3pbdL7ObsLL81ysR3swrXTEydla0tDyD5w=="
+        },
+        {
+          "identity": "ZstdSharp.Port/0.8.8",
+          "content_sha512": "UIDFkA5DC3en3tOJ3Mof11yBx9kUQLsaeo/oFdvN6Bbkr9E9+VCqfIadHci8cu+I51K2Sl7XYWVl2R/mA75NBQ=="
+        }
+      ],
+      "record_sha256": "d2df63b2c44fbccd291bbfe99168d460e40dcf301e026b29c6a2e4e8648fb32b"
+    },
+    "runtime": {
+      "name": ".NET SDK",
+      "version": "10.0.302",
+      "asset": "dotnet-sdk-10.0.302-linux-x64.tar.gz",
+      "asset_url": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.302/dotnet-sdk-10.0.302-linux-x64.tar.gz",
+      "archive_sha256": "264a838d6f5d1a252489c7bb2e2946a579d6a881391d50ffd175a01e4d948c1c"
+    },
+    "probe": {
+      "steam_build_id": "24181105",
+      "pak_bytes": 4797040962,
+      "mappings": {
+        "status": "mappings_not_required",
+        "identity": null,
+        "sha256": null
+      },
+      "production_gate_passed": true,
+      "required_tables": [
+        "alpha-spawners",
+        "breeding",
+        "items",
+        "pals",
+        "spawner-placements",
+        "wild-spawners"
+      ],
+      "tables": [
+        {
+          "name": "pals",
+          "present": true,
+          "parsed": true,
+          "row_count": 753,
+          "sample_field_count": 80,
+          "sample_fields_sha256": "b03b2a00d14ad28c4e5a024d08e3e83fdfe32149dee38bf2954e88ffb200d907",
+          "package_path": "Pal/Content/Pal/DataTable/Character/DT_PalMonsterParameter"
+        },
+        {
+          "name": "breeding",
+          "present": true,
+          "parsed": true,
+          "row_count": 258,
+          "sample_field_count": 5,
+          "sample_fields_sha256": "85a754a6071ac4267ea144869c78dca30bd45a2d8423771fd9e652e29ca8dfff",
+          "package_path": "Pal/Content/Pal/DataTable/Character/DT_PalCombiUnique"
+        },
+        {
+          "name": "items",
+          "present": true,
+          "parsed": true,
+          "row_count": 2466,
+          "sample_field_count": 53,
+          "sample_fields_sha256": "df2d434e0e419fef7d53d9841a16819e903f41ada0f7551c84dc4b3b35106b5c",
+          "package_path": "Pal/Content/Pal/DataTable/Item/DT_ItemDataTable"
+        },
+        {
+          "name": "wild-spawners",
+          "present": true,
+          "parsed": true,
+          "row_count": 1691,
+          "sample_field_count": 25,
+          "sample_fields_sha256": "de387f41ca2b34e24fc21d5504b4f4f357c13bf23432141b1898b58fd9b09e33",
+          "package_path": "Pal/Content/Pal/DataTable/Spawner/DT_PalWildSpawner"
+        },
+        {
+          "name": "spawner-placements",
+          "present": true,
+          "parsed": true,
+          "row_count": 8253,
+          "sample_field_count": 11,
+          "sample_fields_sha256": "884be405ec0afd7397ca242ab48e98377a88ec4091bada53ca570fe408865ea5",
+          "package_path": "Pal/Content/Pal/DataTable/Spawner/DT_PalSpawnerPlacement"
+        },
+        {
+          "name": "alpha-spawners",
+          "present": true,
+          "parsed": true,
+          "row_count": 159,
+          "sample_field_count": 4,
+          "sample_fields_sha256": "262cca6ba7ef805f59ee76a178c4aeae1e970d3454e2cfe7b067d36f9dd91af5",
+          "package_path": "Pal/Content/Pal/DataTable/UI/DT_BossSpawnerLoactionData"
+        },
+        {
+          "name": "map-metadata",
+          "present": true,
+          "parsed": true,
+          "row_count": 2,
+          "sample_field_count": 9,
+          "sample_fields_sha256": "c5727e2b1793e3936d9c8b45e4eec4703bc79cee1f4b76fa2759991ce424f8b1",
+          "package_path": "Pal/Content/Pal/DataTable/WorldMapUIData/DT_WorldMapUIData"
+        },
+        {
+          "name": "pal-names",
+          "present": true,
+          "parsed": true,
+          "row_count": 322,
+          "sample_field_count": 1,
+          "sample_fields_sha256": "c509189c25354de5fb5dfeb220e704841061cf58e5c155457c06f4b1e151684b",
+          "package_path": "Pal/Content/L10N/en/Pal/DataTable/Text/DT_PalNameText_Common"
+        },
+        {
+          "name": "pal-descriptions",
+          "present": false,
+          "parsed": false,
+          "row_count": 0,
+          "sample_field_count": 0,
+          "sample_fields_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "error": "Package not present in the dedicated server PAK"
+        },
+        {
+          "name": "item-names",
+          "present": true,
+          "parsed": true,
+          "row_count": 1994,
+          "sample_field_count": 1,
+          "sample_fields_sha256": "c509189c25354de5fb5dfeb220e704841061cf58e5c155457c06f4b1e151684b",
+          "package_path": "Pal/Content/L10N/en/Pal/DataTable/Text/DT_ItemNameText_Common"
+        },
+        {
+          "name": "item-descriptions",
+          "present": true,
+          "parsed": true,
+          "row_count": 1924,
+          "sample_field_count": 1,
+          "sample_fields_sha256": "c509189c25354de5fb5dfeb220e704841061cf58e5c155457c06f4b1e151684b",
+          "package_path": "Pal/Content/L10N/en/Pal/DataTable/Text/DT_ItemDescriptionText_Common"
+        }
+      ],
+      "record_sha256": "5d6c8f7acb61e0e290681e260c197f19bfaee99349a0396b1ab0b904b2146b43"
+    }
+  },
+  "generation": {
+    "tool": "tools/lock_palworld_server_acquisition.py",
+    "serialization": "UTF-8 JSON, two-space indentation, LF terminator",
+    "deterministic": true
+  },
+  "integrity": {
+    "source_record_sha256": "4b711767a73660878ab442819874866eceb51f3acd23a0e55c468209235539bf",
+    "generated_record_sha256": "fef729bdc7be39a1d670dd932bf28d3d6bcb646d6544ac3ca33568b704cc7c36"
+  }
+}
