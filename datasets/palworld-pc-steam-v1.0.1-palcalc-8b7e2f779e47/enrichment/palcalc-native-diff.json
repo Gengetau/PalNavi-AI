@@ -1,0 +1,5297 @@
+{
+  "schema_version": 1,
+  "contract": "palnavi-palcalc-native-diff/v1",
+  "compared_records": 299,
+  "compared_fields_per_record": [
+    "male_probability_percent",
+    "guaranteed_passive_skill_ids"
+  ],
+  "summary": {
+    "comparisons": 598,
+    "matches": 598,
+    "differences": 0
+  },
+  "records": [
+    {
+      "pal_internal_id": "aegidron",
+      "source_internal_name": "DomeArmorDragon",
+      "native_source_row_sha256": "0eb9492b65855389f390acb14fd56af33de39e28dc2af80099f12bf2a53fb25a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "amione",
+      "source_internal_name": "ClioneTwins",
+      "native_source_row_sha256": "25ff478e504acc5226ab72504d75e788128ab84a4ec075c72ad2b98c427aa2c1",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "anubis",
+      "source_internal_name": "Anubis",
+      "native_source_row_sha256": "09c014327c2e17be7601a50c32e594a1e04e22194217eeaefd7e75eeee8a9d05",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Earth_2_PAL"
+          ],
+          "native": [
+            "ElementBoost_Earth_2_PAL"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "arsox",
+      "source_internal_name": "FlameBuffalo",
+      "native_source_row_sha256": "ce4f8aeaacdd714fe479007fca46041ed0ccf51d477528edba1658d75fd2c569",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "astegon",
+      "source_internal_name": "BlackMetalDragon",
+      "native_source_row_sha256": "8a0b86e0c88c159197d811540079d20b49ece6a503874f4580909103a1fc2255",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up1"
+          ],
+          "native": [
+            "Deffence_up1"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "azurmane",
+      "source_internal_name": "BlueThunderHorse",
+      "native_source_row_sha256": "33e39de96a5edfbb8564aa096a50e3b4147c52e97d3005e2a1228ac4e97f95ba",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "azurobe",
+      "source_internal_name": "BlueDragon",
+      "native_source_row_sha256": "e1079b7e3a75693fe8e9c0633a51daa6799ab8f87c281a1f5c95762aa6a3921e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "azurobe_cryst",
+      "source_internal_name": "BlueDragon_Ice",
+      "native_source_row_sha256": "f00b5feb9e1c0c837e729e925affb6850f84bf598cf116de6fbfce1cd8b9781e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bakemi",
+      "source_internal_name": "OniGhostGirl",
+      "native_source_row_sha256": "a42e6d6f278df63e4cf5dd668edec84945cf53272fde46652aa74748671cefbe",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bastigor",
+      "source_internal_name": "SnowTigerBeastman",
+      "native_source_row_sha256": "0390c050658ca4f3b1fd45c005a775a187855c2a753f0efe2de3c73b4f639c8c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 60,
+          "native": 60,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "beakon",
+      "source_internal_name": "ThunderBird",
+      "native_source_row_sha256": "7f82ca4121228bab9627c7c1c0492f785f53153538cdeb800efa206627da2cab",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "beakon_cryst",
+      "source_internal_name": "ThunderBird_Ice",
+      "native_source_row_sha256": "cc0dc3d8d37a65e9fc0f1308e462db6533908352ae4737c4be6358cdd861d961",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "beegarde",
+      "source_internal_name": "SoldierBee",
+      "native_source_row_sha256": "ecedd67a066b2666631b7c3a4fea1ceadd1a7dbeed99c11ccfc223612b51d2a3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 10,
+          "native": 10,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bellanoir",
+      "source_internal_name": "NightLady",
+      "native_source_row_sha256": "1d1375165c4859b2cc5c96a848809c6c38838abccd0141ee82b1910b3412faa8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 10,
+          "native": 10,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bellanoir_libero",
+      "source_internal_name": "NightLady_Dark",
+      "native_source_row_sha256": "4812fe8ed51a50b531b764bb1faee79a07892851c02425162e0e980677fb3af5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 10,
+          "native": 10,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Witch"
+          ],
+          "native": [
+            "Witch"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "blazamut",
+      "source_internal_name": "KingBahamut",
+      "native_source_row_sha256": "f78e022e6f42d9ce8a10af442719eea9a28ecc8f7f404e661a82263a8cc9eee6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Fire_2_PAL"
+          ],
+          "native": [
+            "ElementBoost_Fire_2_PAL"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "blazamut_ryu",
+      "source_internal_name": "KingBahamut_Dragon",
+      "native_source_row_sha256": "6f8b841be762c3a543a3a31643e8479c71fc6b62207e5eadbd5198709305c8f9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "EternalFlame"
+          ],
+          "native": [
+            "EternalFlame"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "blazehowl",
+      "source_internal_name": "Manticore",
+      "native_source_row_sha256": "64b63a03e3643456737fde6936cecd4c71bf6146f80f0225addaa9ae75f027af",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "blazehowl_noct",
+      "source_internal_name": "Manticore_Dark",
+      "native_source_row_sha256": "cc288ca026cd0f208f5732350735e3baa18b581fdf1eee512d85bf4d132907a2",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "blue_slime",
+      "source_internal_name": "YakushimaMonster001_Blue",
+      "native_source_row_sha256": "1e41c4063f1e755dedd8b50dbdd1d4bd4fdcf33c4155481b6ca926acef3a92bf",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "braloha",
+      "source_internal_name": "Plesiosaur",
+      "native_source_row_sha256": "15e46347669c97c2d43061eb3d716691b15dcedd1f6cef1a4bd4ca97aeb84648",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bristla",
+      "source_internal_name": "LittleBriarRose",
+      "native_source_row_sha256": "7646c856c261db40b21b490ca10f8c885412fa19b86d0e8774504564ceea0ca9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "broncherry",
+      "source_internal_name": "SakuraSaurus",
+      "native_source_row_sha256": "2ce047995b3022357d641043e55aa1615ca0736315afab6078542317784830db",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "broncherry_aqua",
+      "source_internal_name": "SakuraSaurus_Water",
+      "native_source_row_sha256": "0df753d2b206760c78020ecbc1f93f0eba4ee8ff11ded0901e6a066cc16156df",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bulldosu",
+      "source_internal_name": "SumoDog",
+      "native_source_row_sha256": "78dcdb19677e955dfd82cf78347964e1088a20ace6473bc1cac51242128a2a81",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bushi",
+      "source_internal_name": "Ronin",
+      "native_source_row_sha256": "62f5ac89efdf7be29c912f70d8a7161ec57f709b211535e05b7b97aba400ce7a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "bushi_noct",
+      "source_internal_name": "Ronin_Dark",
+      "native_source_row_sha256": "81c5ecf3131d311a6883745483aee757eb9bd20f1fe8f512ef48b0f964577c26",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "caprity",
+      "source_internal_name": "BerryGoat",
+      "native_source_row_sha256": "8b1c7fdf508785c4c91bba36248dde74705f8bdfede9238b2c8aeac2c89542fb",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "caprity_noct",
+      "source_internal_name": "BerryGoat_Dark",
+      "native_source_row_sha256": "2767cb4490683b63bb0518bb265f285ad717a867024bd9aa93fde39fd8b7bbc7",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "carnibora",
+      "source_internal_name": "VenusFlytrap",
+      "native_source_row_sha256": "1f712cc3105d9eb268820c69cad997c608d9cf5c1f1e27e1ae1f9db488769e8e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "cattiva",
+      "source_internal_name": "PinkCat",
+      "native_source_row_sha256": "eb669c48fd9e30f6316ab1c4fce4e73970f4ad611811e60e2b73a11f608163f1",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "PAL_ALLAttack_down1"
+          ],
+          "native": [
+            "PAL_ALLAttack_down1"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "cave_bat",
+      "source_internal_name": "YakushimaMonster003",
+      "native_source_row_sha256": "5142eb6d892c9d273fcb39dd68cd1fb469ad40f2a1bd88a4f722a74fde0a81c8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "cawgnito",
+      "source_internal_name": "DarkCrow",
+      "native_source_row_sha256": "b86f7650e85ff81a49360ca5fe66cbe8e2e7639731274631526a02f20af5a15f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "celaray",
+      "source_internal_name": "FlyingManta",
+      "native_source_row_sha256": "86ef7af50ced2ee5b6037417ab9df931108118ac14498ab27d2358dfef5859d6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "celaray_lux",
+      "source_internal_name": "FlyingManta_Thunder",
+      "native_source_row_sha256": "583ba7a1724aae446c00109503ecc562ae54524b66e6e402bbbbd92a612ac89a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "celesdir",
+      "source_internal_name": "WhiteDeer",
+      "native_source_row_sha256": "3ffb37a49a88d0a0b1b1639bf8f150ec918d0617c2be556a0d0c17d9a231a9ee",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "celesdir_noct",
+      "source_internal_name": "WhiteDeer_Dark",
+      "native_source_row_sha256": "05300fafbe2abd2487b849fdc4e62dba2a5b65b7880c448b47bddc603560a927",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "chikipi",
+      "source_internal_name": "ChickenPal",
+      "native_source_row_sha256": "fcc958a1f51fbd40f48934866b9f1ced422b5e306b2ea3ddf3cc19d8a20a5697",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "chillet",
+      "source_internal_name": "WeaselDragon",
+      "native_source_row_sha256": "32efe733e85d4f5f9da1bda62cd2e005004bb2bb8879bc726ef035678ca43348",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "chillet_ignis",
+      "source_internal_name": "WeaselDragon_Fire",
+      "native_source_row_sha256": "65bba2372602175e908414f54b8ce8a51ed0c55a34d3de625df9488e0d0b8ae9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "cinnamoth",
+      "source_internal_name": "CuteButterfly",
+      "native_source_row_sha256": "4955b6eda8c6f70ee7662a644f066258fa98a9fc149b5c6887230a328b5d448d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "clovee",
+      "source_internal_name": "CloverFairy",
+      "native_source_row_sha256": "02800a7c73d75d72af8a1d71880e3f8c0a1ad1fa832d81a12aa6b479a2a675b4",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "cremis",
+      "source_internal_name": "WoolFox",
+      "native_source_row_sha256": "04140ad983770492d277480b91d88f3d22a9ed00a6a5d3b60da066b5c44070e6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "croajiro",
+      "source_internal_name": "KendoFrog",
+      "native_source_row_sha256": "50403d41d99fb351744fd2cbf4fab805b080ffb80ab43dff872fe769023250d8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "croajiro_noct",
+      "source_internal_name": "KendoFrog_Dark",
+      "native_source_row_sha256": "96d00fe901c7612788b63ec1e924fd64dc09b8b8e57548b1919622674c4e60dc",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "cryolinx",
+      "source_internal_name": "WhiteTiger",
+      "native_source_row_sha256": "28499156acbc9d0ea7304662d399590e551802d45887135f7c6d6a16f73dbd88",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "cryolinx_terra",
+      "source_internal_name": "WhiteTiger_Ground",
+      "native_source_row_sha256": "e31f25ed8d1c0db0507bce649f20d41cebbd7e772687fc6af3fe0b815f2a207d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "daedream",
+      "source_internal_name": "DreamDemon",
+      "native_source_row_sha256": "5d48dadf5d46e9cc63aaf0a63a18e87ed8d9edd6116c8efd088e18746531198b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dandilord",
+      "source_internal_name": "FlowerPrince",
+      "native_source_row_sha256": "a2ef130d3d78704f5622755d9a7f8bca435f4f02b6389ab5c3bef55aa94d5c0e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 60,
+          "native": 60,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dazemu",
+      "source_internal_name": "FeatherOstrich",
+      "native_source_row_sha256": "ec0369771eeb73b4cb37abd8c282f84947b393360d6a119c2b30e46cbda0b0c5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dazzi",
+      "source_internal_name": "RaijinDaughter",
+      "native_source_row_sha256": "9476b6058a45780e1c458980b17cff7c52b20e50f4dbdd7580ed004b35ba5aa2",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 20,
+          "native": 20,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dazzi_noct",
+      "source_internal_name": "RaijinDaughter_Water",
+      "native_source_row_sha256": "94f63e99c7f8521994973168b3f667b40e33193ef485eb7364d2ef024b41b409",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 20,
+          "native": 20,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "demon_eye",
+      "source_internal_name": "YakushimaBoss001_Small",
+      "native_source_row_sha256": "1f53eb03da02e8e7449e5d9456f0fc1da0ebf5b1ba65dcf7022e10128339eb25",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "depresso",
+      "source_internal_name": "NegativeKoala",
+      "native_source_row_sha256": "559947ae57dcae04aaf28ead20cd5f60ec97637b428d5a133e0ac23fab823866",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "digtoise",
+      "source_internal_name": "DrillGame",
+      "native_source_row_sha256": "7b0afc94c70b0160d4c465d53fcf1688bb7218aa69111eb9950317b8bb19871c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up1"
+          ],
+          "native": [
+            "Deffence_up1"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dinossom",
+      "source_internal_name": "FlowerDinosaur",
+      "native_source_row_sha256": "33203abcc6c9dc8d507cf98c52baf3ba4c7e6c7d70c4156b8252a26510cd9bb7",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dinossom_lux",
+      "source_internal_name": "FlowerDinosaur_Electric",
+      "native_source_row_sha256": "f03b92d0e9077d7c1486179bd776d3e7b84d833fca42efc61559a4e2d3d30730",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "direhowl",
+      "source_internal_name": "Garm",
+      "native_source_row_sha256": "f9204272d7d9028022a8c576e6effc75239576433d715e08f6aaaaff21f2e1ce",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dogen",
+      "source_internal_name": "SifuDog",
+      "native_source_row_sha256": "a4f5bf4bdf2e7ad6ed1b160b61a4be8823792be0393bd12e819b99e531569d17",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dualith",
+      "source_internal_name": "GrassGolem",
+      "native_source_row_sha256": "629aafbc7884a29930ca756ada987789a431543b83e2d04ca78ba8437186297e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dualith_noct",
+      "source_internal_name": "GrassGolem_Dark",
+      "native_source_row_sha256": "0be0406a548dc6cd8bacf08ba4791f23b822e6b0aa4df6a944bf03935b082cf4",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dumud",
+      "source_internal_name": "LazyCatfish",
+      "native_source_row_sha256": "a77c85126ddeb8c676468eca26177363246caebe4762f64b8ad82e97231da2a9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dumud_gild",
+      "source_internal_name": "LazyCatfish_Gold",
+      "native_source_row_sha256": "cfc131a004449b597cc91ec16c33727d7ed815e0ee6d7ac454bab392b695f3d3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dupin",
+      "source_internal_name": "ClownRabbit",
+      "native_source_row_sha256": "5bef14d53557b6f7c967e1b5056db0d88867a385a9fb2e96c2b7aabd4061c4f4",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "dynamoff",
+      "source_internal_name": "ThunderFluffyBird",
+      "native_source_row_sha256": "289ac31109dbafc3e4212ff44e3441232af6bb1a1c5de71b61b2be4f442e8a11",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "eidrolon",
+      "source_internal_name": "GhostDragon",
+      "native_source_row_sha256": "6cadc93457787a4f798c0dc2a2a7b8fa2e676f3d47af220fd9528b42ba33bd96",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "eidrolon_ignis",
+      "source_internal_name": "GhostDragon_Fire",
+      "native_source_row_sha256": "53ec04f7ef56b1ed6eaddf78a5d5d4f6f62b5b94eac1c59ac55b99538b2e9e3c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "eikthyrdeer",
+      "source_internal_name": "Deer",
+      "native_source_row_sha256": "f886a61c7367829817b312ebe1e24590aac5a03b568ef3b0faaa08769b7f254d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "eikthyrdeer_terra",
+      "source_internal_name": "Deer_Ground",
+      "native_source_row_sha256": "a9f3c138fc098a59d277ea7720e72e7a0a0712362ae63053a8e64acca4b6a353",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "elgrove",
+      "source_internal_name": "GrassMinotaur",
+      "native_source_row_sha256": "54df62d8cd39f2c384bc3e2f077e9a7ac87901c7bf07f469eba39f65ff3ad810",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 60,
+          "native": 60,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "elgrove_cryst",
+      "source_internal_name": "GrassMinotaur_Ice",
+      "native_source_row_sha256": "629f1f30e2ce26f619b21512da493d8de151745d4f111a50f7264bfc093f3645",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 60,
+          "native": 60,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "elizabee",
+      "source_internal_name": "QueenBee",
+      "native_source_row_sha256": "d24318746d6cee27cee54a864117403fc7495ffa41c8172a1d944ac7f6c13bca",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 10,
+          "native": 10,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "elphidran",
+      "source_internal_name": "FairyDragon",
+      "native_source_row_sha256": "ae7c7fd9f31d766eb0a6a83bf403b01b75a22507e6695c07932f05b434079799",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "elphidran_aqua",
+      "source_internal_name": "FairyDragon_Water",
+      "native_source_row_sha256": "c7dcfc42068b1fb13d7d1e7621b401b8bbb4801a0027cc51c6397de0558ee860",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "enchanted_sword",
+      "source_internal_name": "YakushimaMonster002",
+      "native_source_row_sha256": "67157ce478c43e90fa68e07e2b9f1f28ac688e22af2dea160099bbc7a58008db",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "eye_of_cthulhu",
+      "source_internal_name": "YakushimaBoss001",
+      "native_source_row_sha256": "18c5120740c52e74fb2f2037f60fa9ccbeec7212717d7047b8b4708a916936d3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "faleris",
+      "source_internal_name": "Horus",
+      "native_source_row_sha256": "8afd16362279666ae71bb6b9d1d090264254582e1461b95a5163687a8595dd17",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "faleris_aqua",
+      "source_internal_name": "Horus_Water",
+      "native_source_row_sha256": "be50a68874af372a2df3a6318e9faf549e2ffa1a152d3276d055c6d7e9619457",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "felbat",
+      "source_internal_name": "CatVampire",
+      "native_source_row_sha256": "988cd768b85680ef449e686d26686871def1635e0b94675844376bf3429d3a75",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "fenglope",
+      "source_internal_name": "FengyunDeeper",
+      "native_source_row_sha256": "0ff74f8627f3874e25a12db21097d4b3f070356468bce897e1538de52198bfa8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "fenglope_lux",
+      "source_internal_name": "FengyunDeeper_Electric",
+      "native_source_row_sha256": "818ded4e5425453f770fb1b8fdb95a372a69f763058295b91a86bc291207bb11",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "finsider",
+      "source_internal_name": "StuffedShark",
+      "native_source_row_sha256": "65b30afa895e0876e4607c8731b1e8b4d20f081e428e5488fff290ba6f323161",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "finsider_ignis",
+      "source_internal_name": "StuffedShark_Fire",
+      "native_source_row_sha256": "c870fd5f2314287089201e50cdb1cb5ce1f42c4782ccfcd2ea60b8bd3b4948e6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "flambelle",
+      "source_internal_name": "LavaGirl",
+      "native_source_row_sha256": "751a2ad55ff6d6a72b3cccc796ee135c5766cb806d3713cf685ecc94dec6a17d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "flaracle",
+      "source_internal_name": "FoxExorcist",
+      "native_source_row_sha256": "6eabe2e920ca55904b5606bcc9d7880cdcedd3c362f6d64d91dc0be773073c66",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "flopie",
+      "source_internal_name": "FlowerRabbit",
+      "native_source_row_sha256": "c37a676ca6225c38b85d340eadf605c76be9e91089628de7d6b991f5b56c400e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "foxcicle",
+      "source_internal_name": "IceFox",
+      "native_source_row_sha256": "a7e17ea6e1aeec9a99db4a007859701cd3f273e5f0406724aeae4c9e7744d673",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "foxparks",
+      "source_internal_name": "Kitsunebi",
+      "native_source_row_sha256": "7eb673c8e266898b718aa29e496e45742ffcc4ac505f66a5369cfd5a3947567b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "foxparks_cryst",
+      "source_internal_name": "Kitsunebi_Ice",
+      "native_source_row_sha256": "1d50cfa4a001f5d02b90e08a00f1dc665563c91e8652b29835c0e0c104df8350",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "frostallion",
+      "source_internal_name": "IceHorse",
+      "native_source_row_sha256": "047e874eac97f07634c250c96ac384ed937abf1e128bff2308abf83bb726317d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Ice_2_PAL",
+            "Legend"
+          ],
+          "native": [
+            "ElementBoost_Ice_2_PAL",
+            "Legend"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "frostallion_noct",
+      "source_internal_name": "IceHorse_Dark",
+      "native_source_row_sha256": "b3308f901d75e50eb3517ee22b5791fa3698c528c32f84d438021aecfde7d992",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Dark_2_PAL",
+            "Legend"
+          ],
+          "native": [
+            "ElementBoost_Dark_2_PAL",
+            "Legend"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "frostplume",
+      "source_internal_name": "SnowPeafowl",
+      "native_source_row_sha256": "c39408ead66987c391703fa3c0f15962684ca9850f239c04d43ff259c1c80597",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "fuack",
+      "source_internal_name": "BluePlatypus",
+      "native_source_row_sha256": "96726f79b8bbc2bb8357554e83f1d640c476c9938085f4c03e8857af444cb795",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "fuack_ignis",
+      "source_internal_name": "BluePlatypus_Fire",
+      "native_source_row_sha256": "cd82b42179a6ba960ff5649a22a9f82491bc8326f7933cb4fe92b529a79cfd08",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "fuddler",
+      "source_internal_name": "CuteMole",
+      "native_source_row_sha256": "edcdc9075417ed86dff185c20b0ff7a66e590faa5796a8511a1fd6115b8c66a0",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "galeclaw",
+      "source_internal_name": "Eagle",
+      "native_source_row_sha256": "2d52b3caef6344a8ea70087a8d0a319adcc01f528c28b2d5ed3de96d4d02ff3c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "ghangler",
+      "source_internal_name": "GhostAnglerfish",
+      "native_source_row_sha256": "7a66794e95697076461a9a711811ff60b1ee077b2c1a3aeefe41cebfdcb13f48",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "ghangler_ignis",
+      "source_internal_name": "GhostAnglerfish_Fire",
+      "native_source_row_sha256": "ada8d36c36f782da4654cea03bc9251f08ac6367a0f002d25263b4c1b08dad51",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gildane",
+      "source_internal_name": "GoldenHorse",
+      "native_source_row_sha256": "7a867bcc10f94f9f51080fdcf9bc32dbe76a94e8a222fd0d25ae10e3d175f5af",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gildra",
+      "source_internal_name": "MummyPal",
+      "native_source_row_sha256": "685ca368a2199e5ec237bb5ba008b03d8ebe6b5d25bb754f06f02eb0017240c2",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gloopie",
+      "source_internal_name": "OctopusGirl",
+      "native_source_row_sha256": "6870a87f70128a1850dc55cfeca16139de7790931ad3515983e248637f48bd12",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gloopie_primo",
+      "source_internal_name": "OctopusGirl_Neutral",
+      "native_source_row_sha256": "05719adaea3871edd896a80e4b7504d676b0ca8598cfbdf8caa9ae7226896f12",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gobfin",
+      "source_internal_name": "SharkKid",
+      "native_source_row_sha256": "49f8bdc6dae55287363eef1960e90d89923a22d3234f1eb79d4582e9c568be9c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gobfin_ignis",
+      "source_internal_name": "SharkKid_Fire",
+      "native_source_row_sha256": "864108c6af88c0506d4470510b13ff392772f2a0dee0fb3f7e540d0198afcf11",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gorirat",
+      "source_internal_name": "Gorilla",
+      "native_source_row_sha256": "bc8d277587a9bb08bf12844f971b9ccc5248289a81512c4b991356bed2a2cafd",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "PAL_rude"
+          ],
+          "native": [
+            "PAL_rude"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gorirat_terra",
+      "source_internal_name": "Gorilla_Ground",
+      "native_source_row_sha256": "3d687620719af7fa7e4ed05d0ec0a6de32ccbe5fd928fe59e4f1a39cd15a49f9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "PAL_rude"
+          ],
+          "native": [
+            "PAL_rude"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "green_slime",
+      "source_internal_name": "YakushimaMonster001",
+      "native_source_row_sha256": "8622de7f701b8a9a5f95eb343ad120c71af2843a05c0969255b4d119d27bd015",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "grintale",
+      "source_internal_name": "NaughtyCat",
+      "native_source_row_sha256": "d1e55cefc6b945b1a9c3ccb38d98341304e0544ab53ba9f8ac4682930ca1f146",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "grizzbolt",
+      "source_internal_name": "ElecPanda",
+      "native_source_row_sha256": "8ba13f1316ed137b35a63b45a64919fdc191385fb9601da97b1d7e394bb9c836",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gumoss",
+      "source_internal_name": "PlantSlime",
+      "native_source_row_sha256": "2d954051038387e16fa1c619329ebfb60f214aa32ea6aa03ec80734098305b35",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "gumoss_flower",
+      "source_internal_name": "PlantSlime_Flower",
+      "native_source_row_sha256": "05d57cbc397a38e0c32b4a5527c4d87bcfdb35b874edee9b62b4eef4474056d9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "hangyu",
+      "source_internal_name": "WindChimes",
+      "native_source_row_sha256": "e21500beff10fc575d891775b76dd32098785576b354d43c317a122ff7efb984",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "hangyu_cryst",
+      "source_internal_name": "WindChimes_Ice",
+      "native_source_row_sha256": "d5e2589b2fd913548e70d5c931dbc239d1e96e7a7de5695fa6024ac0f5a3d335",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "hartalis",
+      "source_internal_name": "LegendDeer",
+      "native_source_row_sha256": "f5246b486c61a18d996a2962ba7eee16b991456b21543d2fcb7272710b9aaa8d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Salvation"
+          ],
+          "native": [
+            "Salvation"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "helzephyr",
+      "source_internal_name": "HadesBird",
+      "native_source_row_sha256": "cc8caecfbfba07a1a84a02597165d6e8cfc5a02111913267ffbf0eaeb4048683",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "helzephyr_lux",
+      "source_internal_name": "HadesBird_Electric",
+      "native_source_row_sha256": "1cd4da639e60b2e39f5cb2f7072399cd922eaa7eb1bdfe224bd65828df8550e8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "herbil",
+      "source_internal_name": "LeafMomonga",
+      "native_source_row_sha256": "36bd9202182ab20f4ccb86967ac73db2d2290682f0275438213b259a5b91e172",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "hoocrates",
+      "source_internal_name": "WizardOwl",
+      "native_source_row_sha256": "2083505d27627a017ca2ba7c5899b5c8dbd10a90fd1a002fce91c6045fec1344",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "hoodle",
+      "source_internal_name": "HoodGhost",
+      "native_source_row_sha256": "cc0e6d5ec932926c24cca357dcd18e5358a874ce38762fcb76d4dc081ef69b24",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "icelyn",
+      "source_internal_name": "IceWitch",
+      "native_source_row_sha256": "e6da553397f3a189844d1db93a0ae6f0144bc19117e30cbbcf72450fa005867e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "illuminant_bat",
+      "source_internal_name": "YakushimaMonster003_Purple",
+      "native_source_row_sha256": "731827502120d655da21dbc574780887a3a99e35bc928eb8a5aeadd75d1f3ffb",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "illuminant_slime",
+      "source_internal_name": "YakushimaMonster001_Pink",
+      "native_source_row_sha256": "57b199b6bfe4e668b89b0937bc2ff0129aa09dd10df9e289d8782e871a1b056c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "incineram",
+      "source_internal_name": "Baphomet",
+      "native_source_row_sha256": "e6b537c6f28c3b539f14bae85a4f307d3dd457ebf8e4813fbc8ba94320f178dc",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "incineram_noct",
+      "source_internal_name": "Baphomet_Dark",
+      "native_source_row_sha256": "67d8f70bcaf6d8604abd322fc95810826661fa9626b8904e41f082aeae7c5881",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "jelliette",
+      "source_internal_name": "JellyfishFairy",
+      "native_source_row_sha256": "26db315fb0e5b970f7da286b744e0bfebf30924916db4d5c2454b2586cd79d86",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "jellroy",
+      "source_internal_name": "JellyfishGhost",
+      "native_source_row_sha256": "fd3726ce1b4d170d1187a3f0d651dd675cc3149c6ca1a8cf7d8152cd5b9433af",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "jetragon",
+      "source_internal_name": "JetDragon",
+      "native_source_row_sha256": "58a4ae344a3fa4b2c1f36f57c3f866f2994608af443e7b2f4fef684461866e55",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Dragon_2_PAL",
+            "Legend"
+          ],
+          "native": [
+            "ElementBoost_Dragon_2_PAL",
+            "Legend"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "jolthog",
+      "source_internal_name": "Hedgehog",
+      "native_source_row_sha256": "c158aceb3a139e86e9e2046d71042af64a126521626d8d9c0c8d2f8c279d8f50",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "jolthog_cryst",
+      "source_internal_name": "Hedgehog_Ice",
+      "native_source_row_sha256": "9855aee209a2b064742c4ecf7e20c1eff1d7cde65a298121f36f4bec7f668692",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "jormuntide",
+      "source_internal_name": "Umihebi",
+      "native_source_row_sha256": "e8088a4551b104b425616762030f1bfafc6779db231539c1e3cc397394cebe33",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Aqua_2_PAL"
+          ],
+          "native": [
+            "ElementBoost_Aqua_2_PAL"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "jormuntide_ignis",
+      "source_internal_name": "Umihebi_Fire",
+      "native_source_row_sha256": "a5df6aaf0074616968abe1e32589a8082d33145e52862ae90f623078d1e487fd",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "katress",
+      "source_internal_name": "CatMage",
+      "native_source_row_sha256": "ec1408e9a52e4efae8534d666ab0a6c3bb8838f1d4ea2a7b0030155473b583bb",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "katress_ignis",
+      "source_internal_name": "CatMage_Fire",
+      "native_source_row_sha256": "3e14e093dbc9d21694116ce4075a379b75c2539fc157c868019b9c258b48b9a5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "kelpsea",
+      "source_internal_name": "Kelpie",
+      "native_source_row_sha256": "52685728574c96dc15a3662a283fae10db8dc037cc4a402340b4804fa0494c5e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "kelpsea_ignis",
+      "source_internal_name": "Kelpie_Fire",
+      "native_source_row_sha256": "43a4cd2fcaf0e2214b6aefb9d4087f24bd8a308e7f8de0cca1e96c47330c054e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "kikit",
+      "source_internal_name": "SmallArmadillo",
+      "native_source_row_sha256": "201f9b18def96c49fe159d25c0153314669d2e8ae480c77bd3f7f9df57b7ed2a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "killamari",
+      "source_internal_name": "NegativeOctopus",
+      "native_source_row_sha256": "05f645ba0e264e7264e6b1801ce603247ce49426f1eac1da02b340367abaabf1",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "killamari_primo",
+      "source_internal_name": "NegativeOctopus_Neutral",
+      "native_source_row_sha256": "c5d46380c70ee5f38da9181c970a88a4b1428fdb83aa3e0b861e669e35bf2406",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "kingpaca",
+      "source_internal_name": "KingAlpaca",
+      "native_source_row_sha256": "3dd8eed85a805433fd0946a6a525351f3ad52cf7304ba8dc6953af8f77c2ef1b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 90,
+          "native": 90,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "kingpaca_cryst",
+      "source_internal_name": "KingAlpaca_Ice",
+      "native_source_row_sha256": "bf00604f79fac69f0680159e4e65aaf63e62fb7ec90ea71f811c20995777a0ed",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 90,
+          "native": 90,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "kitsun",
+      "source_internal_name": "AmaterasuWolf",
+      "native_source_row_sha256": "e6163f4afa675191c751a0661a743b78450b050b6172b7773a55f53714a09ccd",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "kitsun_noct",
+      "source_internal_name": "AmaterasuWolf_Dark",
+      "native_source_row_sha256": "1dc645c9384d14fc1c58a15f877574751499ded770f1e957bf2aa406c2ede739",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "knocklem",
+      "source_internal_name": "WingGolem",
+      "native_source_row_sha256": "5693b6a2596845230f3f48f38ce31f7b725d232435d5d833c8ba4219a367c99c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 70,
+          "native": 70,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "knocklem_ignis",
+      "source_internal_name": "WingGolem_Fire",
+      "native_source_row_sha256": "d7c76f2b60c0220687ff4664d1366033c78c350f39d3fa926e33138fd2d486a8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 70,
+          "native": 70,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lamball",
+      "source_internal_name": "SheepBall",
+      "native_source_row_sha256": "fd2de82191a1e4bf0ed6e1a3eed2ab9739863bc59b44356de586b11306e4efce",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lapiron",
+      "source_internal_name": "BrownRabbit",
+      "native_source_row_sha256": "d29f8d584b94ad82df9e4aff02b6e91a44a2e45ef3f67d05256775219498dc5d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lapure",
+      "source_internal_name": "SleeveRabbit",
+      "native_source_row_sha256": "05ef3f7666929d4af3a5094d6b84792b7e88f596038322e6d9f5391a7a608c77",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "leafan",
+      "source_internal_name": "PandaGirl",
+      "native_source_row_sha256": "019c7a9b30bc8c4202edb1e8fca6c4c1f4976272c7a4ecec9b2bea74bb0081de",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "leezpunk",
+      "source_internal_name": "LizardMan",
+      "native_source_row_sha256": "f89bd9bd0deeb115c3ca40cc33456d84badb39d59404966e241ffebbe408e839",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "leezpunk_ignis",
+      "source_internal_name": "LizardMan_Fire",
+      "native_source_row_sha256": "8d9b8aca38ed023c727f22ffeb03b97b9f40ef52648cd313f15584c778c56238",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lifmunk",
+      "source_internal_name": "Carbunclo",
+      "native_source_row_sha256": "a00c1a2e54b428565489bb026848879f83df2cf2ca9be8b39abb83d0eaa580ad",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "loomen",
+      "source_internal_name": "LanternButler",
+      "native_source_row_sha256": "a85eeaa7b7c8bdd608f276e88a823b5e6b5a5f8c86f5260ef9947c2af0da55d4",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "loupmoon",
+      "source_internal_name": "Werewolf",
+      "native_source_row_sha256": "db5785c1f1adb924dfcfd9d9aac453237393075e3f43f7b5598368cbc5be9975",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "loupmoon_cryst",
+      "source_internal_name": "Werewolf_Ice",
+      "native_source_row_sha256": "7982afca930b6cc4d9cd2fc0d94a695102a4d994def4a6ce3a5db596c8bd3fd9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lovander",
+      "source_internal_name": "PinkLizard",
+      "native_source_row_sha256": "a4c23556c96be2626f57a972b04b1511af058e810de68024d25d88ebbc6d86b8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 30,
+          "native": 30,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementResist_Normal_1_PAL"
+          ],
+          "native": [
+            "ElementResist_Normal_1_PAL"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lullu",
+      "source_internal_name": "LeafPrincess",
+      "native_source_row_sha256": "e25f7f2630a06dbb64b8500f8c9384f38539ac17beeac57454f4f957ba2e28a0",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 30,
+          "native": 30,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lunaris",
+      "source_internal_name": "Mutant",
+      "native_source_row_sha256": "bf7f595434806a7038276fc73a3efa1db399e13b5c6a72b2b5db2b672bebdac0",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lyleen",
+      "source_internal_name": "LilyQueen",
+      "native_source_row_sha256": "34a87dce97d3de48658abf71d17c07ae63143fddc87aaf779d8dfd2e754be22f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 30,
+          "native": 30,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Leaf_2_PAL"
+          ],
+          "native": [
+            "ElementBoost_Leaf_2_PAL"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "lyleen_noct",
+      "source_internal_name": "LilyQueen_Dark",
+      "native_source_row_sha256": "144deb0001388e5e42468c4655ba500e07b34ea446a9faa09a721777a6541375",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 30,
+          "native": 30,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "majex",
+      "source_internal_name": "DarkFlameFox",
+      "native_source_row_sha256": "1735a57d64cc26ebddb2968990cc977c87cae99cd42f36cb7421bf5c91e66410",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mammorest",
+      "source_internal_name": "GrassMammoth",
+      "native_source_row_sha256": "31a6fb8f5cfa1aedebba43a582f9d47266b0c4bb516fc570af927aa86e3f451f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mammorest_cryst",
+      "source_internal_name": "GrassMammoth_Ice",
+      "native_source_row_sha256": "89be7e7fdc575e1c63870a1f9613194b90659d4733906859a534c9886244482a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "maraith",
+      "source_internal_name": "GhostBeast",
+      "native_source_row_sha256": "549dcfd2e73952f34e9b390bb624ff60a74cd1ebea8db8883426b2f11f3fba5c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mau",
+      "source_internal_name": "Bastet",
+      "native_source_row_sha256": "93e918d06e7fbf557e51120a8b5aeb4ab8ef23cc4634ca7112de76c88035f428",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mau_cryst",
+      "source_internal_name": "Bastet_Ice",
+      "native_source_row_sha256": "db85dcca696d68c1010db8173c9985bf5abfc78875feeeaca81085179c5a49f0",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "melpaca",
+      "source_internal_name": "Alpaca",
+      "native_source_row_sha256": "4b2519e1daa687a30ad1e3410f6b5767792f86826fba8d9f4663c50029ea6041",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "menasting",
+      "source_internal_name": "DarkScorpion",
+      "native_source_row_sha256": "3b51c985a4082a045ddeb9269daa05c6146d4f4c1592e3e707f949a338119f0b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "menasting_terra",
+      "source_internal_name": "DarkScorpion_Ground",
+      "native_source_row_sha256": "1958522e223f598f5a4662cd1fff4b277a0f067a0709ecc3f60b6e02b04bd1e4",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mimog",
+      "source_internal_name": "MimicDog",
+      "native_source_row_sha256": "72c30078093e1e06ece05af39315002c04c15cff4c1b0219a6a8d1e6e4d2081b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 80,
+          "native": 80,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "moldron",
+      "source_internal_name": "VolcanoDragon",
+      "native_source_row_sha256": "ba6bf971456d38f936fc6e30478aa100ada7acde30b585a0743f74a43334afdf",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "moldron_cryst",
+      "source_internal_name": "VolcanoDragon_Ice",
+      "native_source_row_sha256": "fe8a06d27bd494b4c066e49ba6d8dfafab96aee8035d26984d4633e57f8468ae",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mossanda",
+      "source_internal_name": "GrassPanda",
+      "native_source_row_sha256": "76ecaa5438ad98bd270dfda9eda4b800a2b2ea460c009c11cb374c441da12716",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mossanda_lux",
+      "source_internal_name": "GrassPanda_Electric",
+      "native_source_row_sha256": "a12a338bcd9796052920bf5ea638be18f73d76989ff41d53e849d656456baf8a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mozzarina",
+      "source_internal_name": "CowPal",
+      "native_source_row_sha256": "97057e4e88d3b6c1d05995f4fe4e7e7dda494c8632897cefcd3832458b7eed44",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 20,
+          "native": 20,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "muffly",
+      "source_internal_name": "FluffyBird",
+      "native_source_row_sha256": "a730a58fe691fa1d52f026922773e948556132d1bec5835fab13c2177152996b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "munchill",
+      "source_internal_name": "IceCrocodile",
+      "native_source_row_sha256": "b28a369f14c3a7cf9a35590bc31b3a30ab52f5ce0cd50ba215e2895e50fd9a5d",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "mycora",
+      "source_internal_name": "MushroomLady",
+      "native_source_row_sha256": "e0c45edd3c01ead8af7294dae49a0530f75f526cc63a436840dfd48bca4400c8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 30,
+          "native": 30,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "necromus",
+      "source_internal_name": "BlackCentaur",
+      "native_source_row_sha256": "597fa48e90af75ec8222bf0b66cb5033a63f49294439de3e9b8e8d514f08d8fb",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Dark_2_PAL",
+            "Legend"
+          ],
+          "native": [
+            "ElementBoost_Dark_2_PAL",
+            "Legend"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "needoll",
+      "source_internal_name": "CactusDoll",
+      "native_source_row_sha256": "d814bcbbae47b5416cbbfa360710917afb21d78523be664666feb719407afc2c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "needoll_noct",
+      "source_internal_name": "CactusDoll_Dark",
+      "native_source_row_sha256": "424d79ba27e1d7b76fdde53e50948ec56dbc002f8af92ee7e5fb5aa304b11914",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "neptilius",
+      "source_internal_name": "PoseidonOrca",
+      "native_source_row_sha256": "46e7fbbdf9b02f3a2042a60ae855f135f69da7b5941646331b2d16418407caa5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Legend",
+            "Nushi"
+          ],
+          "native": [
+            "Legend",
+            "Nushi"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "nitemary",
+      "source_internal_name": "GhostRabbit",
+      "native_source_row_sha256": "4e7657542ac8ed8c97c3f2ee43a03fe2ed57ad7968c3629d29b9ec1b05734b5f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "nitemary_botan",
+      "source_internal_name": "GhostRabbit_Grass",
+      "native_source_row_sha256": "363b78fec395259d134af6966366461b953ba16d3644d86241a2d562758140da",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "nitewing",
+      "source_internal_name": "HawkBird",
+      "native_source_row_sha256": "bbb4ed95a2e685646f6cfb66f7461674b4174a697c412055ded02e726117a3f5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "nox",
+      "source_internal_name": "NightFox",
+      "native_source_row_sha256": "fd01e5721ad8bc3724349e6effcbb93431cc1b55d123ecda32af5664e6eb34a6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "nyafia",
+      "source_internal_name": "BadCatgirl",
+      "native_source_row_sha256": "9f1e4f154f96f99b71cf792a20b3c1a731fcd19a4595dc13a5075907178c0405",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "omascul",
+      "source_internal_name": "MysteryMask",
+      "native_source_row_sha256": "e87cf038b62e2da61b9a7c867ff7db58917f5a7768a05fe07baa7c1eca9b6373",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "ophydia",
+      "source_internal_name": "LotusDragon",
+      "native_source_row_sha256": "d243770154d97e6eba5c45c0804e0116afa109ea44dc5dfddabaf99a2433334a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "orserk",
+      "source_internal_name": "ThunderDragonMan",
+      "native_source_row_sha256": "ef9fef093daa77e1730e4f51fae8c4f65d29692b7aa5e95dc14ded8c6320a02f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Thunder_2_PAL"
+          ],
+          "native": [
+            "ElementBoost_Thunder_2_PAL"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "paladius",
+      "source_internal_name": "SaintCentaur",
+      "native_source_row_sha256": "2626d2c78d5e16e9c756a3fddddf9612390616b4999887095d9850e634e05beb",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "ElementBoost_Normal_2_PAL",
+            "Legend"
+          ],
+          "native": [
+            "ElementBoost_Normal_2_PAL",
+            "Legend"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "palumba",
+      "source_internal_name": "TropicalOstrich",
+      "native_source_row_sha256": "ad8a7d90104d3bbd869535bcbe3372acdcb36d5c56d4047bd5411e5b500e1738",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "panthalus",
+      "source_internal_name": "KingWhale",
+      "native_source_row_sha256": "288574cf84e89685f4b3fdc4b5b119c4a18a7282a8445aaaef67ed180e1371cc",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "pengullet",
+      "source_internal_name": "Penguin",
+      "native_source_row_sha256": "ddcd78a6f33014ee8e71e1508c7267b6feaec7109c4185c2dac1da218249a67a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "pengullet_lux",
+      "source_internal_name": "Penguin_Electric",
+      "native_source_row_sha256": "4640f037ef35f47c2306163e7407ada05786f013ab53802f50d917476b19de77",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "penking",
+      "source_internal_name": "CaptainPenguin",
+      "native_source_row_sha256": "2fa132fc060521e9e5e7f3d572cc9f5db1444cca773e388e04740b655f7cd165",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "penking_lux",
+      "source_internal_name": "CaptainPenguin_Black",
+      "native_source_row_sha256": "9d0a3d12f12bae961fe2e93b15a7ec7f215ffef5e26a97a85ec64feaadb6c847",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "petallia",
+      "source_internal_name": "FlowerDoll",
+      "native_source_row_sha256": "6fc6e93d3505bbf928d69489999c5ab69ad919bf7a0a07fe451845b8f8443b53",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "petallia_ignis",
+      "source_internal_name": "FlowerDoll_Fire",
+      "native_source_row_sha256": "fce7ed3ee41909f40144be7b31781a141a1d6acf215e3afd8b025fb2223554c8",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "pierdon",
+      "source_internal_name": "RockBeast",
+      "native_source_row_sha256": "eebb4051b19a4f278c7e4c264eef1649008a3858bf2c2f07057a4cfaf32feb1b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "pierdon_cryst",
+      "source_internal_name": "RockBeast_Ice",
+      "native_source_row_sha256": "125b595b4587510960184c3e8cf3445fb32dd6457754b40631f2f164f2973b02",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "polapup",
+      "source_internal_name": "IceSeal",
+      "native_source_row_sha256": "f76bd4ae197d723adf80e27f56051a2b52e0c2ccdfe668c24c1d0ede24b6c206",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "polapup_terra",
+      "source_internal_name": "IceSeal_Ground",
+      "native_source_row_sha256": "9efd3af45b9e52ffcb4a8a02f3b947085274e254779216f47d8449e9e2396fd9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "prixter",
+      "source_internal_name": "ScorpionMan",
+      "native_source_row_sha256": "f4cb3f6df81ff324f3fed81a51e38f73e6afe731c700b26b9365ce76899a5f44",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "prixter_lux",
+      "source_internal_name": "ScorpionMan_Electric",
+      "native_source_row_sha256": "047f43787a965a57474d02a3d6d77a75480ba719b224e166c1a1649110830f36",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "prunelia",
+      "source_internal_name": "BlueberryFairy",
+      "native_source_row_sha256": "5b2eb83ad0c0c5185f5eac9500eaae3966a23eec5074c61cb392ff5dd26f8560",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "puffolt",
+      "source_internal_name": "ElecPomeranian",
+      "native_source_row_sha256": "89b1e01ecea6b9ca35457b9a321ff5f9b38b53117cf0b193911d1eac586e6e27",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "pupperai",
+      "source_internal_name": "SamuraiDog",
+      "native_source_row_sha256": "85cbb6e335ad1260f2c10763ccf77adcc23968c977caeb8943ce34293c69f6f3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "purple_slime",
+      "source_internal_name": "YakushimaMonster001_Purple",
+      "native_source_row_sha256": "14829a72f0e1195ca5f6e49b324bc711656f0e92a8b1f881280a1cd06e08fb75",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "pyrin",
+      "source_internal_name": "FireKirin",
+      "native_source_row_sha256": "29fc96d8c23bf264cbf5ff84cd3410cfcbc006d4d3c25f133f643d1d91730662",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "pyrin_noct",
+      "source_internal_name": "FireKirin_Dark",
+      "native_source_row_sha256": "990df7a4e206a059901996f57156674ba77f244d5365236b399bfd00108aea60",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "quivern",
+      "source_internal_name": "SkyDragon",
+      "native_source_row_sha256": "45fcc5456650d7c5a4f04cd5d169f89b096d2366a32d990f500f715184fb8f19",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "quivern_botan",
+      "source_internal_name": "SkyDragon_Grass",
+      "native_source_row_sha256": "b8045ff2fb6fc7e8bf9f09c2684f27a8ad67d93d85ff4e295c78de8281407964",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "ragnahawk",
+      "source_internal_name": "RedArmorBird",
+      "native_source_row_sha256": "4e97d616b6fc0ecd4c0ed8aa8a13fa5f1dfc0ceb6bd6fb693106bfeec4943578",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "rainbow_slime",
+      "source_internal_name": "YakushimaMonster001_Rainbow",
+      "native_source_row_sha256": "ee01d0ea53c6e2c6173d6111b7d6dfe4fb070b0ce0720f87d95a4ee975cfacc4",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "rayhound",
+      "source_internal_name": "ThunderDog",
+      "native_source_row_sha256": "3d4eeee05b3cd922e0d0ab8cf2ede60c4a3a59a2ecdd76abbc80ae4d64b12ca6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "rayhound_cryst",
+      "source_internal_name": "ThunderDog_Ice",
+      "native_source_row_sha256": "b6e3f9c862d824e4992307280bfc99812c4cd5eb29d7d5ca1d374d95d3ad96ca",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "red_slime",
+      "source_internal_name": "YakushimaMonster001_Red",
+      "native_source_row_sha256": "2cd1cd34f9f01191b5e2033a6a8187a4774948fdfaab5584ebf586d366e76fe0",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "reindrix",
+      "source_internal_name": "IceDeer",
+      "native_source_row_sha256": "14df10bddd93c4942a9a5f36212682fd9dd4f2e30f75184901c703d5ca0cd82f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "relaxaurus",
+      "source_internal_name": "LazyDragon",
+      "native_source_row_sha256": "01b4c8fc18fad735bc17382135457cbf919c58f7e2e1250dfbc8a4ffd2af83f2",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "PAL_FullStomach_Up_1"
+          ],
+          "native": [
+            "PAL_FullStomach_Up_1"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "relaxaurus_lux",
+      "source_internal_name": "LazyDragon_Electric",
+      "native_source_row_sha256": "93a97b771f56723d168f7b84b5ef7ff24cca8ac2fcd9fc5f1dd1f1dea4eb29d5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "renjishi",
+      "source_internal_name": "KabukiMan",
+      "native_source_row_sha256": "74490b86de908ccb7d3a84f54f4318ff6a442bcc900d877aa7f3d625f3938bf3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 60,
+          "native": 60,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "reptyro",
+      "source_internal_name": "VolcanicMonster",
+      "native_source_row_sha256": "cd7d4961d8865b57f4840c8a93b2db93d994d54f8ddf7ec28861243efb03826f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "reptyro_cryst",
+      "source_internal_name": "VolcanicMonster_Ice",
+      "native_source_row_sha256": "2a6bbe732fab8e9dccc6a42315aead401163a16041d70cd2aa3490e3dd254b61",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "ribbuny",
+      "source_internal_name": "PinkRabbit",
+      "native_source_row_sha256": "cd76fa1c56a1bfabe011f3859753ca7b0a248003b4dee9cc86e7f1f61ea2ab72",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "ribbuny_botan",
+      "source_internal_name": "PinkRabbit_Grass",
+      "native_source_row_sha256": "5554f84a2bf8c9821631cf859cda1c4d4d156a9a3238ccb95134579d26a8f01f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "robinquill",
+      "source_internal_name": "RobinHood",
+      "native_source_row_sha256": "4b5a4a85ead5c309ec1dceeebcf643cc6fe66808e084afef5f13a89503929be5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "robinquill_terra",
+      "source_internal_name": "RobinHood_Ground",
+      "native_source_row_sha256": "994aeda414f00311045c3c91fdac38f94e227d645af3d3d417bbfe7deaa77e51",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "rooby",
+      "source_internal_name": "FlameBambi",
+      "native_source_row_sha256": "d126b424d0ef974d4583084d61abaf3f3a8d0c724f5a04b8874b954befe28eb4",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "roujay",
+      "source_internal_name": "ThiefBird",
+      "native_source_row_sha256": "f72a4f1a16818e331269e4af32fa31582177bc4bb4c8613d73d0065bc6b8fa45",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 60,
+          "native": 60,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "rushoar",
+      "source_internal_name": "Boar",
+      "native_source_row_sha256": "3a70bc32a4fda7f99e0ecba99cf9489b11d636bb2240444a66174943c066550c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "sekhmet",
+      "source_internal_name": "Sekhmet",
+      "native_source_row_sha256": "0e989f39c51f673da84e05975c04ed058df3708747cfe67ad7b4422fd42e1f53",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 30,
+          "native": 30,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "selyne",
+      "source_internal_name": "MoonQueen",
+      "native_source_row_sha256": "fad3690d8bacbaa3b1fd77a7d338fb1073fbc12e7ef099b2c61ede1477605ed3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 20,
+          "native": 20,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "shadowbeak",
+      "source_internal_name": "BlackGriffon",
+      "native_source_row_sha256": "a9a65a889a4f4db580b1bd26497e5e9df40d2741cb2941d400dc391c7cbc48c9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "shaolong",
+      "source_internal_name": "BlueSkyDragon",
+      "native_source_row_sha256": "df5092e052be48c4914a437530f1f165123e08cfa370cafd593cbec1885cafbd",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "shroomer",
+      "source_internal_name": "MushroomDragon",
+      "native_source_row_sha256": "90ce35043386fbb67d1d0904e708a9d22b63941ecb9305edc789ddf010259b6f",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 55,
+          "native": 55,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "shroomer_noct",
+      "source_internal_name": "MushroomDragon_Dark",
+      "native_source_row_sha256": "7760cc11ca76134e391e3f89ffd848258197c798c4e8b496899a62d1e2a99f8a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "sibelyx",
+      "source_internal_name": "WhiteMoth",
+      "native_source_row_sha256": "32d252b1b9b7c96978a6c2748a51b19ee6b6ff2b5d4969921ac0d5920b2c99b3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "sibelyx_primo",
+      "source_internal_name": "WhiteMoth_Neutral",
+      "native_source_row_sha256": "df902de00c2fd9ba85ec5e52eb307f7148e0a2c56b5f0dc305a2931388e7b151",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "silvance",
+      "source_internal_name": "Mothman",
+      "native_source_row_sha256": "491200fab67581f993eb21cedfcf38ffc97a0cc0510bd6c10c4b39a4a5df5214",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "silvegis",
+      "source_internal_name": "WhiteShieldDragon",
+      "native_source_row_sha256": "c0716a32636a26ea7779829fc7e6419a386cdfab08718268f8dc638f4bc796dd",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "skutlass",
+      "source_internal_name": "SwordCutlassfish",
+      "native_source_row_sha256": "d1f2075b2e783c71133e921a46b92a00ee2eec859238fe4cb28c2aecf9854c1e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "skutlass_ignis",
+      "source_internal_name": "SwordCutlassfish_Fire",
+      "native_source_row_sha256": "297f8831e61634535b4c96f3fa7c92e1a4d2df5c0e9a557538a51502110fe8e7",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "slowatt",
+      "source_internal_name": "ElecLizard",
+      "native_source_row_sha256": "a9628e6ceac45b914f63a73a022529152704e1455423fe9a4a5e938fe4ecacb1",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "smokie",
+      "source_internal_name": "BlackPuppy",
+      "native_source_row_sha256": "fd3a3927eccbcd7022c9853aba54b3ebace0105fc9940bf3b62d01526907b541",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "smokie_cryst",
+      "source_internal_name": "BlackPuppy_Ice",
+      "native_source_row_sha256": "510a9952eb337840bdeb77bfdffe660edcf8ee91fb2298ac3f07c2ff97383ed9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "snock",
+      "source_internal_name": "ElecSnail",
+      "native_source_row_sha256": "b72ea15fe3d3b5402e2347af846bbb97d921396b2fb9e90332bc78fa4e69f35c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "snock_lux",
+      "source_internal_name": "ElecSnail_Ground",
+      "native_source_row_sha256": "d605bd15927b5bf11557f010a4c9de38593b09013c02a3a35e6b924bd9897a99",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "snugloo",
+      "source_internal_name": "SmallYeti",
+      "native_source_row_sha256": "8db4db99d0f0731e356cd997187ffa95309497772c05d332b2be70dc1d2eb0f1",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "solenne",
+      "source_internal_name": "MonochromeQueen",
+      "native_source_row_sha256": "0511834feba06cfb2aae226e1c7135402c2d2fbafd6d8bf97417cee1cc196fbd",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 30,
+          "native": 30,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "solmora",
+      "source_internal_name": "KingSunfish",
+      "native_source_row_sha256": "5286080df1b2bf5284becb05232e5eb4188e265dfd53e6c46b0e0b30388d8b2a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "solmora_lux",
+      "source_internal_name": "KingSunfish_Thunder",
+      "native_source_row_sha256": "dd0379b13d51b28883d8e19c2f6c7c9ef0a9c6dbbb96c86dbc4c028e41ab1fcf",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "sootseer",
+      "source_internal_name": "CandleGhost",
+      "native_source_row_sha256": "ae7ef0a9cbe3b42b39fdd80dc3e1fcbd48172b241d662ccf76c309fd72eabb16",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "souffline",
+      "source_internal_name": "DandelionGirl",
+      "native_source_row_sha256": "d3f2d43ab6af87080d2aef8b2731020f69dffe2199be6fe8c5588ad8ba9b7cca",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "sparkit",
+      "source_internal_name": "ElecCat",
+      "native_source_row_sha256": "2eeab04c5d6a0ac3f780a95182b6b0354de2adbae213523b78162e8452edb666",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "splatterina",
+      "source_internal_name": "GrimGirl",
+      "native_source_row_sha256": "6c94f15cac4741e8e3b68acdae1dc9dd9aea84474d07ec2a8aa4191ad16c64f5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 38,
+          "native": 38,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "PAL_sadist"
+          ],
+          "native": [
+            "PAL_sadist"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "starryon",
+      "source_internal_name": "NightBlueHorse",
+      "native_source_row_sha256": "3fa5fe847c2e76f7af26a97d241f954d670d2a1e0fbc6c082263d7186df374b6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "starryon_primo",
+      "source_internal_name": "NightBlueHorse_Neutral",
+      "native_source_row_sha256": "a8b3376718fae7e87edd46ad56832fa28a7d9d03d058c4b9bcb6d072b11ceb53",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "surfent",
+      "source_internal_name": "Serpent",
+      "native_source_row_sha256": "7a29957720c3f3197f1bd0030e75217f2ddd08da58b0972b8353d8c75e6ad153",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "surfent_terra",
+      "source_internal_name": "Serpent_Ground",
+      "native_source_row_sha256": "9d048a8ba6e23b67fbb7626c8e98c0e9cd92c58b90fc08ee8268575febdc908b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "suzaku",
+      "source_internal_name": "Suzaku",
+      "native_source_row_sha256": "6f3a04c725198976158d897a7c2775e08af123cf337e5cc192d74c0e7cfda8f7",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "suzaku_aqua",
+      "source_internal_name": "Suzaku_Water",
+      "native_source_row_sha256": "46492af0e5350eca3564963c1aacd6a0252c91e1e4ab3137ef4d0a3231305643",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "swee",
+      "source_internal_name": "MopBaby",
+      "native_source_row_sha256": "20ab82610a2603e7aa4a04fd6f9d8291e59f438f5d4f451ae9881a499d3c3f25",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "sweepa",
+      "source_internal_name": "MopKing",
+      "native_source_row_sha256": "cdb4014c044d1ac51b39e38b9f39b970c48d216e8edd8d228f4c16a44a1ce989",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tanzee",
+      "source_internal_name": "Monkey",
+      "native_source_row_sha256": "fdbfffb1c24b4f9679423ac792dd3619c86b3c663a9a40a310d356d9a6903855",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tanzee_ignis",
+      "source_internal_name": "Monkey_Fire",
+      "native_source_row_sha256": "7e0dac0ecdf482b2b94ecafe8447d8ebc90900247e3cac69aef258dfc6d891ea",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tarantriss",
+      "source_internal_name": "PurpleSpider",
+      "native_source_row_sha256": "d174917bc070b5e9d7058a25936811eeadd79877228dfac8dd258da935b22319",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "teafant",
+      "source_internal_name": "Ganesha",
+      "native_source_row_sha256": "0fafc7a7155d4c84081fd2ae8f44beacb5f2cda6dc0a168c43a797529b6f7490",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tetroise",
+      "source_internal_name": "CubeTurtle",
+      "native_source_row_sha256": "169a6c24e4dd9f8a79aa5bf9049bce1dd1302ab02a9b97ecc134bb90c6c35cc5",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tetroise_primo",
+      "source_internal_name": "CubeTurtle_Neutral",
+      "native_source_row_sha256": "a80b0373bc9361d855f7165aed9bbec80ebadfb3f89964deb1ff715f55fc4a4a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tocotoco",
+      "source_internal_name": "ColorfulBird",
+      "native_source_row_sha256": "3869abd38acdcb235a90ab0675309e0e9c9670dc9c39c54cf742675638db44f0",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tombat",
+      "source_internal_name": "CatBat",
+      "native_source_row_sha256": "e0a2e674e3eef894b8baa4604087a287c646d188d3a1937825184a81751ebb9c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "tropicaw",
+      "source_internal_name": "RedFlowerBird",
+      "native_source_row_sha256": "1bfc6476770d122fb82eb99f9ff0b5f0652f37fb8dc940f46cf499ee5d165e2a",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "turtacle",
+      "source_internal_name": "TentacleTurtle",
+      "native_source_row_sha256": "1930584586bfab2976c23203d32c2d2ddae194c3574139f41055d8b792ba1967",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "turtacle_terra",
+      "source_internal_name": "TentacleTurtle_Ground",
+      "native_source_row_sha256": "8519055cc9c60617cd8c84190782164f71384b87d29997e96af78a4bdf72608c",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "univolt",
+      "source_internal_name": "Kirin",
+      "native_source_row_sha256": "b9a820a2a37327557f16645fa64d3ba120d6a4efc7b1fe2a2c62ec2110ceb6b6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "univolt_cryst",
+      "source_internal_name": "Kirin_Ice",
+      "native_source_row_sha256": "971de0626f04146e83f0b049de8455a20574aced87e0ffdef1dac1ee341ecb51",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "vaelet",
+      "source_internal_name": "VioletFairy",
+      "native_source_row_sha256": "24f1f89ce6a47cd13acab142557026b63423a207cb117e0ce0c34ea162fdbc9b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "valentail",
+      "source_internal_name": "LongCat",
+      "native_source_row_sha256": "164e9ecafb4ca59e116c0ac1ca669861ba57245e39865727eee1b676b2596ced",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "vanwyrm",
+      "source_internal_name": "BirdDragon",
+      "native_source_row_sha256": "3e2e54b996e9a73f5f951c0a381b8e1502a247243f6d7039e7ad44ff3ef584c1",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "vanwyrm_cryst",
+      "source_internal_name": "BirdDragon_Ice",
+      "native_source_row_sha256": "4c7b75ea9e4d1aa8da7ec0e6610049a850f7fa5a4cf202bbf57624ebc38ba39e",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "venusa",
+      "source_internal_name": "SnakeGirl",
+      "native_source_row_sha256": "84ead1ea38c7d4468cbab6d0cc9d0c2c58a538f15653dea7861b48cecf794a7b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 40,
+          "native": 40,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "verdash",
+      "source_internal_name": "GrassRabbitMan",
+      "native_source_row_sha256": "09c7c22e57899f3a0848bb0132d824694859ad0a6e8e36e08d060659d06ed1e3",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "vixy",
+      "source_internal_name": "CuteFox",
+      "native_source_row_sha256": "b948a115250f4e2eeb87c080ede3c4b5387fb11da07aa9c5be04c6a0b75106d6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "warsect",
+      "source_internal_name": "HerculesBeetle",
+      "native_source_row_sha256": "e636798de77f25ee98e6ee749ce8a5af2e3a591e635f0a9ff36db7017b5651f9",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 85,
+          "native": 85,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up1"
+          ],
+          "native": [
+            "Deffence_up1"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "warsect_terra",
+      "source_internal_name": "HerculesBeetle_Ground",
+      "native_source_row_sha256": "cb5cbd19881badac4ee0ff1bb49f40785e07b54d38cc76305bfab1032a6fd1ac",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 85,
+          "native": 85,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up1"
+          ],
+          "native": [
+            "Deffence_up1"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "whalaska",
+      "source_internal_name": "IceNarwhal",
+      "native_source_row_sha256": "67e262774a7cdff8b8584f04c6792d6a066c1760ba9f35e5f648e3e8800368a6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 58,
+          "native": 58,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "whalaska_ignis",
+      "source_internal_name": "IceNarwhal_Fire",
+      "native_source_row_sha256": "2762b60c71bfcdd836589c9f8e9448a154f01673b5309de2e8d0fdf7cef07ade",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 42,
+          "native": 42,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "wispaw",
+      "source_internal_name": "GhostBlackCat",
+      "native_source_row_sha256": "43610a031d824a59f7f7c8cfef62d7ebf8bf8a0df64c0afad7071587011801b0",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "wistella",
+      "source_internal_name": "MoonChild",
+      "native_source_row_sha256": "b958e111e13ee6b3c7d02b7ba1217cac68f0d6f121f2f93f0490749b5d3cbcc7",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "wixen",
+      "source_internal_name": "FoxMage",
+      "native_source_row_sha256": "75d6a1c53d5e1a9ea5bb76d000cad26cd21c2760b0e7252c36f9696c6efb8e67",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "wixen_noct",
+      "source_internal_name": "FoxMage_Dark",
+      "native_source_row_sha256": "9f9e23b3b66fa7f6da84260765e411397bd3986dc2a0560cb948cb6b476eb0d6",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "woolipop",
+      "source_internal_name": "SweetsSheep",
+      "native_source_row_sha256": "256042deca27ad7562b1f71e7ee544fbd12075752a7509fa4c4a63880e15e72b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "woolipop_terra",
+      "source_internal_name": "SweetsSheep_Ground",
+      "native_source_row_sha256": "5fc969c2bcd1ca0a58611abed155eb1308d54a16a6aa13dbc577254c4816efe7",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "wumpo",
+      "source_internal_name": "Yeti",
+      "native_source_row_sha256": "b650f0c21544a865496957125cdbf0da834f75fdd647abba574183cde56e6e87",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "wumpo_botan",
+      "source_internal_name": "Yeti_Grass",
+      "native_source_row_sha256": "eb8d870bf5704b8bd0af1fd98aac577832d4c0262b7e1aa8464de643dc660191",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Deffence_up2_2"
+          ],
+          "native": [
+            "Deffence_up2_2"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "xenogard",
+      "source_internal_name": "WhiteAlienDragon",
+      "native_source_row_sha256": "df23fc56fd1b479b6666636224baaef08ddb041b2c9a1c1ede2408b155c006b2",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Alien"
+          ],
+          "native": [
+            "Alien"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "xenolord",
+      "source_internal_name": "DarkMechaDragon",
+      "native_source_row_sha256": "f9717d43374ec259cfadfb061a606c0f7e78cba24de677ccdff520013b5b5afa",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Alien",
+            "Invader"
+          ],
+          "native": [
+            "Alien",
+            "Invader"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "xenovader",
+      "source_internal_name": "DarkAlien",
+      "native_source_row_sha256": "7de1d3533ae72b54ad9817350e2423d072361521d7c500ae70c5a8f5103f7746",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [
+            "Alien"
+          ],
+          "native": [
+            "Alien"
+          ],
+          "status": "match"
+        }
+      }
+    },
+    {
+      "pal_internal_id": "yakumo",
+      "source_internal_name": "GuardianDog",
+      "native_source_row_sha256": "d4e1993b98b126673ec3a1a3db07b7b363cadf002f8d6389059ca5274bab9f5b",
+      "comparisons": {
+        "male_probability_percent": {
+          "palcalc": 50,
+          "native": 50,
+          "status": "match"
+        },
+        "guaranteed_passive_skill_ids": {
+          "palcalc": [],
+          "native": [],
+          "status": "match"
+        }
+      }
+    }
+  ]
+}

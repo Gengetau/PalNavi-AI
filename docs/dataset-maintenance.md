@@ -78,7 +78,29 @@ download an SDK, restore packages, run an extractor, or retain a PAK. See
 `docs/palworld-native-acquisition.md` for pinned identities, prerequisites,
 the exact generation command, cleanup expectations, and failure rules.
 
-An accepted acquisition lock authorizes no field extraction by itself. A
-later loop must define the source table, row identity, field normalization,
-diff policy, and generated-file contract before storing newly extracted facts.
-Runtime activation remains a separate review.
+An accepted acquisition lock authorizes no field extraction by itself.
+Loop 010 separately reviewed and stored a bounded enrichment for roster
+classification, elements, gender probability, fixed passive assignments, and
+active-skill learnsets. The accepted implementation is documented in
+`docs/palworld-enrichment.md`; runtime activation remains a separate review.
+
+## Native enrichment regeneration
+
+`tools/build_palworld_enrichment.py` has two boundaries:
+
+1. Generation requires explicit local paths for the exact PAK, raw patched
+   Atlas snapshot, clean fixed-commit Atlas and PalCalc repositories, PalCalc
+   inputs, Atlas license, and accepted roster-classification file.
+2. Routine `--validate-only` uses only checked-in files, performs no network
+   access, and fails closed for any source identity, row accounting, generated
+   file, or runtime-status change.
+
+The checked Atlas patch exports only seven Pal fields and three active-skill
+fields. It must be applied to the exact upstream commit. Do not replace it with
+a branch tip or expand it to localization, Blueprint, image, or unrelated
+table fields in the same review.
+
+Generation must start from a clean output directory and be repeated. Both
+output trees must be byte-identical. The original PAK, SDK, NuGet cache,
+patched checkout, and raw extraction are disposable operator inputs and must
+not be committed.

@@ -8,10 +8,11 @@ routes can be calculated from a validated, versioned dataset by a deterministic 
 domain service and exposed through a small local API. It also provides deterministic local
 knowledge retrieval and an optional retrieval-first, citation-grounded explanation endpoint
 through provider-neutral, non-streaming model adapters. The explanation path remains disconnected
-from route planning. A reviewed Palworld v1 static breeding dataset is now stored in the
-repository but is not activated because the current species-only planner cannot safely represent
-its gender-directed pair. The application does not contain broad model orchestration, game-process
-access, save parsing, or production-searchable Palworld knowledge prose.
+from route planning. A reviewed Palworld v1 static breeding dataset and a deterministic
+native-field enrichment are now stored in the repository, but neither is activated because the
+current species-only planner cannot safely represent its gender-directed pair. The application
+does not contain broad model orchestration, game-process access, save parsing, or
+production-searchable Palworld knowledge prose.
 
 ## What is implemented
 
@@ -37,6 +38,9 @@ access, save parsing, or production-searchable Palworld knowledge prose.
 - a deterministic native Linux-server acquisition lock that binds exact Steam Build, depot
   manifest, PAK, acquisition tool, extractor dependency graph, and a successful no-mappings
   probe without committing proprietary game bytes;
+- a deterministic, provenance-bound enrichment for all 299 calculation records containing
+  `287 + 11 + 1` roster classification, elements, gender probabilities, 2,356 active-skill
+  learnset entries, and direct fixed passive assignments, stored without runtime activation;
 - versioned fictional synthetic data and automated domain/import/repository/API tests.
 
 Exact breeding outcomes must always come from versioned structured data and deterministic
@@ -124,6 +128,9 @@ are documented in [docs/palworld-data.md](docs/palworld-data.md).
 The exact native server acquisition procedure, offline validator, probe result, and
 client-claim limits are documented in
 [docs/palworld-native-acquisition.md](docs/palworld-native-acquisition.md).
+The bounded Atlas patch, row-accounting contract, PalCalc/native diff, enrichment generator,
+and inactive-runtime boundary are documented in
+[docs/palworld-enrichment.md](docs/palworld-enrichment.md).
 Official-source registry governance, content-free snapshots, the mock-default CLI, and the
 single-attempt live boundary are documented in
 [docs/official-sources.md](docs/official-sources.md). Registering or fingerprinting an official
