@@ -914,8 +914,25 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _resolve_cli_paths(arguments: argparse.Namespace) -> None:
+    for name in (
+        "lock",
+        "work_dir",
+        "depot_downloader",
+        "depot_downloader_archive",
+        "atlas_repo",
+        "dotnet",
+        "dotnet_sdk_archive",
+        "nuget_packages",
+    ):
+        path = getattr(arguments, name)
+        if path is not None:
+            setattr(arguments, name, path.resolve())
+
+
 def main() -> int:
     arguments = _parser().parse_args()
+    _resolve_cli_paths(arguments)
     try:
         if arguments.validate_only:
             generation_values = (
