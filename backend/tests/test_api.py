@@ -11,6 +11,7 @@ from palnavi.api.dependencies import (
 from palnavi.api.main import app
 from palnavi.api.schemas import (
     DirectBreedingResponse,
+    GenderRouteResponse,
     RequestValidationErrorResponse,
     RouteResponse,
 )
@@ -252,6 +253,158 @@ async def test_species_only_mode_rejects_inventory_gender_fields() -> None:
                 },
             )
             assert response.status_code == 422
+
+
+async def test_gender_aware_route_uses_directed_rule_after_an_ordinary_step() -> None:
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/gender-aware-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "wixen_noct", "gender": "female"},
+                "inventory": [
+                    {
+                        "instance_id": "dumud-1",
+                        "species_id": "dumud",
+                        "gender": "male",
+                    },
+                    {
+                        "instance_id": "katress-ignis-1",
+                        "species_id": "katress_ignis",
+                        "gender": "female",
+                    },
+                    {
+                        "instance_id": "wixen-1",
+                        "species_id": "wixen",
+                        "gender": "female",
+                    },
+                ],
+            },
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    GenderRouteResponse.model_validate(payload)
+    assert payload["status"] == "success"
+    assert payload["target"] == {
+        "species_id": "wixen_noct",
+        "gender": "female",
+        "required_passive_ids": [],
+        "required_iv_constraints": [],
+        "generation_depth": 2,
+    }
+    assert payload["cost"] == {
+        "generations": 2,
+        "breeding_steps": 2,
+        "probability_dependent_cost_available": False,
+        "expected_attempts": None,
+    }
+    assert [
+        (
+            step["parent_a"]["species_id"],
+            step["parent_a"]["gender"],
+            step["parent_b"]["species_id"],
+            step["parent_b"]["gender"],
+            step["child"]["species_id"],
+            step["child"]["gender"],
+            step["result_kind"],
+        )
+        for step in payload["steps"]
+    ] == [
+        (
+            "dumud",
+            "male",
+            "katress_ignis",
+            "female",
+            "katress",
+            "male",
+            "ordinary_power",
+        ),
+        (
+            "katress",
+            "male",
+            "wixen",
+            "female",
+            "wixen_noct",
+            "female",
+            "gender_directed",
+        ),
+    ]
+
+
+async def test_gender_aware_route_unknown_inventory_is_machine_readable() -> None:
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/gender-aware-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "wixen_noct", "gender": "female"},
+                "inventory": [
+                    {
+                        "instance_id": "katress-unknown",
+                        "species_id": "katress",
+                        "gender": "unknown",
+                    },
+                    {
+                        "instance_id": "wixen-1",
+                        "species_id": "wixen",
+                        "gender": "female",
+                    },
+                ],
+            },
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "gender_required"
+    assert payload["unknown_instance_ids"] == ["katress-unknown"]
+    assert payload["cost"] is None
+
+
+@pytest.mark.parametrize("gender_value", [None, "unknown", "invalid"])
+async def test_gender_aware_route_rejects_non_concrete_target_gender(
+    gender_value: object,
+) -> None:
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/gender-aware-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "wixen_noct", "gender": gender_value},
+                "inventory": [],
+            },
+        )
+
+    assert response.status_code == 422
+    RequestValidationErrorResponse.model_validate(response.json())
+
+
+async def test_gender_aware_route_rejects_duplicate_instance_ids() -> None:
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/gender-aware-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "wixen_noct", "gender": "female"},
+                "inventory": [
+                    {
+                        "instance_id": "duplicate",
+                        "species_id": "katress",
+                        "gender": "male",
+                    },
+                    {
+                        "instance_id": "duplicate",
+                        "species_id": "wixen",
+                        "gender": "female",
+                    },
+                ],
+            },
+        )
+
+    assert response.status_code == 422
+    payload = response.json()
+    assert payload["status"] == "invalid"
+    assert payload["error_category"] == "request_invalid"
 
 
 async def test_direct_rule_not_found_is_structured() -> None:
