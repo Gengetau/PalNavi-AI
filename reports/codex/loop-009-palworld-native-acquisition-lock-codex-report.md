@@ -39,6 +39,7 @@ caller path, network route, credential, token, or environment value.
 The operator checkout was at Atlas commit
 `0385b3fd8bd757240d4a2c79615145122669abd5`. The tool bound:
 
+- canonical repository `https://github.com/Awy64/palworld-atlas-data.git`;
 - Atlas project SHA-256
   `3e40be050b850c887a9416c25d8be6d8b5cf437c7d0ca0cbf006588d86d9932a`;
 - .NET SDK `10.0.302` and its archive SHA-256;
@@ -74,6 +75,11 @@ connector-provided network routes and requiring the Oodle failure evidence,
 the actual PAK probe was rerun. It produced the same mappings status,
 production result, and probe record SHA-256.
 
+Independent pre-review compared the repository locator with the control source
+lock and local Git remote, corrected an initial owner-name typo, downloaded the
+fixed-commit archive from the corrected URL, and matched every tracked file
+against the checkout before the revised lock was published.
+
 ## Produced artifacts
 
 The canonical lock is
@@ -81,13 +87,13 @@ The canonical lock is
 
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
-| Native acquisition lock | 13,727 | `1a9c370c31dc946f2b3348a265100e01c1e4f53e023e71c05b1312fff4aac028` |
-| Acquisition and validation tool | source file | `51f3ee205991deb6ac19ce4066e45bc6e86dc78c3b8e9382c4bf9d242c15051e` |
+| Native acquisition lock | 13,726 | `57e19c299c805995b3efa3b8b442f12040fdd2396d761d638677098388223307` |
+| Acquisition and validation tool | source file | `0cb34b0e2746715308fdff43a646d49830ffef835cb850e46ee6851f8380e532` |
 
 The lock's source record SHA-256 is
 `4b711767a73660878ab442819874866eceb51f3acd23a0e55c468209235539bf`,
 and its generated-record SHA-256 is
-`e62c868aea7d0ae681dcd68220545ea13606f3e3a74de18f4fe78ee2473266bb`.
+`fef729bdc7be39a1d670dd932bf28d3d6bcb646d6544ac3ca33568b704cc7c36`.
 
 The generator builds the canonical bytes twice from the same stable evidence
 and refuses to publish if they differ. Routine `--validate-only` execution is

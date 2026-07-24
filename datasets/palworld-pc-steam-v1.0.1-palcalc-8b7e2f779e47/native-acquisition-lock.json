@@ -46,7 +46,7 @@
     "executable_sha256": "d62a1721564bdb96bacd9285bb5f96180a45202e82a9f85c6a88e5e8ee5f992c"
   },
   "extractor": {
-    "repository": "https://github.com/Draygone/PalworldAtlasData.git",
+    "repository": "https://github.com/Awy64/palworld-atlas-data.git",
     "commit": "0385b3fd8bd757240d4a2c79615145122669abd5",
     "project": "src/PalworldAtlas.Extractor/PalworldAtlas.Extractor.csproj",
     "project_sha256": "3e40be050b850c887a9416c25d8be6d8b5cf437c7d0ca0cbf006588d86d9932a",
@@ -320,6 +320,6 @@
   },
   "integrity": {
     "source_record_sha256": "4b711767a73660878ab442819874866eceb51f3acd23a0e55c468209235539bf",
-    "generated_record_sha256": "e62c868aea7d0ae681dcd68220545ea13606f3e3a74de18f4fe78ee2473266bb"
+    "generated_record_sha256": "fef729bdc7be39a1d670dd932bf28d3d6bcb646d6544ac3ca33568b704cc7c36"
   }
 }
