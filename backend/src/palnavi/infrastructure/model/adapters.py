@@ -27,7 +27,10 @@ class HttpModelGateway:
     ) -> None:
         self._config = config
         self._owns_client = client is None
-        self._client = client or httpx.AsyncClient(timeout=config.timeout_seconds)
+        self._client = client or httpx.AsyncClient(
+            timeout=config.timeout_seconds,
+            trust_env=False,
+        )
 
     async def aclose(self) -> None:
         if self._owns_client:
