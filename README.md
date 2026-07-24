@@ -8,8 +8,10 @@ routes can be calculated from a validated, versioned dataset by a deterministic 
 domain service and exposed through a small local API. It also provides deterministic local
 knowledge retrieval and an optional retrieval-first, citation-grounded explanation endpoint
 through provider-neutral, non-streaming model adapters. The explanation path remains disconnected
-from route planning. It does not contain broad model orchestration, game-process access, save
-parsing, or real Palworld breeding or knowledge data.
+from route planning. A reviewed Palworld v1 static breeding dataset is now stored in the
+repository but is not activated because the current species-only planner cannot safely represent
+its gender-directed pair. The application does not contain broad model orchestration, game-process
+access, save parsing, or production-searchable Palworld knowledge prose.
 
 ## What is implemented
 
@@ -30,6 +32,8 @@ parsing, or real Palworld breeding or knowledge data.
   preserves typed search and explanation outcomes, and renders backend content as inert text;
 - a deterministic registry of exact official source URLs plus a credential-free, metadata-only
   fingerprint boundary with a mandatory synthetic mock fallback;
+- an exact-source, MIT-attributed Palworld v1 dataset with 299 calculation records and 44,851
+  normalized outcomes, stored but not yet enabled for runtime planning;
 - versioned fictional synthetic data and automated domain/import/repository/API tests.
 
 Exact breeding outcomes must always come from versioned structured data and deterministic
@@ -99,9 +103,10 @@ provenance, and relationship content rather than trusting a filename. A future p
 version applicability and separately reviewed, permission-compatible provenance.
 
 Real Palworld knowledge answers remain unavailable until permission-compatible, reviewed,
-versioned knowledge data is imported. The current explanation endpoint supports only fictional
-synthetic evidence. The frontend keeps **Synthetic knowledge only** enabled and visibly labeled by
-default and does not claim that its fixtures represent verified game facts.
+versioned knowledge documents are imported. Structured breeding data is present separately but
+is not an explanation corpus or the current planner default. The explanation endpoint supports
+only fictional synthetic evidence. The frontend keeps **Synthetic knowledge only** enabled and
+visibly labeled by default and does not claim that its fixtures represent verified game facts.
 
 Model provider setup, security boundaries, and the explicit live smoke command are documented
 in [docs/model-providers.md](docs/model-providers.md). Knowledge ingestion, local database setup,
@@ -111,6 +116,8 @@ and filtering behavior are documented in
 [docs/data-contracts.md](docs/data-contracts.md) for the current boundaries and schemas.
 Dataset authors should also follow
 [docs/dataset-maintenance.md](docs/dataset-maintenance.md).
+The reviewed Palworld source locks, normalized data schema, known gaps, and activation boundary
+are documented in [docs/palworld-data.md](docs/palworld-data.md).
 Official-source registry governance, content-free snapshots, the mock-default CLI, and the
 single-attempt live boundary are documented in
 [docs/official-sources.md](docs/official-sources.md). Registering or fingerprinting an official
