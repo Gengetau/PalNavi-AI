@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "source_id": "palworld-mod-guideline",
+      "canonical_url": "https://guideline.palworldgame.com/palworld-mod-guideline",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "policy",
+      "observed_version": null,
+      "content_sensitivity": "policy",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "manual_policy_review_required",
+      "usage_note": "Register and fingerprint only; manual policy review is required before any content use.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "palworld-news",
+      "canonical_url": "https://news.palworldgame.com/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "news",
+      "observed_version": null,
+      "content_sensitivity": "standard",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "metadata_only",
+      "usage_note": "Official announcements are metadata-only pending a source-specific content review.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "palworld-rest-info-doc",
+      "canonical_url": "https://docs.palworldgame.com/api/rest-api/info/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "documentation",
+      "observed_version": "Server Guide 1.0.0; REST API v0.2.0.0",
+      "content_sensitivity": "standard",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "documentation_only",
+      "usage_note": "Public documentation metadata only; never call the documented runtime endpoint.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "palworld-rest-introduction",
+      "canonical_url": "https://docs.palworldgame.com/api/rest-api/palwold-rest-api/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "documentation",
+      "observed_version": "Server Guide 1.0.0; REST API v0.2.0.0",
+      "content_sensitivity": "standard",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "scope_review_required",
+      "usage_note": "The page declares a license, but content scope still requires review before use.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "palworld-rest-players-doc",
+      "canonical_url": "https://docs.palworldgame.com/api/rest-api/players/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "documentation",
+      "observed_version": "Server Guide 1.0.0; REST API v0.2.0.0",
+      "content_sensitivity": "sensitive_runtime_fields",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "sensitive_documentation_only",
+      "usage_note": "Documentation metadata only; never call a runtime endpoint or collect player fields.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "palworld-server-guide",
+      "canonical_url": "https://docs.palworldgame.com/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "documentation",
+      "observed_version": "Server Guide 1.0.0",
+      "content_sensitivity": "standard",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "metadata_only",
+      "usage_note": "Register the current official guide surface without copying its body.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "palworld-server-mods",
+      "canonical_url": "https://docs.palworldgame.com/settings-and-operation/mod/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "documentation",
+      "observed_version": "Server Guide 1.0.0",
+      "content_sensitivity": "standard",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "metadata_only",
+      "usage_note": "Deployment guidance is planning metadata only; this loop performs no deployment.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "palworld-technology-ids",
+      "canonical_url": "https://docs.palworldgame.com/settings-and-operation/technologyids/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "documentation",
+      "observed_version": "Server Guide 1.0.0",
+      "content_sensitivity": "standard",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "copying_requires_review",
+      "usage_note": "Register and fingerprint only; do not copy the identifier table without review.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    },
+    {
+      "source_id": "pocketpair-derivative-work",
+      "canonical_url": "https://www.pocketpair.jp/en/guidelines-derivativework-en/",
+      "publisher": "Pocketpair, Inc.",
+      "source_kind": "policy",
+      "observed_version": null,
+      "content_sensitivity": "policy",
+      "content_capture_policy": "metadata_only",
+      "usage_review_status": "policy_reference_only",
+      "usage_note": "Policy reference only; no policy text is copied into the product corpus.",
+      "live_probe_permitted": true,
+      "verified_at": "2026-07-23T20:04:09Z"
+    }
+  ],
+  "registry_sha256": "599104fc01705e6e0ccc058ea44f7ddee1b25846f8c77bd1819cfcd533f32e46"
+}

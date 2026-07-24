@@ -139,6 +139,27 @@ def test_remote_custom_provider_requires_key_but_loopback_does_not() -> None:
     assert isinstance(local, OpenAICompatibleChatAdapter)
 
 
+def test_owned_model_client_ignores_ambient_socks_proxy(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ALL_PROXY", "socks5h://ambient-proxy.fixture.invalid:1080")
+    monkeypatch.setenv("all_proxy", "socks5h://ambient-proxy.fixture.invalid:1080")
+    monkeypatch.setenv("NO_PROXY", "")
+    monkeypatch.setenv("no_proxy", "")
+
+    gateway = create_model_gateway(
+        ModelProviderConfig(
+            provider_id=ModelProviderId.CUSTOM,
+            model_id="test-model",
+            base_url="http://localhost:8080/v1",
+        )
+    )
+    try:
+        assert gateway._client._trust_env is False
+    finally:
+        asyncio.run(gateway.aclose())
+
+
 @pytest.mark.parametrize(
     "base_url",
     [
