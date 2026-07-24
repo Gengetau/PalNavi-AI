@@ -166,5 +166,126 @@
     "error_category": "rule_not_found",
     "errors": [],
     "message": "no direct breeding rule was found"
+  },
+  "gender_route_request": {
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "target": {
+      "species_id": "wixen_noct",
+      "gender": "female"
+    },
+    "inventory": [
+      {
+        "instance_id": "dumud-1",
+        "species_id": "dumud",
+        "gender": "male"
+      },
+      {
+        "instance_id": "katress-ignis-1",
+        "species_id": "katress_ignis",
+        "gender": "female"
+      },
+      {
+        "instance_id": "wixen-1",
+        "species_id": "wixen",
+        "gender": "female"
+      }
+    ],
+    "objective": "minimum_generations"
+  },
+  "gender_route_success": {
+    "status": "success",
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "content_sha256": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b",
+    "gender_data_content_sha256": "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf",
+    "target": {
+      "species_id": "wixen_noct",
+      "gender": "female",
+      "required_passive_ids": [],
+      "required_iv_constraints": [],
+      "generation_depth": 2
+    },
+    "steps": [
+      {
+        "order": 1,
+        "generation": 1,
+        "parent_a": {
+          "species_id": "dumud",
+          "gender": "male",
+          "required_passive_ids": [],
+          "required_iv_constraints": [],
+          "generation_depth": 0
+        },
+        "parent_b": {
+          "species_id": "katress_ignis",
+          "gender": "female",
+          "required_passive_ids": [],
+          "required_iv_constraints": [],
+          "generation_depth": 0
+        },
+        "child": {
+          "species_id": "katress",
+          "gender": "male",
+          "required_passive_ids": [],
+          "required_iv_constraints": [],
+          "generation_depth": 1
+        },
+        "result_kind": "ordinary_power",
+        "source_record_hash": "4b732cb09f3c3e97426c5e2685a4f15cf3db0114055ab6c3bfd546d22a0ddd8a"
+      },
+      {
+        "order": 2,
+        "generation": 2,
+        "parent_a": {
+          "species_id": "katress",
+          "gender": "male",
+          "required_passive_ids": [],
+          "required_iv_constraints": [],
+          "generation_depth": 1
+        },
+        "parent_b": {
+          "species_id": "wixen",
+          "gender": "female",
+          "required_passive_ids": [],
+          "required_iv_constraints": [],
+          "generation_depth": 0
+        },
+        "child": {
+          "species_id": "wixen_noct",
+          "gender": "female",
+          "required_passive_ids": [],
+          "required_iv_constraints": [],
+          "generation_depth": 2
+        },
+        "result_kind": "gender_directed",
+        "source_record_hash": "9da3059bdaa87c8a40b9446c72004720b18f41ad8370dabf23688eb0ce944452"
+      }
+    ],
+    "cost": {
+      "generations": 2,
+      "breeding_steps": 2,
+      "probability_dependent_cost_available": false,
+      "expected_attempts": null
+    },
+    "reachable_states": [],
+    "unknown_instance_ids": [],
+    "error_category": null,
+    "errors": [],
+    "message": null
+  },
+  "gender_route_gender_required": {
+    "status": "gender_required",
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "content_sha256": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b",
+    "gender_data_content_sha256": "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf",
+    "target": null,
+    "steps": [],
+    "cost": null,
+    "reachable_states": [],
+    "unknown_instance_ids": [
+      "katress-unknown"
+    ],
+    "error_category": null,
+    "errors": [],
+    "message": "route planning requires concrete inventory genders"
   }
 }
