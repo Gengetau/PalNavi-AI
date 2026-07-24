@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+  "classification": "production",
+  "created_at": "2026-07-24T05:19:31Z",
+  "importer_version": "palnavi-palworld-normalizer/1",
+  "validation_status": "validated",
+  "game_version_scope": {
+    "source_snapshot": "v1.0.0",
+    "independently_verified_compatible_patch": "v1.0.1",
+    "compatibility_evidence": "secondary_community_audit",
+    "compatibility_audited_at": "2026-07-17"
+  },
+  "provenance": {
+    "palcalc_repository": "https://github.com/tylercamp/palcalc",
+    "palcalc_commit": "8b7e2f779e47fddae16ddcb973e828ba20c02b80",
+    "palweave_methodology": "https://palweave.com/data-methodology",
+    "license": "MIT",
+    "attribution": "Copyright 2024, Tyler Camp"
+  },
+  "source_inputs": [
+    {
+      "source_id": "palcalc_db",
+      "path": "PalCalc.Model/db.json",
+      "bytes": 1588212,
+      "sha256": "803d891afdb18bd00e24332844a7276bbe5c0855170ef90ef142f2f4d7698ed1",
+      "git_blob_sha1": "82ef55ab1f26a8c4fd032eb29a9aab0ddb1532eb"
+    },
+    {
+      "source_id": "palcalc_breeding",
+      "path": "PalCalc.Model/breeding.json",
+      "bytes": 8941970,
+      "sha256": "1af1e4d6b461599ec3b80a2195002337ff484ed3c28ce57e27def96138262ec2",
+      "git_blob_sha1": "768ee32bb1e56339dfbd5157955d0c80df1673dd"
+    },
+    {
+      "source_id": "palcalc_algorithm",
+      "path": "PalCalc.GenDB/PalBreedingCalculator.cs",
+      "bytes": 2260,
+      "sha256": "30f1cd4e787ca2c713075e4269ddf1b451a120eaaf347474eabb216f436fcab1",
+      "git_blob_sha1": "bc5f3599df11c2856333202e39c884b6500d3b95"
+    },
+    {
+      "source_id": "palcalc_license",
+      "path": "LICENSE.txt",
+      "bytes": 1058,
+      "sha256": "60768557719376acb654991ff138d1b6ce5e9bf872582566b3f82b22e51ad5a4",
+      "git_blob_sha1": "ad11cbfdbfcb4d58f80169a922addd125d81b415"
+    },
+    {
+      "source_id": "palweave_json",
+      "path": "palworld-breeding-data.json",
+      "bytes": 8049960,
+      "sha256": "9f558802ed3fa14b52c352d18a05cd40b295e636ccca249376293e80dc1643c4",
+      "git_blob_sha1": null
+    },
+    {
+      "source_id": "palweave_csv",
+      "path": "palworld-breeding-data.csv",
+      "bytes": 2128682,
+      "sha256": "db4e0e2b755ed3c01ef61744dfcc66c1af320ad444b4c0f47af687a3cf8f0b74",
+      "git_blob_sha1": null
+    }
+  ],
+  "counts": {
+    "pal_records": 299,
+    "source_derived_outcomes": 44851,
+    "source_ordinary_outcomes": 44603,
+    "source_special_outcomes": 248,
+    "same_species": 299,
+    "ordinary_power": 44418,
+    "fixed_special": 132,
+    "gender_directed": 2,
+    "gender_dependent_parent_pair_families": 1
+  },
+  "generated_files": [
+    {
+      "path": "pals.json",
+      "bytes": 393010,
+      "sha256": "d981831c11f552890ef0bd5cbbdda49208798c440a1b85cd272813207fe65da9",
+      "records": 299
+    },
+    {
+      "path": "breeding-outcomes/part-000.json",
+      "bytes": 613502,
+      "sha256": "061e91b8ea8267d6975bd51043055370ca20f51a56424550dce8d47835a940d9",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-001.json",
+      "bytes": 616288,
+      "sha256": "565cfd690dcc5c9017d75aa8726621cce7565f71512776b7156472289f695dc0",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-002.json",
+      "bytes": 619156,
+      "sha256": "754ff6210f3f0056d68dca9672eb01295bfe8195856c9eb657c8bc8397ee27d6",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-003.json",
+      "bytes": 619249,
+      "sha256": "22fd3970017d13af8e7021bb49cbf8e51e76f90f6d5ed02c0491b4f441458771",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-004.json",
+      "bytes": 617164,
+      "sha256": "8ccb3a4f0435933b956f74a453eccfa06083d3ea8e434d9aab5709ca198fc902",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-005.json",
+      "bytes": 616839,
+      "sha256": "f8dd0aca499803666188f728b63e4909fcb04be82ca4b0f8069f286b954f5476",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-006.json",
+      "bytes": 617356,
+      "sha256": "5050a3fbdef798cf4cd2255b17ef74f7acc885f36a4e021b06dbe94f646df833",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-007.json",
+      "bytes": 615540,
+      "sha256": "c2230591e9831d2173c50d2fb33af479558e610484f96b38fb141f43527d2ce5",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-008.json",
+      "bytes": 618796,
+      "sha256": "d3c75c0e6907975245d934e194b59de574b6d9d51e0409b48d90d4d7e500f0a0",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-009.json",
+      "bytes": 615079,
+      "sha256": "c7a4ca1b34b0776e0ff88d61267139c245662c571d065823f20e076856350b4a",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-010.json",
+      "bytes": 616554,
+      "sha256": "1b9a9417c27de7d27457bf896b3bac4e1ab4a88c5a6af2091e3a1794effe829c",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-011.json",
+      "bytes": 617145,
+      "sha256": "c98cc0bf9572c5d08ce28fd0405d5cb157b432a08f7b9f58420029dd1699ae58",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-012.json",
+      "bytes": 621072,
+      "sha256": "6599c2452575b54b6f988c3efe547ee7755dd537cb0c853091275a7ef80b4411",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-013.json",
+      "bytes": 619146,
+      "sha256": "a3a2435dd75d9be4d2bf3929ec4ae803c84390477ed0e8a626796faf867d7f4b",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-014.json",
+      "bytes": 616803,
+      "sha256": "e21c65ca4c3ccd81a9798d696f0e67653945095fcf5ae7957036a41ab3e791ab",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-015.json",
+      "bytes": 619312,
+      "sha256": "9c2c8fcaa4d0a1b240e503b911c5aa97e7aad830259eb62a27870f5bef25fc83",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-016.json",
+      "bytes": 616710,
+      "sha256": "ca27f16aec92296c4f3d675c21d9ea9d3e6154c5294157dbc5c19811ce5c3357",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-017.json",
+      "bytes": 617910,
+      "sha256": "3d7ab82cdacf18990e56dee642e3a318c7217d15879a1dc253ba5276f856c473",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-018.json",
+      "bytes": 617040,
+      "sha256": "245689efb79bcb561c15d5ea03a98fc9b654a0d47390c315ec9e13d8fbb5bbce",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-019.json",
+      "bytes": 618632,
+      "sha256": "f26892db933a4016e8e71c003bf99f3f1b22e6f7de972bacfcd42f575c33c7b3",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-020.json",
+      "bytes": 618675,
+      "sha256": "8cf3d214f1e500a482c249c57629191cd002bedb9ba1ce8b9904485f9ab9f86f",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-021.json",
+      "bytes": 618340,
+      "sha256": "91b35e1d51df8b9e1171cb22fce503608bd1eead1a6e4eea766b923a7cfe91bf",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-022.json",
+      "bytes": 615727,
+      "sha256": "14ee5b0fbf4785066eb262e7c6f443a1f61de493b7e7c253df9a9b6821e5124f",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-023.json",
+      "bytes": 615200,
+      "sha256": "401ca24a9b96384ab8f5abde3ee69db2dc6e2ca15905dff235d22f5577dcb647",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-024.json",
+      "bytes": 616701,
+      "sha256": "117ef7b75744b5209b5af1638f95a9045473a057c024d00de9c6c50b54d440c5",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-025.json",
+      "bytes": 615329,
+      "sha256": "0c67a47951fc80789d53c647c4c913be98c590491d8e9b61334bc735c9adb0bf",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-026.json",
+      "bytes": 618049,
+      "sha256": "483c040e437d868502376b9f4f8484e1015dfa33b925e1494efadd544691165a",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-027.json",
+      "bytes": 617957,
+      "sha256": "cf4a190dad67f77c779adbbcf2400a9ce20fdc9316d414dea924d982cf251c35",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-028.json",
+      "bytes": 616598,
+      "sha256": "1d183cc167ed14540ac771b7972c0b2bbac2a6a5e9b228c60673ace936fc9513",
+      "records": 1500
+    },
+    {
+      "path": "breeding-outcomes/part-029.json",
+      "bytes": 554853,
+      "sha256": "adf09791b509e45edad9cec38813dc4552d7e8c43e6a694d0c542b6af624e582",
+      "records": 1351
+    },
+    {
+      "path": "PALCALC-LICENSE.txt",
+      "bytes": 1058,
+      "sha256": "60768557719376acb654991ff138d1b6ce5e9bf872582566b3f82b22e51ad5a4",
+      "records": null
+    }
+  ],
+  "insufficient_fields": [
+    "player_visible",
+    "elements",
+    "ranch_outputs",
+    "partner_skill_id",
+    "active_skill_ids",
+    "complete_passive_skill_ids",
+    "inheritance_and_mutation_probabilities"
+  ],
+  "runtime_status": "stored_not_activated",
+  "runtime_note": "The current planner cannot represent the one gender-directed parent-pair family; runtime activation requires a separately reviewed schema change.",
+  "content_identity": {
+    "algorithm": "sha256",
+    "digest": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b"
+  }
+}

@@ -32,9 +32,26 @@ Synthetic datasets must use:
 The importer rejects a synthetic manifest that claims official/community provenance or a
 real-game version scope.
 
-## Future production data
+## Production data
 
-Production datasets require a separately authorized loop. They must declare a non-empty
-explicit game-version scope and permission-compatible provenance. Source review, license
-assessment, import tooling, special breeding rules, and update policy must be approved before
-any real facts are committed. No current maintenance step performs network access.
+The first separately authorized production artifact is the stored, not-yet-activated Palworld
+v1 dataset documented in `docs/palworld-data.md`. It uses exact locked inputs, retains the
+PalCalc MIT notice, and records unsupported facts as unavailable.
+
+Regeneration is a two-stage operator action:
+
+1. Download the six exact source files named in the dataset manifest outside the normal
+   application runtime.
+2. Pass all six local paths explicitly to `tools/build_palworld_dataset.py`.
+
+The tool accepts no URL and performs no network access. It verifies byte counts, SHA-256 values,
+Git blob identities, cross-export equality, normalized counts, references, gender constraints,
+and generated-file identities before replacing outputs atomically.
+
+Do not activate a production dataset merely because it validates. The current planner cannot
+represent the gender-directed parent-pair family. Runtime activation requires a separately
+reviewed contract and planner change.
+
+Every future Palworld patch requires a newly pinned extraction or independently reproducible
+audit, a complete field and outcome diff, a new compatibility decision, and regenerated
+identities. Patch notes alone do not extend the compatibility window.
