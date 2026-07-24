@@ -7,6 +7,13 @@ from palnavi.application.breeding_planning import (
     PlanningOutcome,
     PlanningSuccess,
 )
+from palnavi.application.direct_breeding import (
+    DirectBreedingQueryFailure,
+    DirectBreedingQueryFailureKind,
+    DirectBreedingQueryOutcome,
+    DirectBreedingQuerySuccess,
+    DirectBreedingService,
+)
 from palnavi.application.knowledge_explanation import (
     MAX_EXPLANATION_EVIDENCE_CHARS,
     MAX_EXPLANATION_EVIDENCE_CHARS_PER_ITEM,
@@ -52,6 +59,11 @@ __all__ = [
     "PlanningFailureKind",
     "PlanningOutcome",
     "PlanningSuccess",
+    "DirectBreedingQueryFailure",
+    "DirectBreedingQueryFailureKind",
+    "DirectBreedingQueryOutcome",
+    "DirectBreedingQuerySuccess",
+    "DirectBreedingService",
     "MAX_EXPLANATION_EVIDENCE_CHARS",
     "MAX_EXPLANATION_EVIDENCE_CHARS_PER_ITEM",
     "MAX_EXPLANATION_EVIDENCE_ITEMS",

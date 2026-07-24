@@ -1,8 +1,17 @@
 """HTTP request and response schemas; domain logic does not depend on these types."""
 
+from __future__ import annotations
+
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+BreedingResultKindValue = Literal[
+    "same_species",
+    "ordinary_power",
+    "fixed_special",
+    "gender_directed",
+]
 
 
 class RelationshipInput(BaseModel):
@@ -77,6 +86,57 @@ class RouteResponse(BaseModel):
     steps: list[RouteStepResponse] = Field(default_factory=list)
     cost: RouteCostResponse | None = None
     reachable_species_ids: list[str] = Field(default_factory=list)
+    error_category: str | None = None
+    errors: list[ValidationIssueResponse] = Field(default_factory=list)
+    message: str | None = None
+
+
+class DirectBreedingParentInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    species_id: str
+    gender: Literal["male", "female", "unknown"] | None = None
+
+
+class DirectBreedingRequestBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dataset_id: str = Field(min_length=1, max_length=128)
+    query_mode: Literal["concrete", "species_only"] = "concrete"
+    parent_a: DirectBreedingParentInput
+    parent_b: DirectBreedingParentInput
+
+    @model_validator(mode="after")
+    def validate_gender_shape(self) -> DirectBreedingRequestBody:
+        parent_fields = (self.parent_a.model_fields_set, self.parent_b.model_fields_set)
+        genders = (self.parent_a.gender, self.parent_b.gender)
+        if self.query_mode == "concrete":
+            if any("gender" not in fields for fields in parent_fields) or any(
+                gender is None for gender in genders
+            ):
+                raise ValueError("concrete queries require both parent genders")
+        elif any("gender" in fields for fields in parent_fields):
+            raise ValueError("species-only queries must omit both parent genders")
+        return self
+
+
+class DirectBreedingPossibleResultResponse(BaseModel):
+    parent_a_gender: Literal["male", "female"]
+    parent_b_gender: Literal["male", "female"]
+    child_species_id: str
+    result_kind: BreedingResultKindValue
+    source_record_hash: str
+
+
+class DirectBreedingResponse(BaseModel):
+    status: Literal["success", "gender_required", "invalid", "not_found"]
+    dataset_id: str
+    content_sha256: str | None = None
+    gender_data_content_sha256: str | None = None
+    child_species_id: str | None = None
+    result_kind: BreedingResultKindValue | None = None
+    source_record_hash: str | None = None
+    possible_results: list[DirectBreedingPossibleResultResponse] = Field(default_factory=list)
     error_category: str | None = None
     errors: list[ValidationIssueResponse] = Field(default_factory=list)
     message: str | None = None

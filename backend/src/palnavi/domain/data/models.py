@@ -7,7 +7,7 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Protocol
 
-from palnavi.domain.breeding import BreedingRelationship, SpeciesId
+from palnavi.domain.breeding import BreedingRelationship, BreedingRule, SpeciesId
 
 
 class DatasetClassification(StrEnum):
@@ -80,6 +80,18 @@ class BreedingDatasetSnapshot:
     relationships: tuple[BreedingRelationship, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class GenderAwareBreedingDatasetSnapshot:
+    """Exact production rule snapshot assembled from both accepted manifests."""
+
+    dataset_id: str
+    schema_version: int
+    content_identity: ContentIdentity
+    gender_data_identity: ContentIdentity
+    species_ids: frozenset[SpeciesId]
+    rules: tuple[BreedingRule, ...]
+
+
 class DatasetValidationCode(StrEnum):
     INVALID_DATASET_ID = "invalid_dataset_id"
     UNSUPPORTED_SCHEMA_VERSION = "unsupported_schema_version"
@@ -98,6 +110,11 @@ class DatasetValidationCode(StrEnum):
     CONFLICTING_RELATIONSHIP = "conflicting_relationship"
     INVALID_CONTENT_IDENTITY = "invalid_content_identity"
     CONTENT_IDENTITY_MISMATCH = "content_identity_mismatch"
+    INVALID_FILE_INVENTORY = "invalid_file_inventory"
+    FILE_INTEGRITY_MISMATCH = "file_integrity_mismatch"
+    MALFORMED_PALWORLD_RECORD = "malformed_palworld_record"
+    CONFLICTING_BREEDING_RULE = "conflicting_breeding_rule"
+    INVALID_GENDER_DATA = "invalid_gender_data"
 
 
 @dataclass(frozen=True, slots=True)
@@ -126,7 +143,21 @@ class DatasetInvalid:
 DatasetLoadResult = DatasetFound | DatasetNotFound | DatasetInvalid
 
 
+@dataclass(frozen=True, slots=True)
+class GenderAwareDatasetFound:
+    snapshot: GenderAwareBreedingDatasetSnapshot
+
+
+GenderAwareDatasetLoadResult = GenderAwareDatasetFound | DatasetNotFound | DatasetInvalid
+
+
 class BreedingDatasetRepository(Protocol):
     """Read-only access to fully validated immutable breeding dataset snapshots."""
 
     def load(self, dataset_id: str) -> DatasetLoadResult: ...
+
+
+class GenderAwareBreedingDatasetRepository(Protocol):
+    """Read-only access to the exact accepted production rule snapshot."""
+
+    def load(self, dataset_id: str) -> GenderAwareDatasetLoadResult: ...

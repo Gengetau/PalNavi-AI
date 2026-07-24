@@ -1,8 +1,22 @@
-"""Typed breeding models and deterministic route planning."""
+"""Typed breeding models, direct lookup, and deterministic route planning."""
 
+from palnavi.domain.breeding.direct import GenderAwareDirectBreedingIndex
 from palnavi.domain.breeding.models import (
+    BreedingParentConstraint,
     BreedingRelationship,
+    BreedingResultKind,
+    BreedingRule,
+    DirectBreedingGenderRequired,
+    DirectBreedingInvalid,
+    DirectBreedingNotFound,
+    DirectBreedingPossibility,
+    DirectBreedingRequest,
+    DirectBreedingResult,
+    DirectBreedingStatus,
+    DirectBreedingSuccess,
+    GenderConstraint,
     InvalidRouteResult,
+    InventoryGender,
     OwnedSpeciesInventory,
     RouteCost,
     RouteObjective,
@@ -17,9 +31,23 @@ from palnavi.domain.breeding.models import (
 from palnavi.domain.breeding.planner import BreedingRoutePlanner
 
 __all__ = [
+    "BreedingParentConstraint",
     "BreedingRelationship",
+    "BreedingResultKind",
+    "BreedingRule",
     "BreedingRoutePlanner",
+    "DirectBreedingGenderRequired",
+    "DirectBreedingInvalid",
+    "DirectBreedingNotFound",
+    "DirectBreedingPossibility",
+    "DirectBreedingRequest",
+    "DirectBreedingResult",
+    "DirectBreedingStatus",
+    "DirectBreedingSuccess",
+    "GenderAwareDirectBreedingIndex",
+    "GenderConstraint",
     "InvalidRouteResult",
+    "InventoryGender",
     "OwnedSpeciesInventory",
     "RouteCost",
     "RouteObjective",

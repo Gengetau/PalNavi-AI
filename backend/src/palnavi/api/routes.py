@@ -1,17 +1,21 @@
 """HTTP adapters for health and repository-backed deterministic planning."""
 
-from typing import Annotated
+from typing import Annotated, Literal, cast
 
 from fastapi import APIRouter, Depends, Response, status
 from fastapi.responses import JSONResponse
 
 from palnavi.api.dependencies import (
     get_breeding_planning_service,
+    get_direct_breeding_service,
     get_knowledge_explanation_service,
     get_knowledge_retrieval_service,
 )
 from palnavi.api.schemas import (
     DatasetMetadataResponse,
+    DirectBreedingPossibleResultResponse,
+    DirectBreedingRequestBody,
+    DirectBreedingResponse,
     GameVersionScopeResponse,
     HealthResponse,
     KnowledgeCitationResponse,
@@ -35,6 +39,10 @@ from palnavi.api.schemas import (
 )
 from palnavi.application import (
     BreedingPlanningService,
+    DirectBreedingQueryFailure,
+    DirectBreedingQueryFailureKind,
+    DirectBreedingQuerySuccess,
+    DirectBreedingService,
     KnowledgeExplanationInvalidOutputFailure,
     KnowledgeExplanationModelFailure,
     KnowledgeExplanationRequest,
@@ -49,7 +57,13 @@ from palnavi.application import (
     PlanningSuccess,
 )
 from palnavi.domain.breeding import (
+    DirectBreedingGenderRequired,
+    DirectBreedingInvalid,
+    DirectBreedingNotFound,
+    DirectBreedingRequest,
+    DirectBreedingSuccess,
     InvalidRouteResult,
+    InventoryGender,
     OwnedSpeciesInventory,
     RouteObjective,
     RoutePlanningRequest,
@@ -139,6 +153,145 @@ _UNSUPPORTED_EXPLANATION_MESSAGE = "No usable knowledge evidence was found."
 @router.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
     return HealthResponse(status="healthy")
+
+
+@router.post(
+    "/api/v1/breeding/direct",
+    response_model=DirectBreedingResponse,
+    responses={
+        404: {"model": DirectBreedingResponse},
+        422: {
+            "model": DirectBreedingResponse | RequestValidationErrorResponse,
+            "description": (
+                "Palworld data validation error or FastAPI request-body validation error"
+            ),
+        },
+    },
+)
+def query_direct_breeding(
+    body: DirectBreedingRequestBody,
+    response: Response,
+    service: Annotated[DirectBreedingService, Depends(get_direct_breeding_service)],
+) -> DirectBreedingResponse:
+    try:
+        request = DirectBreedingRequest(
+            parent_a=SpeciesId(body.parent_a.species_id),
+            parent_b=SpeciesId(body.parent_b.species_id),
+            parent_a_gender=(
+                InventoryGender(body.parent_a.gender)
+                if body.query_mode == "concrete" and body.parent_a.gender is not None
+                else None
+            ),
+            parent_b_gender=(
+                InventoryGender(body.parent_b.gender)
+                if body.query_mode == "concrete" and body.parent_b.gender is not None
+                else None
+            ),
+        )
+    except ValueError:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+        return DirectBreedingResponse(
+            status="invalid",
+            dataset_id=body.dataset_id,
+            error_category="request_invalid",
+            errors=[
+                ValidationIssueResponse(
+                    code="invalid_species_identifier",
+                    field="parent_a.species_id_or_parent_b.species_id",
+                    message="request contains an invalid stable species identifier",
+                )
+            ],
+            message="direct breeding request is invalid",
+        )
+
+    outcome = service.query(body.dataset_id, request)
+    if isinstance(outcome, DirectBreedingQueryFailure):
+        if outcome.kind is DirectBreedingQueryFailureKind.DATASET_NOT_FOUND:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            issues = [
+                ValidationIssueResponse(
+                    code="dataset_not_found",
+                    field="dataset_id",
+                    message="requested dataset was not found",
+                )
+            ]
+        else:
+            response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+            issues = [_validation_issue_response(issue) for issue in outcome.issues]
+        return DirectBreedingResponse(
+            status="not_found"
+            if outcome.kind is DirectBreedingQueryFailureKind.DATASET_NOT_FOUND
+            else "invalid",
+            dataset_id=outcome.dataset_id,
+            error_category=outcome.kind.value,
+            errors=issues,
+            message="direct breeding data could not be validated",
+        )
+    if not isinstance(outcome, DirectBreedingQuerySuccess):
+        raise AssertionError("direct breeding service returned an unsupported result type")
+
+    result = outcome.result
+    if isinstance(result, DirectBreedingSuccess):
+        return DirectBreedingResponse(
+            status="success",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            child_species_id=result.child.value,
+            result_kind=result.result_kind.value,
+            source_record_hash=result.source_record_hash,
+        )
+    if isinstance(result, DirectBreedingGenderRequired):
+        return DirectBreedingResponse(
+            status="gender_required",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            possible_results=[
+                DirectBreedingPossibleResultResponse(
+                    parent_a_gender=cast(
+                        Literal["male", "female"],
+                        item.parent_a_gender.value,
+                    ),
+                    parent_b_gender=cast(
+                        Literal["male", "female"],
+                        item.parent_b_gender.value,
+                    ),
+                    child_species_id=item.child.value,
+                    result_kind=item.result_kind.value,
+                    source_record_hash=item.source_record_hash,
+                )
+                for item in result.possible_results
+            ],
+            message=result.reason,
+        )
+    if isinstance(result, DirectBreedingInvalid):
+        return DirectBreedingResponse(
+            status="invalid",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            error_category="parent_pair_invalid",
+            errors=[
+                ValidationIssueResponse(
+                    code="invalid_parent_pair",
+                    field="parent_a.gender_or_parent_b.gender",
+                    message=message,
+                )
+                for message in result.errors
+            ],
+            message="direct breeding parent pair is invalid",
+        )
+    if isinstance(result, DirectBreedingNotFound):
+        return DirectBreedingResponse(
+            status="not_found",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            error_category="rule_not_found",
+            message=result.reason,
+        )
+    raise AssertionError("direct breeding index returned an unsupported result type")
 
 
 @router.post(
