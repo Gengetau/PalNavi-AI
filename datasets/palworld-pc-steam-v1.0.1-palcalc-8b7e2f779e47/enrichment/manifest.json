@@ -25,7 +25,12 @@
     "project_sha256": "3e40be050b850c887a9416c25d8be6d8b5cf437c7d0ca0cbf006588d86d9932a",
     "dependency_lock_record_sha256": "d2df63b2c44fbccd291bbfe99168d460e40dcf301e026b29c6a2e4e8648fb32b",
     "patch_path": "tools/palworld_atlas_enrichment.patch",
-    "patch_sha256": "462761bdb29e8992f21af050d563d2f8a32bb02ce4b4724499518c699b7e3feb",
+    "patch_sha256": "555a7ee1df68fbf120a2cac0582f562e4e4761cd35ccc08131bac89a1c93ce1e",
+    "patched_source_sha256": {
+      "src/PalworldAtlas.Extractor/AssetCatalog.cs": "04d857ef49bb7ebcbe8323d0bce6287a3f411270d705c98d27dbdcc2d16b1011",
+      "src/PalworldAtlas.Extractor/EnrichmentExtractor.cs": "7156ff482bf11392eb9ad78736b61f6714a12b9e8c7e3494df2eda5bc0c49c09",
+      "src/PalworldAtlas.Extractor/Program.cs": "643d735c16135ccfff41b75cdec371b4aef69653f1be684168a082677b52b257"
+    },
     "raw_snapshot_sha256": "5a9aa34bf870fa6270fedacc7dbc3a991d83ef7907ab1a301766fd8fd52f1da9"
   },
   "palcalc": {
@@ -103,6 +108,6 @@
   },
   "content_identity": {
     "algorithm": "sha256",
-    "digest": "a125a85a085024e7f577840eefc3cb9300966c2d91efed6a8767cb5e89fb77ec"
+    "digest": "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf"
   }
 }

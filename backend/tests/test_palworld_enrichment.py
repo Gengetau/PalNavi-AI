@@ -74,8 +74,19 @@ def test_manifest_binds_native_acquisition_extractor_and_every_output() -> None:
     }
     assert manifest["extractor"]["commit"] == ("0385b3fd8bd757240d4a2c79615145122669abd5")
     assert manifest["extractor"]["patch_sha256"] == (
-        "462761bdb29e8992f21af050d563d2f8a32bb02ce4b4724499518c699b7e3feb"
+        "555a7ee1df68fbf120a2cac0582f562e4e4761cd35ccc08131bac89a1c93ce1e"
     )
+    assert manifest["extractor"]["patched_source_sha256"] == {
+        "src/PalworldAtlas.Extractor/AssetCatalog.cs": (
+            "04d857ef49bb7ebcbe8323d0bce6287a3f411270d705c98d27dbdcc2d16b1011"
+        ),
+        "src/PalworldAtlas.Extractor/EnrichmentExtractor.cs": (
+            "7156ff482bf11392eb9ad78736b61f6714a12b9e8c7e3494df2eda5bc0c49c09"
+        ),
+        "src/PalworldAtlas.Extractor/Program.cs": (
+            "643d735c16135ccfff41b75cdec371b4aef69653f1be684168a082677b52b257"
+        ),
+    }
     assert manifest["counts"]["pal_records"] == 299
     assert manifest["counts"]["active_skill_entries"] == 2_356
 
@@ -218,3 +229,20 @@ def test_runtime_source_does_not_import_or_reference_the_enrichment() -> None:
     assert "pal-enrichment.json" not in runtime_source
     assert "native-pal-fields.json" not in runtime_source
     assert "deterministic-enrichment-v1" not in runtime_source
+
+
+def test_atlas_patch_modified_hunks_retain_context() -> None:
+    patch = (REPOSITORY_ROOT / "tools" / "palworld_atlas_enrichment.patch").read_text(
+        encoding="utf-8"
+    )
+    modified_sections = [
+        section for section in patch.split("diff --git ")[1:] if "\nnew file mode " not in section
+    ]
+
+    assert len(modified_sections) == 2
+    for section in modified_sections:
+        hunks = section.split("\n@@ ")[1:]
+        assert hunks
+        for hunk in hunks:
+            body = hunk.split("\n", 1)[1]
+            assert any(line.startswith(" ") for line in body.splitlines())

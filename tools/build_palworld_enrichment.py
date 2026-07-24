@@ -8,6 +8,7 @@ import csv
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -29,7 +30,21 @@ ATLAS_PROJECT_SHA256 = "3e40be050b850c887a9416c25d8be6d8b5cf437c7d0ca0cbf006588d
 ATLAS_LICENSE_SOURCE_SHA256 = "46c6b7eae9ee308e80c8876a72cc277e8ef32891dea4e2c4eb440e43c2b4dbeb"
 ATLAS_LICENSE_SOURCE_GIT_BLOB_SHA1 = "1e40d35969c34af2e3f1c762f330d98b2f23476e"
 ATLAS_LICENSE_OUTPUT_SHA256 = "b88ccccdda36c466e1f74db2c5d97edac73edffa382ec7c92fbc8651daca6694"
-ATLAS_PATCH_SHA256 = "462761bdb29e8992f21af050d563d2f8a32bb02ce4b4724499518c699b7e3feb"
+ATLAS_PATCH_SHA256 = "555a7ee1df68fbf120a2cac0582f562e4e4761cd35ccc08131bac89a1c93ce1e"
+ATLAS_PATCHED_SOURCE_SHA256 = {
+    "src/PalworldAtlas.Extractor/AssetCatalog.cs": (
+        "04d857ef49bb7ebcbe8323d0bce6287a3f411270d705c98d27dbdcc2d16b1011"
+    ),
+    "src/PalworldAtlas.Extractor/EnrichmentExtractor.cs": (
+        "7156ff482bf11392eb9ad78736b61f6714a12b9e8c7e3494df2eda5bc0c49c09"
+    ),
+    "src/PalworldAtlas.Extractor/Program.cs": (
+        "643d735c16135ccfff41b75cdec371b4aef69653f1be684168a082677b52b257"
+    ),
+}
+ATLAS_PATCH_NEW_PATHS = {
+    "src/PalworldAtlas.Extractor/EnrichmentExtractor.cs",
+}
 NATIVE_SNAPSHOT_SHA256 = "5a9aa34bf870fa6270fedacc7dbc3a991d83ef7907ab1a301766fd8fd52f1da9"
 ACQUISITION_LOCK_SHA256 = "57e19c299c805995b3efa3b8b442f12040fdd2396d761d638677098388223307"
 ROSTER_CLASSIFICATION_SHA256 = "4a9de3ea0560f7053366c2bcfa053f059c7b2aaaffc46bb355e0774ab841d61c"
@@ -174,7 +189,7 @@ def _read_json(path: Path, label: str) -> dict[str, Any]:
     return parsed
 
 
-def _run(command: list[str], label: str) -> str:
+def _run(command: list[str], label: str, *, cwd: Path | None = None) -> str:
     try:
         completed = subprocess.run(
             command,
@@ -182,6 +197,7 @@ def _run(command: list[str], label: str) -> str:
             capture_output=True,
             text=True,
             timeout=60,
+            cwd=cwd,
         )
     except (OSError, subprocess.TimeoutExpired) as error:
         raise EnrichmentError(f"{label} could not complete") from error
@@ -200,6 +216,57 @@ def _verify_git_source(repository: Path, expected_head: str, label: str) -> None
     )
     if tracked:
         raise EnrichmentError(f"{label} tracked worktree is modified")
+
+
+def _verify_atlas_patch_application(repository: Path, patch_path: Path) -> None:
+    expected_paths = set(ATLAS_PATCHED_SOURCE_SHA256)
+    with tempfile.TemporaryDirectory(prefix="palnavi-atlas-patch-") as temporary:
+        patch_root = Path(temporary)
+        for relative in sorted(expected_paths):
+            source = repository / relative
+            if relative in ATLAS_PATCH_NEW_PATHS:
+                if source.exists():
+                    raise EnrichmentError(
+                        "Atlas checkout contains an unexpected untracked patched source"
+                    )
+                continue
+            if not source.is_file():
+                raise EnrichmentError("Atlas patch base source is absent")
+            destination = patch_root / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, destination)
+
+        numstat = _run(
+            ["git", "apply", "--numstat", str(patch_path)],
+            "Atlas enrichment patch inventory check",
+            cwd=patch_root,
+        )
+        patch_paths = {
+            line.split("\t", 2)[2] for line in numstat.splitlines() if len(line.split("\t", 2)) == 3
+        }
+        if patch_paths != expected_paths:
+            raise EnrichmentError("Atlas enrichment patch path inventory is invalid")
+
+        _run(
+            ["git", "apply", "--check", str(patch_path)],
+            "Atlas enrichment patch applicability check",
+            cwd=patch_root,
+        )
+        _run(
+            ["git", "apply", str(patch_path)],
+            "Atlas enrichment patch reconstruction",
+            cwd=patch_root,
+        )
+        materialized = {
+            path.relative_to(patch_root).as_posix()
+            for path in patch_root.rglob("*")
+            if path.is_file()
+        }
+        if materialized != expected_paths:
+            raise EnrichmentError("Atlas patched source inventory is invalid")
+        for relative, expected_sha256 in ATLAS_PATCHED_SOURCE_SHA256.items():
+            if _sha256_file(patch_root / relative) != expected_sha256:
+                raise EnrichmentError("Atlas patched source identity is invalid")
 
 
 def _verify_locked_file(
@@ -744,6 +811,7 @@ def _build_manifest(outputs: dict[str, bytes], counts: dict[str, int]) -> dict[s
             "dependency_lock_record_sha256": acquisition.DEPENDENCY_LOCK_RECORD_SHA256,
             "patch_path": "tools/palworld_atlas_enrichment.patch",
             "patch_sha256": ATLAS_PATCH_SHA256,
+            "patched_source_sha256": ATLAS_PATCHED_SOURCE_SHA256,
             "raw_snapshot_sha256": NATIVE_SNAPSHOT_SHA256,
         },
         "palcalc": {
@@ -850,17 +918,7 @@ def build(args: argparse.Namespace) -> None:
     patch_path = repository_root / "tools" / "palworld_atlas_enrichment.patch"
     if _sha256_file(patch_path) != ATLAS_PATCH_SHA256:
         raise EnrichmentError("Atlas enrichment patch identity is invalid")
-    _run(
-        [
-            "git",
-            "-C",
-            str(args.atlas_repo),
-            "apply",
-            "--check",
-            str(patch_path),
-        ],
-        "Atlas enrichment patch applicability check",
-    )
+    _verify_atlas_patch_application(args.atlas_repo, patch_path)
 
     _verify_git_source(args.palcalc_repo, PALCALC_COMMIT, "PalCalc")
     palcalc_by_source, probability_by_source = _load_palcalc(
@@ -961,6 +1019,7 @@ def _validate_manifest(dataset: Path) -> tuple[dict[str, Any], dict[str, bytes]]
         or extractor.get("commit") != ATLAS_COMMIT
         or extractor.get("project_sha256") != ATLAS_PROJECT_SHA256
         or extractor.get("patch_sha256") != ATLAS_PATCH_SHA256
+        or extractor.get("patched_source_sha256") != ATLAS_PATCHED_SOURCE_SHA256
         or extractor.get("raw_snapshot_sha256") != NATIVE_SNAPSHOT_SHA256
     ):
         raise EnrichmentError("enrichment manifest source identity is invalid")

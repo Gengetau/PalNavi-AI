@@ -19,7 +19,7 @@ the completed `pals.json` and breeding-outcome files.
 | Selected PAK SHA-256 | `cad80fe15c38d74a795779fbab31f04bc2c15c37fb8a2188e4d89f3800fb0e68` |
 | Atlas commit | `0385b3fd8bd757240d4a2c79615145122669abd5` |
 | Atlas dependency record | `d2df63b2c44fbccd291bbfe99168d460e40dcf301e026b29c6a2e4e8648fb32b` |
-| Atlas patch SHA-256 | `462761bdb29e8992f21af050d563d2f8a32bb02ce4b4724499518c699b7e3feb` |
+| Atlas patch SHA-256 | `555a7ee1df68fbf120a2cac0582f562e4e4761cd35ccc08131bac89a1c93ce1e` |
 | Raw native snapshot SHA-256 | `5a9aa34bf870fa6270fedacc7dbc3a991d83ef7907ab1a301766fd8fd52f1da9` |
 | PalCalc commit | `8b7e2f779e47fddae16ddcb973e828ba20c02b80` |
 | Roster rules SHA-256 | `4a9de3ea0560f7053366c2bcfa053f059c7b2aaaffc46bb355e0774ab841d61c` |
@@ -130,8 +130,10 @@ python tools/build_palworld_enrichment.py \
 ```
 
 The generator verifies all Git Heads, source bytes, Git blobs, PAK bytes,
-patch applicability, native row and table hashes, joins, comparisons, counts,
-and output identities before atomically replacing artifacts.
+the exact three-file patch inventory, the applied source hashes, native row and
+table hashes, joins, comparisons, counts, and output identities before
+atomically replacing artifacts. The patch is applied to a disposable copy of
+the pinned source files; `git apply --check` alone is not accepted as evidence.
 
 Routine validation is offline:
 

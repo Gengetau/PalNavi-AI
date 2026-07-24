@@ -28,8 +28,13 @@ The operator reacquired only
   `cad80fe15c38d74a795779fbab31f04bc2c15c37fb8a2188e4d89f3800fb0e68`.
 
 Atlas commit `0385b3fd8bd757240d4a2c79615145122669abd5` passed the
-accepted no-mappings probe with 753 Pal rows. The versioned patch SHA-256 is
-`462761bdb29e8992f21af050d563d2f8a32bb02ce4b4724499518c699b7e3feb`.
+accepted no-mappings probe with 753 Pal rows. The repaired,
+context-preserving versioned patch SHA-256 is
+`555a7ee1df68fbf120a2cac0582f562e4e4761cd35ccc08131bac89a1c93ce1e`.
+The generator applies it to disposable copies of the exact upstream files and
+verifies the three resulting source-file hashes, preventing a context-free
+patch from passing only an applicability check while inserting members at the
+wrong location.
 It adds a bounded `enrich` command and exports only:
 
 - `ElementType1`, `ElementType2`, `MaleProbability`, and
@@ -79,14 +84,14 @@ not a complete inheritance pool.
 | Artifact | Bytes | SHA-256 |
 | --- | ---: | --- |
 | `enrichment/ATLAS-LICENSE.txt` | 1,067 | `b88ccccdda36c466e1f74db2c5d97edac73edffa382ec7c92fbc8651daca6694` |
-| `enrichment/manifest.json` | 4,451 | `b39b8e97e1b6db3c84949e9861fa4c7d6af4a900d322a84fa670c12938e54d51` |
+| `enrichment/manifest.json` | 4,853 | `362dbcfafe3b6e5cd2f92493bba3ce8953d29541fd8312fdc227b17704114325` |
 | `enrichment/native-pal-fields.json` | 3,509,325 | `9e79caaa37715df5b19cc0faebc877e72a4bc696bdd6d11e4f26d240bc8e21b1` |
 | `enrichment/pal-enrichment.json` | 381,451 | `4e27eaf7bd4624afa47f7f57c6b24febf759081b0ea44b2f032986080083872b` |
 | `enrichment/palcalc-native-diff.json` | 149,488 | `77efe94b8776259b48780d8f7b75f222ea2b9308172e50258cde773df634515d` |
 | `enrichment/roster-classification.json` | 5,049 | `4a9de3ea0560f7053366c2bcfa053f059c7b2aaaffc46bb355e0774ab841d61c` |
 
 The generator source SHA-256 is
-`553fc84fe52a1792e2e12f0b4132d6b5cfdb854b56eea2e885cfb9f146f1b101`.
+`7018d8468ef405b64be77335f6eecc1eeeb081e80cd66360fce0a17362a63e10`.
 
 ## Determinism and failure behavior
 
@@ -111,11 +116,14 @@ case fails closed with a sanitized error.
 
 - Exact manifest-only and single-PAK reacquisition: passed.
 - PAK byte count, Steam SHA-1, and local SHA-256: passed.
+- Context-preserving patch application and applied-source identity checks:
+  passed.
+- Fresh offline compilation of the reconstructed extractor: passed.
 - Atlas no-mappings production probe: passed.
 - Bounded native extraction: 753 Pal rows and 5,772 active-skill rows.
 - Clean-directory deterministic generation: passed twice.
 - Offline enrichment validator: passed.
-- Backend: 310 tests passed.
+- Backend: 311 tests passed.
 - Ruff format and lint: passed.
 - Strict mypy: passed for 41 source files.
 - Frontend no-network tests: 136 passed.

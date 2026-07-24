@@ -1,14 +1,25 @@
 diff --git a/src/PalworldAtlas.Extractor/AssetCatalog.cs b/src/PalworldAtlas.Extractor/AssetCatalog.cs
-index 5d86a6f..ea3dccf 100644
+index 5d86a6f7479771a4c9a7fd0ed0a7f4422107ff31..ea3dccf0e0c5dec996e22f86743eaa2476cd0631 100644
 --- a/src/PalworldAtlas.Extractor/AssetCatalog.cs
 +++ b/src/PalworldAtlas.Extractor/AssetCatalog.cs
-@@ -12,0 +13,3 @@ internal static class AssetCatalog
+@@ -10,6 +10,9 @@ internal static class AssetCatalog
+     public static readonly TableSpec Breeding = new("breeding", true,
+         "Pal/Content/Pal/DataTable/Character/DT_PalCombiUnique",
+         "Pal/Content/Pal/DataTable/Character/DT_PalCombiUnique_Common");
 +    public static readonly TableSpec ActiveSkillLearnset = new("active-skill-learnset", true,
 +        "Pal/Content/Pal/DataTable/Waza/DT_WazaMasterLevel",
 +        "Pal/Content/Pal/DataTable/Waza/DT_WazaMasterLevel_Common");
+     public static readonly TableSpec Items = new("items", true,
+         "Pal/Content/Pal/DataTable/Item/DT_ItemDataTable",
+         "Pal/Content/Pal/DataTable/Item/DT_ItemDataTable_Common");
+@@ -36,4 +39,3 @@ internal static class AssetCatalog
+         PalNames, PalDescriptions, ItemNames, ItemDescriptions
+     ];
+ }
+-
 diff --git a/src/PalworldAtlas.Extractor/EnrichmentExtractor.cs b/src/PalworldAtlas.Extractor/EnrichmentExtractor.cs
 new file mode 100644
-index 0000000..28428d2
+index 0000000000000000000000000000000000000000..28428d26c27e3514f523b934597266e228c6b3f0
 --- /dev/null
 +++ b/src/PalworldAtlas.Extractor/EnrichmentExtractor.cs
 @@ -0,0 +1,183 @@
@@ -196,18 +207,25 @@ index 0000000..28428d2
 +        .ToLowerInvariant();
 +}
 diff --git a/src/PalworldAtlas.Extractor/Program.cs b/src/PalworldAtlas.Extractor/Program.cs
-index 71051db..d552637 100644
+index 71051dbd8fe5cb65a6335fde1ef7a344261085e6..d552637ed543d013d02e4a228090ae67f6c9ddf5 100644
 --- a/src/PalworldAtlas.Extractor/Program.cs
 +++ b/src/PalworldAtlas.Extractor/Program.cs
-@@ -15,0 +16,5 @@ internal static class Program
+@@ -16 +16,6 @@ internal static class Program
 +    private static readonly JsonSerializerOptions EnrichmentJsonOptions = new(JsonOptions)
 +    {
 +        DefaultIgnoreCondition = JsonIgnoreCondition.Never,
 +    };
 +
-@@ -36,0 +42 @@ internal static class Program
+     public static int Main(string[] args)
+@@ -34,6 +39,7 @@ internal static class Program
+                 "probe" => Probe(pakDirectory, mappings, buildId, Required(options, "output")),
+                 "publish" => Publish(pakDirectory, mappings, buildId, Required(options, "output"),
+                     options.GetValueOrDefault("game-version"), options.GetValueOrDefault("previous-manifest")),
 +                "enrich" => Enrich(pakDirectory, mappings, buildId, Required(options, "output")),
-@@ -64,0 +71,15 @@ internal static class Program
+                 _ => throw new ArgumentException($"Unknown command '{command}'"),
+             };
+         }
+@@ -65 +80,16 @@ internal static class Program
 +    private static int Enrich(string pakDirectory, string? mappings, string buildId, string output)
 +    {
 +        if (buildId == "unknown") throw new ArgumentException("--build-id is required for enrich");
@@ -223,5 +241,11 @@ index 71051db..d552637 100644
 +        return 0;
 +    }
 +
-@@ -90,0 +112 @@ internal static class Program
+     private static Dictionary<string, string> ParseOptions(string[] args)
+@@ -88,5 +109,6 @@ internal static class Program
+         probe   --pak-dir PATH --output FILE [--build-id ID] [--mappings FILE]
+         publish --pak-dir PATH --output DIR --build-id ID [--mappings FILE]
+                 [--game-version VERSION] [--previous-manifest FILE]
 +        enrich  --pak-dir PATH --output FILE --build-id ID
+         """);
+ }
