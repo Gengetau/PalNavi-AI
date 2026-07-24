@@ -1,6 +1,7 @@
 """Typed breeding models, direct lookup, and deterministic route planning."""
 
 from palnavi.domain.breeding.direct import GenderAwareDirectBreedingIndex
+from palnavi.domain.breeding.gender_planner import GenderAwareRoutePlanner
 from palnavi.domain.breeding.models import (
     BreedingParentConstraint,
     BreedingRelationship,
@@ -15,8 +16,17 @@ from palnavi.domain.breeding.models import (
     DirectBreedingStatus,
     DirectBreedingSuccess,
     GenderConstraint,
+    GenderRequiredRouteResult,
+    GenderRouteCost,
+    GenderRoutePlanningRequest,
+    GenderRouteResult,
+    GenderRouteState,
+    GenderRouteStatus,
+    GenderRouteStep,
+    InvalidGenderRouteResult,
     InvalidRouteResult,
     InventoryGender,
+    OwnedBreedingCandidate,
     OwnedSpeciesInventory,
     RouteCost,
     RouteObjective,
@@ -24,8 +34,11 @@ from palnavi.domain.breeding.models import (
     RouteResult,
     RouteStatus,
     RouteStep,
+    SpeciesGenderFeasibility,
     SpeciesId,
+    SuccessfulGenderRouteResult,
     SuccessfulRouteResult,
+    UnreachableGenderRouteResult,
     UnreachableRouteResult,
 )
 from palnavi.domain.breeding.planner import BreedingRoutePlanner
@@ -45,9 +58,19 @@ __all__ = [
     "DirectBreedingStatus",
     "DirectBreedingSuccess",
     "GenderAwareDirectBreedingIndex",
+    "GenderAwareRoutePlanner",
     "GenderConstraint",
+    "GenderRequiredRouteResult",
+    "GenderRouteCost",
+    "GenderRoutePlanningRequest",
+    "GenderRouteResult",
+    "GenderRouteState",
+    "GenderRouteStatus",
+    "GenderRouteStep",
     "InvalidRouteResult",
+    "InvalidGenderRouteResult",
     "InventoryGender",
+    "OwnedBreedingCandidate",
     "OwnedSpeciesInventory",
     "RouteCost",
     "RouteObjective",
@@ -56,6 +79,9 @@ __all__ = [
     "RouteStatus",
     "RouteStep",
     "SpeciesId",
+    "SpeciesGenderFeasibility",
+    "SuccessfulGenderRouteResult",
     "SuccessfulRouteResult",
+    "UnreachableGenderRouteResult",
     "UnreachableRouteResult",
 ]
