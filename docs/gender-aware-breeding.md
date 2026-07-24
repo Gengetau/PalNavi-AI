@@ -1,11 +1,16 @@
-# Gender-Aware Direct Breeding
+# Gender-Aware Breeding and Route Planning
 
 ## Runtime boundary
 
-`POST /api/v1/breeding/direct` is the only runtime path that reads the accepted
-Palworld production breeding outcomes. It performs a read-only direct lookup; it does not
-replace `POST /api/v1/breeding/routes`, mutate inventory, estimate probabilities, or run a
-multi-generation search.
+Two read-only runtime paths use the accepted Palworld production breeding outcomes:
+
+- `POST /api/v1/breeding/direct` performs one exact direct lookup;
+- `POST /api/v1/breeding/gender-aware-routes` performs deterministic
+  gender-capable multi-generation search.
+
+Neither endpoint mutates inventory. The pre-existing
+`POST /api/v1/breeding/routes` endpoint, synthetic repository, request and response contracts,
+and species-only planner remain unchanged as the rollback target.
 
 The production repository accepts exactly:
 
@@ -22,8 +27,15 @@ source-record hash shapes, all species references, all result kinds, the native 
 lock, and the exact directed rows before it returns a snapshot. A mismatch returns a sanitized
 `dataset_invalid` response and no query executes.
 
-The gender-data files remain stored-only. This endpoint verifies their accepted identity but
-does not parse or expose probabilities, elements, skills, or roster fields.
+The repository validates all 299 exact male and female probability pairs. The route planner uses
+them only to decide whether a future offspring can satisfy a male or female state. Both values
+are positive for every accepted species. Neither endpoint exposes the values, estimates expected
+attempts, or uses elements, skills, roster fields, or fixed passives.
+
+For the gender-probability fields only, this reviewed activation boundary supersedes the
+historical `stored_not_activated` statements in the Loop 008 and Loop 010 data-generation
+documents. Those documents remain the source and regeneration record; every other supplemental
+field remains inactive.
 
 ## Concrete query
 
@@ -77,12 +89,52 @@ invalid, including an explicit `null`.
 Every successful repository-backed response includes the accepted main and gender-data content
 identities. Error messages are stable and do not contain local paths or exception text.
 
+## Multi-generation route request
+
+The production route endpoint requires a concrete target gender and an inventory of stable
+instance IDs, species IDs, and explicit genders:
+
+```json
+{
+  "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+  "target": {"species_id": "wixen_noct", "gender": "female"},
+  "inventory": [
+    {"instance_id": "dumud-1", "species_id": "dumud", "gender": "male"},
+    {
+      "instance_id": "katress-ignis-1",
+      "species_id": "katress_ignis",
+      "gender": "female"
+    },
+    {"instance_id": "wixen-1", "species_id": "wixen", "gender": "female"}
+  ],
+  "objective": "minimum_generations"
+}
+```
+
+This request deterministically produces Katress male in generation one and then uses the
+gender-directed Katress male plus Wixen female rule to produce Wixen Noct female in generation
+two.
+
+Every route state contains species, a concrete gender requirement, empty passive constraints,
+empty IV constraints, and generation depth. Each step includes both gender-bound parents, the
+selected feasible child gender, result kind, source-record hash, generation, and stable order.
+Search minimizes maximum generation, then breeding-step count, then a stable source-bound
+signature.
+
+An explicit inventory gender of `unknown` returns `gender_required` before graph matching.
+Omitted, `null`, or unrecognized inventory genders are request-validation errors. Duplicate
+instance IDs, invalid identifiers, impossible states, and invalid data fail closed.
+
+Route success costs contain generations and breeding-step count. They always include
+`probability_dependent_cost_available: false` and `expected_attempts: null`; the planner does not
+invent a 50:50 distribution or a probability-weighted cost model.
+
 ## Rollback and non-goals
 
 The pre-existing synthetic repository, multi-generation planner, route request, and route
-response remain unchanged. Disabling the new direct endpoint or reverting its dependency leaves
-that complete rollback path intact.
+response remain unchanged. Disabling both production endpoints or reverting their shared
+repository dependency leaves that complete rollback path intact.
 
-This feature does not implement gender-aware multi-generation planning, expected attempts,
-offspring probability cost, inventory persistence, passive or IV inheritance, mutation, cakes,
-incubation, partner skills, ranch outputs, frontend planning, or save-file access.
+This feature does not implement expected attempts, offspring probability cost, inventory
+persistence or consumption, passive or IV inheritance, mutation, cakes, incubation, partner
+skills, ranch outputs, frontend planning, or save-file access.
