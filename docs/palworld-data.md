@@ -21,6 +21,15 @@ The generator verifies the byte count, SHA-256, and, for Git inputs, Git blob
 SHA-1 before parsing. It also cross-checks all PalCalc breeding rows against
 both audited Palweave exports.
 
+The same dataset directory also contains
+`native-acquisition-lock.json`. It independently binds the public Linux
+dedicated-server Build `24181105`, exact depot manifest, selected PAK,
+DepotDownloader release, Atlas extractor commit and dependency graph, and a
+successful no-mappings probe. It is acquisition provenance for later
+field-extraction loops, not an input to the current breeding dataset generator.
+The reproducible operator and offline-validation procedures are documented in
+`docs/palworld-native-acquisition.md`.
+
 ## Normalized identities
 
 Source slugs use hyphens. PalNavi IDs replace them with underscores so they
@@ -65,11 +74,11 @@ A later runtime-integration loop must add gender-aware inventory and request
 semantics, update canonical identity rules, and review route behavior before
 this dataset becomes the API default.
 
-## Unsupported fields
+## Fields not normalized in this dataset
 
-The audited inputs do not establish:
+The current `pals.json` does not contain normalized values for:
 
-- a record-level mapping for the stated 287-player-visible roster;
+- roster classification or UI displayability;
 - elements per Pal;
 - ranch outputs;
 - partner-skill IDs or descriptions;
@@ -77,6 +86,13 @@ The audited inputs do not establish:
 - complete per-Pal passive-skill assignments;
 - inheritance, mutation, gender-odds, incubation, or cake-effect probabilities.
 
-These fields remain `null` or explicitly unavailable. Product logic must not
-fill them from display names, artwork, unversioned community tables, or guide
-prose.
+Follow-up research has established a `287 + 11 + 1` roster classification and
+identified native source entries for elements, male probability, guaranteed
+passives, and active-skill learnsets. The acquisition lock makes the exact
+server source reproducible, but those facts are not yet normalized or approved
+for runtime use.
+
+The fields therefore remain `null` or explicitly unavailable in this dataset.
+Product logic must not fill them from the acquisition probe, display names,
+artwork, unversioned community tables, or guide prose. Each field requires a
+separately reviewed extraction and normalization contract.
