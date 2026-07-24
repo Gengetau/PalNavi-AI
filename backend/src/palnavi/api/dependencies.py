@@ -8,6 +8,7 @@ from fastapi import Depends
 
 from palnavi.application import (
     BreedingPlanningService,
+    DirectBreedingService,
     KnowledgeExplanationService,
     KnowledgeRetrievalService,
     ModelGeneration,
@@ -16,7 +17,7 @@ from palnavi.application import (
     ModelResponse,
 )
 from palnavi.domain.breeding import BreedingRoutePlanner
-from palnavi.domain.data import BreedingDatasetRepository
+from palnavi.domain.data import BreedingDatasetRepository, GenderAwareBreedingDatasetRepository
 from palnavi.domain.knowledge import KnowledgeRepository
 from palnavi.infrastructure.json_dataset_repository import (
     LocalJsonBreedingDatasetRepository,
@@ -25,6 +26,10 @@ from palnavi.infrastructure.json_dataset_repository import (
 from palnavi.infrastructure.model.adapters import HttpModelGateway
 from palnavi.infrastructure.model.config import load_model_provider_config
 from palnavi.infrastructure.model.factory import create_model_gateway
+from palnavi.infrastructure.palworld_dataset_repository import (
+    LocalPalworldBreedingDatasetRepository,
+    default_palworld_dataset_root,
+)
 from palnavi.infrastructure.sqlite_knowledge_repository import (
     SQLiteKnowledgeRepository,
     default_knowledge_database_path,
@@ -79,6 +84,19 @@ def get_breeding_planning_service(
     repository: Annotated[BreedingDatasetRepository, Depends(get_dataset_repository)],
 ) -> BreedingPlanningService:
     return BreedingPlanningService(repository=repository, planner=BreedingRoutePlanner())
+
+
+def get_direct_breeding_repository() -> GenderAwareBreedingDatasetRepository:
+    return LocalPalworldBreedingDatasetRepository(root=default_palworld_dataset_root())
+
+
+def get_direct_breeding_service(
+    repository: Annotated[
+        GenderAwareBreedingDatasetRepository,
+        Depends(get_direct_breeding_repository),
+    ],
+) -> DirectBreedingService:
+    return DirectBreedingService(repository=repository)
 
 
 def get_knowledge_repository() -> KnowledgeRepository:

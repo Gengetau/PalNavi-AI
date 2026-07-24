@@ -81,5 +81,90 @@
     "status": "error",
     "error_category": "configuration_invalid",
     "message": "Model provider configuration is unavailable."
+  },
+  "direct_request": {
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "query_mode": "concrete",
+    "parent_a": {
+      "species_id": "katress",
+      "gender": "male"
+    },
+    "parent_b": {
+      "species_id": "wixen",
+      "gender": "female"
+    }
+  },
+  "direct_success": {
+    "status": "success",
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "content_sha256": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b",
+    "gender_data_content_sha256": "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf",
+    "child_species_id": "wixen_noct",
+    "result_kind": "gender_directed",
+    "source_record_hash": "9da3059bdaa87c8a40b9446c72004720b18f41ad8370dabf23688eb0ce944452",
+    "possible_results": [],
+    "error_category": null,
+    "errors": [],
+    "message": null
+  },
+  "direct_gender_required": {
+    "status": "gender_required",
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "content_sha256": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b",
+    "gender_data_content_sha256": "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf",
+    "child_species_id": null,
+    "result_kind": null,
+    "source_record_hash": null,
+    "possible_results": [
+      {
+        "parent_a_gender": "male",
+        "parent_b_gender": "female",
+        "child_species_id": "wixen_noct",
+        "result_kind": "gender_directed",
+        "source_record_hash": "9da3059bdaa87c8a40b9446c72004720b18f41ad8370dabf23688eb0ce944452"
+      },
+      {
+        "parent_a_gender": "female",
+        "parent_b_gender": "male",
+        "child_species_id": "katress_ignis",
+        "result_kind": "gender_directed",
+        "source_record_hash": "bfe5c673830368aee57ad9e5cbb77517c9560915779f47c392f042adb77198d0"
+      }
+    ],
+    "error_category": null,
+    "errors": [],
+    "message": "this species pair has gender-dependent results"
+  },
+  "direct_invalid": {
+    "status": "invalid",
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "content_sha256": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b",
+    "gender_data_content_sha256": "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf",
+    "child_species_id": null,
+    "result_kind": null,
+    "source_record_hash": null,
+    "possible_results": [],
+    "error_category": "parent_pair_invalid",
+    "errors": [
+      {
+        "code": "invalid_parent_pair",
+        "field": "parent_a.gender_or_parent_b.gender",
+        "message": "concrete breeding requires opposite parent genders"
+      }
+    ],
+    "message": "direct breeding parent pair is invalid"
+  },
+  "direct_not_found": {
+    "status": "not_found",
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "content_sha256": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b",
+    "gender_data_content_sha256": "11173754c8dcf123df6be22823210d80f9b866732cbff80f112c70ba8208cfdf",
+    "child_species_id": null,
+    "result_kind": null,
+    "source_record_hash": null,
+    "possible_results": [],
+    "error_category": "rule_not_found",
+    "errors": [],
+    "message": "no direct breeding rule was found"
   }
 }
