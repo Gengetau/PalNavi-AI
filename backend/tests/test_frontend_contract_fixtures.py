@@ -7,6 +7,8 @@ from pydantic import ValidationError
 from palnavi.api.schemas import (
     DirectBreedingRequestBody,
     DirectBreedingResponse,
+    GenderRouteRequestBody,
+    GenderRouteResponse,
     KnowledgeExplanationErrorResponse,
     KnowledgeExplanationRequestBody,
     KnowledgeExplanationSuccessResponse,
@@ -58,6 +60,19 @@ def test_frontend_golden_fixtures_match_backend_pydantic_contracts() -> None:
         "direct_not_found",
     ):
         DirectBreedingResponse.model_validate_json(
+            json.dumps(fixtures[fixture_name]),
+            strict=True,
+        )
+    gender_route_request = GenderRouteRequestBody.model_validate_json(
+        json.dumps(fixtures["gender_route_request"]),
+        strict=True,
+    )
+    assert gender_route_request.model_dump(mode="json") == fixtures["gender_route_request"]
+    for fixture_name in (
+        "gender_route_success",
+        "gender_route_gender_required",
+    ):
+        GenderRouteResponse.model_validate_json(
             json.dumps(fixtures[fixture_name]),
             strict=True,
         )
