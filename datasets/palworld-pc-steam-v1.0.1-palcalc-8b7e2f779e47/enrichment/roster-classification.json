@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "mapping_id": "palcalc-8b7e2f779e47-canonical-paldeck-classification",
+  "source": {
+    "repository": "https://github.com/tylercamp/palcalc",
+    "commit": "8b7e2f779e47fddae16ddcb973e828ba20c02b80",
+    "path": "PalCalc.GenDB/out-csv/pals.csv",
+    "git_blob_sha1": "6ae6fca1ecd13984ee42fac1ad63605c5d0cd58a"
+  },
+  "semantics": {
+    "canonical_paldeck_member": "Member of the official v1.0 roster count of 287 Pals.",
+    "roster_class": {
+      "canonical_paldeck": "Numbered Pal or numbered variant counted in the official 287.",
+      "terraria_collaboration_entity": "Terraria collaboration breeding entity assigned synthetic Paldex number 10000-10010 by the export.",
+      "internal_duplicate_form": "Separate calculation record that shares a canonical Paldex number and display name but is not an additional member of the official 287."
+    },
+    "warning": "This mapping deliberately replaces the ambiguous player_visible field. Collaboration entities may be player-facing even though they are outside the canonical 287-Pal roster."
+  },
+  "classification_rule": {
+    "input_record_count": 299,
+    "default": {
+      "condition": "record is present in the locked CSV and is not listed in overrides",
+      "canonical_paldeck_member": true,
+      "roster_class": "canonical_paldeck"
+    },
+    "overrides": [
+      {
+        "source_internal_name": "PlantSlime_Flower",
+        "english_name": "Gumoss",
+        "paldex_number": 12,
+        "is_variant": true,
+        "canonical_paldeck_member": false,
+        "roster_class": "internal_duplicate_form",
+        "reason": "Shares Paldex 12 and English display name with ordinary Gumoss; PalCalc applies an explicit legacy variant exception."
+      },
+      {
+        "source_internal_name": "YakushimaBoss001",
+        "english_name": "Eye of Cthulhu",
+        "paldex_number": 10000,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaBoss001_Small",
+        "english_name": "Demon Eye",
+        "paldex_number": 10001,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster001",
+        "english_name": "Green Slime",
+        "paldex_number": 10002,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster001_Blue",
+        "english_name": "Blue Slime",
+        "paldex_number": 10003,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster001_Pink",
+        "english_name": "Illuminant Slime",
+        "paldex_number": 10004,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster001_Purple",
+        "english_name": "Purple Slime",
+        "paldex_number": 10005,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster001_Rainbow",
+        "english_name": "Rainbow Slime",
+        "paldex_number": 10006,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster001_Red",
+        "english_name": "Red Slime",
+        "paldex_number": 10007,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster002",
+        "english_name": "Enchanted Sword",
+        "paldex_number": 10008,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster003",
+        "english_name": "Cave Bat",
+        "paldex_number": 10009,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      },
+      {
+        "source_internal_name": "YakushimaMonster003_Purple",
+        "english_name": "Illuminant Bat",
+        "paldex_number": 10010,
+        "canonical_paldeck_member": false,
+        "roster_class": "terraria_collaboration_entity"
+      }
+    ]
+  },
+  "expected_counts": {
+    "canonical_paldeck": 287,
+    "terraria_collaboration_entity": 11,
+    "internal_duplicate_form": 1,
+    "total": 299
+  },
+  "validation": [
+    "Every one of the 299 locked source_internal_name values must resolve exactly once.",
+    "The 12 override internal names must exist and retain the declared Paldex numbers.",
+    "No unlisted record may have Paldex number 10000 or greater.",
+    "Exactly two records use Paldex number 12 and only PlantSlime_Flower is classified as internal_duplicate_form.",
+    "The four expected counts must match exactly."
+  ]
+}

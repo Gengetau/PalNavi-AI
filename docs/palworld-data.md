@@ -26,9 +26,14 @@ The same dataset directory also contains
 dedicated-server Build `24181105`, exact depot manifest, selected PAK,
 DepotDownloader release, Atlas extractor commit and dependency graph, and a
 successful no-mappings probe. It is acquisition provenance for later
-field-extraction loops, not an input to the current breeding dataset generator.
+field-extraction loops, not an input to the breeding dataset generator.
 The reproducible operator and offline-validation procedures are documented in
 `docs/palworld-native-acquisition.md`.
+
+The separately versioned `enrichment/` directory uses that acquisition lock
+and a checked Atlas patch to add reviewed fields without changing the completed
+Loop 008 files. Its extraction, row accounting, normalization, and validation
+contract is documented in `docs/palworld-enrichment.md`.
 
 ## Normalized identities
 
@@ -74,9 +79,9 @@ A later runtime-integration loop must add gender-aware inventory and request
 semantics, update canonical identity rules, and review route behavior before
 this dataset becomes the API default.
 
-## Fields not normalized in this dataset
+## Base-snapshot and enrichment boundaries
 
-The current `pals.json` does not contain normalized values for:
+The immutable `pals.json` does not contain normalized values for:
 
 - roster classification or UI displayability;
 - elements per Pal;
@@ -86,13 +91,18 @@ The current `pals.json` does not contain normalized values for:
 - complete per-Pal passive-skill assignments;
 - inheritance, mutation, gender-odds, incubation, or cake-effect probabilities.
 
-Follow-up research has established a `287 + 11 + 1` roster classification and
-identified native source entries for elements, male probability, guaranteed
-passives, and active-skill learnsets. The acquisition lock makes the exact
-server source reproducible, but those facts are not yet normalized or approved
-for runtime use.
+The adjacent enrichment now stores:
 
-The fields therefore remain `null` or explicitly unavailable in this dataset.
-Product logic must not fill them from the acquisition probe, display names,
-artwork, unversioned community tables, or guide prose. Each field requires a
-separately reviewed extraction and normalization contract.
+- a `287 + 11 + 1` roster classification;
+- one or two native elements for every calculation record;
+- native male probability and its exact decimal female complement;
+- 2,356 Pal/skill/learned-level entries;
+- direct fixed assignments from `PassiveSkill1` through `PassiveSkill4`.
+
+All 753 native Pal rows and 5,772 active-skill rows are accounted as joined or
+excluded. PalCalc/native comparisons cover gender probability and direct fixed
+passives for all 299 records, producing 598 exact matches and no differences.
+
+These facts remain `stored_not_activated`. Product logic must not copy them
+into runtime repositories until the gender-aware planner loop reviews schema,
+inventory, request, route, API, and compatibility behavior.

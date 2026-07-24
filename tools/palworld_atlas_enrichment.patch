@@ -1,0 +1,227 @@
+diff --git a/src/PalworldAtlas.Extractor/AssetCatalog.cs b/src/PalworldAtlas.Extractor/AssetCatalog.cs
+index 5d86a6f..ea3dccf 100644
+--- a/src/PalworldAtlas.Extractor/AssetCatalog.cs
++++ b/src/PalworldAtlas.Extractor/AssetCatalog.cs
+@@ -12,0 +13,3 @@ internal static class AssetCatalog
++    public static readonly TableSpec ActiveSkillLearnset = new("active-skill-learnset", true,
++        "Pal/Content/Pal/DataTable/Waza/DT_WazaMasterLevel",
++        "Pal/Content/Pal/DataTable/Waza/DT_WazaMasterLevel_Common");
+diff --git a/src/PalworldAtlas.Extractor/EnrichmentExtractor.cs b/src/PalworldAtlas.Extractor/EnrichmentExtractor.cs
+new file mode 100644
+index 0000000..28428d2
+--- /dev/null
++++ b/src/PalworldAtlas.Extractor/EnrichmentExtractor.cs
+@@ -0,0 +1,183 @@
++using System.Security.Cryptography;
++using System.Text.Json;
++using System.Text.Json.Serialization;
++using CUE4Parse.UE4.Assets.Exports.Engine;
++
++namespace PalworldAtlas.Extractor;
++
++internal sealed record NativePalValues(
++    string ElementType1,
++    string ElementType2,
++    int? MaleProbability,
++    string PassiveSkill1,
++    string PassiveSkill2,
++    string PassiveSkill3,
++    string PassiveSkill4);
++
++internal sealed record NativeActiveSkillValues(
++    string PalId,
++    string WazaId,
++    int Level);
++
++internal sealed record NativeSourceRow<T>(
++    string SourceRowId,
++    string SourceRowSha256,
++    IReadOnlyList<string> SourceFields,
++    T Values);
++
++internal sealed record NativeSourceTable<T>(
++    string Name,
++    string PackagePath,
++    int RowCount,
++    IReadOnlyList<string> SelectedFields,
++    string SelectedFieldsSha256,
++    IReadOnlyList<NativeSourceRow<T>> Rows);
++
++internal sealed record NativeEnrichmentSnapshot(
++    int SchemaVersion,
++    string Contract,
++    string SteamBuildId,
++    long PakBytes,
++    bool MappingsProvided,
++    NativeSourceTable<NativePalValues> PalTable,
++    NativeSourceTable<NativeActiveSkillValues> ActiveSkillTable);
++
++internal sealed class EnrichmentExtractor(PakWorkspace workspace)
++{
++    private static readonly string[] PalFields =
++    [
++        "ElementType1",
++        "ElementType2",
++        "MaleProbability",
++        "PassiveSkill1",
++        "PassiveSkill2",
++        "PassiveSkill3",
++        "PassiveSkill4",
++    ];
++
++    private static readonly string[] ActiveSkillFields = ["PalID", "WazaID", "Level"];
++
++    private static readonly JsonSerializerOptions CanonicalJson = new()
++    {
++        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
++        WriteIndented = false,
++        DefaultIgnoreCondition = JsonIgnoreCondition.Never,
++        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
++    };
++
++    public NativeEnrichmentSnapshot Extract(string buildId)
++    {
++        var palTable = ReadPalTable();
++        var activeSkillTable = ReadActiveSkillTable();
++        return new NativeEnrichmentSnapshot(
++            1,
++            "palnavi-atlas-enrichment/v1",
++            buildId,
++            workspace.PakBytes,
++            false,
++            palTable,
++            activeSkillTable);
++    }
++
++    private NativeSourceTable<NativePalValues> ReadPalTable()
++    {
++        var (packagePath, table) = RequiredTable(AssetCatalog.Pals);
++        var rows = table.RowMap
++            .OrderBy(row => row.Key.Text, StringComparer.Ordinal)
++            .Select(row =>
++            {
++                var reader = new RowReader(row.Value);
++                RequireFields(reader, packagePath, row.Key.Text, PalFields);
++                var maleProbability = reader.Int(-1, "MaleProbability");
++                var values = new NativePalValues(
++                    reader.String("", "ElementType1"),
++                    reader.String("", "ElementType2"),
++                    maleProbability is >= 0 and <= 100 ? maleProbability : null,
++                    reader.String("", "PassiveSkill1"),
++                    reader.String("", "PassiveSkill2"),
++                    reader.String("", "PassiveSkill3"),
++                    reader.String("", "PassiveSkill4"));
++                return SourceRow(row.Key.Text, PalFields, values);
++            })
++            .ToArray();
++        return SourceTable(AssetCatalog.Pals.Name, packagePath, PalFields, rows);
++    }
++
++    private NativeSourceTable<NativeActiveSkillValues> ReadActiveSkillTable()
++    {
++        var (packagePath, table) = RequiredTable(AssetCatalog.ActiveSkillLearnset);
++        var rows = table.RowMap
++            .OrderBy(row => row.Key.Text, StringComparer.Ordinal)
++            .Select(row =>
++            {
++                var reader = new RowReader(row.Value);
++                RequireFields(reader, packagePath, row.Key.Text, ActiveSkillFields);
++                var values = new NativeActiveSkillValues(
++                    reader.String("", "PalID"),
++                    reader.String("", "WazaID"),
++                    reader.Int(-1, "Level"));
++                return SourceRow(row.Key.Text, ActiveSkillFields, values);
++            })
++            .ToArray();
++        return SourceTable(
++            AssetCatalog.ActiveSkillLearnset.Name,
++            packagePath,
++            ActiveSkillFields,
++            rows);
++    }
++
++    private (string PackagePath, UDataTable Table) RequiredTable(TableSpec spec)
++    {
++        var packagePath = spec.PackagePaths.FirstOrDefault(workspace.PackageExists)
++            ?? throw new InvalidDataException($"{spec.Name} package is absent");
++        var table = workspace.Load(packagePath)
++            ?? throw new InvalidDataException($"{spec.Name} package could not be parsed");
++        if (table.RowMap.Count == 0)
++            throw new InvalidDataException($"{spec.Name} package contains no rows");
++        return (packagePath, table);
++    }
++
++    private static NativeSourceRow<T> SourceRow<T>(
++        string sourceRowId,
++        IReadOnlyList<string> sourceFields,
++        T values)
++    {
++        var hash = Hash(new { sourceRowId, sourceFields, values });
++        return new NativeSourceRow<T>(sourceRowId, hash, sourceFields, values);
++    }
++
++    private static NativeSourceTable<T> SourceTable<T>(
++        string name,
++        string packagePath,
++        IReadOnlyList<string> selectedFields,
++        IReadOnlyList<NativeSourceRow<T>> rows)
++    {
++        var hash = Hash(new { packagePath, selectedFields, rows });
++        return new NativeSourceTable<T>(
++            name,
++            packagePath,
++            rows.Count,
++            selectedFields,
++            hash,
++            rows);
++    }
++
++    private static void RequireFields(
++        RowReader reader,
++        string packagePath,
++        string sourceRowId,
++        IReadOnlyList<string> expected)
++    {
++        var present = reader.FieldNames.ToHashSet(StringComparer.OrdinalIgnoreCase);
++        var missing = expected.Where(field => !present.Contains(field)).ToArray();
++        if (missing.Length > 0)
++            throw new InvalidDataException(
++                $"{packagePath} row {sourceRowId} is missing selected fields: " +
++                string.Join(", ", missing));
++    }
++
++    private static string Hash<T>(T value) =>
++        Convert.ToHexString(
++            SHA256.HashData(JsonSerializer.SerializeToUtf8Bytes(value, CanonicalJson)))
++        .ToLowerInvariant();
++}
+diff --git a/src/PalworldAtlas.Extractor/Program.cs b/src/PalworldAtlas.Extractor/Program.cs
+index 71051db..d552637 100644
+--- a/src/PalworldAtlas.Extractor/Program.cs
++++ b/src/PalworldAtlas.Extractor/Program.cs
+@@ -15,0 +16,5 @@ internal static class Program
++    private static readonly JsonSerializerOptions EnrichmentJsonOptions = new(JsonOptions)
++    {
++        DefaultIgnoreCondition = JsonIgnoreCondition.Never,
++    };
++
+@@ -36,0 +42 @@ internal static class Program
++                "enrich" => Enrich(pakDirectory, mappings, buildId, Required(options, "output")),
+@@ -64,0 +71,15 @@ internal static class Program
++    private static int Enrich(string pakDirectory, string? mappings, string buildId, string output)
++    {
++        if (buildId == "unknown") throw new ArgumentException("--build-id is required for enrich");
++        if (!string.IsNullOrWhiteSpace(mappings))
++            throw new ArgumentException("The reviewed enrichment extraction requires no mappings file");
++        using var workspace = new PakWorkspace(pakDirectory, null);
++        var snapshot = new EnrichmentExtractor(workspace).Extract(buildId);
++        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(output))!);
++        File.WriteAllText(output, JsonSerializer.Serialize(snapshot, EnrichmentJsonOptions) + "\n");
++        Console.WriteLine(
++            $"Extracted {snapshot.PalTable.RowCount} Pal rows and " +
++            $"{snapshot.ActiveSkillTable.RowCount} active-skill rows");
++        return 0;
++    }
++
+@@ -90,0 +112 @@ internal static class Program
++        enrich  --pak-dir PATH --output FILE --build-id ID

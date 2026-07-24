@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "enrichment_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47-deterministic-enrichment-v1",
+  "source_dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+  "created_at": "2026-07-24T09:54:00Z",
+  "classification": "production_source_data_stored_inactive",
+  "runtime_status": "stored_not_activated",
+  "native_acquisition": {
+    "lock_path": "../native-acquisition-lock.json",
+    "lock_sha256": "57e19c299c805995b3efa3b8b442f12040fdd2396d761d638677098388223307",
+    "steam_app_id": "2394010",
+    "steam_build_id": "24181105",
+    "depot_id": "2394012",
+    "manifest_id": "2167164727892555341",
+    "pak_path": "Pal/Content/Paks/Pal-LinuxServer.pak",
+    "pak_bytes": 4797040962,
+    "pak_steam_sha1": "b81698aff4e50356b9c2672ecadc59a2dd840ea3",
+    "pak_sha256": "cad80fe15c38d74a795779fbab31f04bc2c15c37fb8a2188e4d89f3800fb0e68",
+    "mappings": "not_provided_not_required"
+  },
+  "extractor": {
+    "repository": "https://github.com/Awy64/palworld-atlas-data.git",
+    "commit": "0385b3fd8bd757240d4a2c79615145122669abd5",
+    "project": "src/PalworldAtlas.Extractor/PalworldAtlas.Extractor.csproj",
+    "project_sha256": "3e40be050b850c887a9416c25d8be6d8b5cf437c7d0ca0cbf006588d86d9932a",
+    "dependency_lock_record_sha256": "d2df63b2c44fbccd291bbfe99168d460e40dcf301e026b29c6a2e4e8648fb32b",
+    "patch_path": "tools/palworld_atlas_enrichment.patch",
+    "patch_sha256": "462761bdb29e8992f21af050d563d2f8a32bb02ce4b4724499518c699b7e3feb",
+    "raw_snapshot_sha256": "5a9aa34bf870fa6270fedacc7dbc3a991d83ef7907ab1a301766fd8fd52f1da9"
+  },
+  "palcalc": {
+    "repository": "https://github.com/tylercamp/palcalc",
+    "commit": "8b7e2f779e47fddae16ddcb973e828ba20c02b80",
+    "db_path": "PalCalc.Model/db.json",
+    "db_sha256": "803d891afdb18bd00e24332844a7276bbe5c0855170ef90ef142f2f4d7698ed1",
+    "db_git_blob_sha1": "82ef55ab1f26a8c4fd032eb29a9aab0ddb1532eb",
+    "csv_path": "PalCalc.GenDB/out-csv/pals.csv",
+    "csv_sha256": "01eb3aae31c82c9ed2160bb1d08ec5230516698f50a4025725e36cb5ded52561",
+    "csv_git_blob_sha1": "6ae6fca1ecd13984ee42fac1ad63605c5d0cd58a"
+  },
+  "roster_classification": {
+    "control_source_path": "research/palworld/2026-07-24/gap-closure/roster-classification.json",
+    "sha256": "4a9de3ea0560f7053366c2bcfa053f059c7b2aaaffc46bb355e0774ab841d61c"
+  },
+  "counts": {
+    "pal_records": 299,
+    "canonical_paldeck": 287,
+    "terraria_collaboration_entity": 11,
+    "internal_duplicate_form": 1,
+    "native_pal_rows": 753,
+    "native_pal_rows_joined": 299,
+    "native_pal_rows_excluded": 454,
+    "native_active_skill_rows": 5772,
+    "native_active_skill_rows_joined": 2356,
+    "native_active_skill_rows_excluded": 3416,
+    "active_skill_entries": 2356,
+    "palcalc_native_comparisons": 598,
+    "palcalc_native_differences": 0
+  },
+  "generated_files": [
+    {
+      "path": "ATLAS-LICENSE.txt",
+      "bytes": 1067,
+      "sha256": "b88ccccdda36c466e1f74db2c5d97edac73edffa382ec7c92fbc8651daca6694",
+      "records": null
+    },
+    {
+      "path": "native-pal-fields.json",
+      "bytes": 3509325,
+      "sha256": "9e79caaa37715df5b19cc0faebc877e72a4bc696bdd6d11e4f26d240bc8e21b1",
+      "records": 6525
+    },
+    {
+      "path": "pal-enrichment.json",
+      "bytes": 381451,
+      "sha256": "4e27eaf7bd4624afa47f7f57c6b24febf759081b0ea44b2f032986080083872b",
+      "records": 299
+    },
+    {
+      "path": "palcalc-native-diff.json",
+      "bytes": 149488,
+      "sha256": "77efe94b8776259b48780d8f7b75f222ea2b9308172e50258cde773df634515d",
+      "records": 299
+    },
+    {
+      "path": "roster-classification.json",
+      "bytes": 5049,
+      "sha256": "4a9de3ea0560f7053366c2bcfa053f059c7b2aaaffc46bb355e0774ab841d61c",
+      "records": 299
+    }
+  ],
+  "claim_limits": [
+    "This enrichment is derived from the Linux dedicated-server tables, not PC client assets.",
+    "Guaranteed passive IDs are direct fixed assignments, not an inheritance pool.",
+    "No partner skill, ranch output, mutation, cake, IV, or probability-cost value is inferred.",
+    "Runtime, API, planner, and frontend behavior remain unchanged."
+  ],
+  "generation": {
+    "tool": "tools/build_palworld_enrichment.py",
+    "serialization": "UTF-8 JSON, two-space indentation, LF terminator",
+    "deterministic": true,
+    "aliases": {}
+  },
+  "content_identity": {
+    "algorithm": "sha256",
+    "digest": "a125a85a085024e7f577840eefc3cb9300966c2d91efed6a8767cb5e89fb77ec"
+  }
+}
