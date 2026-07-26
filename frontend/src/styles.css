@@ -39,12 +39,14 @@ body {
 
 button,
 input,
+select,
 textarea {
   font: inherit;
 }
 
 button,
 input,
+select,
 textarea,
 summary {
   min-height: 2.75rem;
@@ -169,7 +171,8 @@ code {
   box-shadow: 0 1rem 4rem rgb(0 0 0 / 0.22);
 }
 
-.knowledge-form {
+.knowledge-form,
+.breeding-form {
   padding: 1.25rem;
 }
 
@@ -196,6 +199,7 @@ legend {
 
 input[type="text"],
 input[type="number"],
+select,
 textarea {
   width: 100%;
   padding: 0.7rem 0.8rem;
@@ -304,6 +308,22 @@ legend {
 .button:hover {
   color: var(--bg);
   background: var(--signal);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.button:disabled:hover {
+  color: var(--signal);
+  background: transparent;
+}
+
+.button-compact {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
 }
 
 .button-primary {
@@ -514,6 +534,184 @@ code {
   border: 0;
 }
 
+.workspace-switcher {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: min(90rem, 100% - 2rem);
+  margin: 1rem auto 0;
+}
+
+.workspace-switcher label {
+  position: relative;
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+  padding: 0.9rem 1rem 0.9rem 2.8rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.workspace-switcher label.active {
+  border-color: var(--signal);
+  background: rgb(111 255 210 / 0.08);
+}
+
+.workspace-switcher input {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.9rem;
+  width: 1.25rem;
+  min-height: 1.25rem;
+}
+
+.workspace-switcher span {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.workspace-switcher small {
+  color: var(--muted);
+}
+
+.verified-badge {
+  border-color: var(--signal);
+  background: rgb(111 255 210 / 0.07);
+}
+
+.verified-badge span {
+  color: var(--signal);
+}
+
+.dataset-scope,
+.objective-note,
+.availability-warning {
+  display: grid;
+  gap: 0.35rem;
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border: 1px solid var(--signal);
+  background: rgb(111 255 210 / 0.055);
+}
+
+.dataset-scope code {
+  color: var(--signal);
+}
+
+.inventory-row {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
+}
+
+.inventory-row-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.inventory-row-heading h3 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.inventory-row-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(7.5rem, 0.38fr);
+  gap: 0.75rem;
+}
+
+.attention-state {
+  border-color: var(--accent);
+}
+
+.attention-state .eyebrow {
+  color: var(--accent);
+}
+
+.availability-warning {
+  border-color: var(--accent);
+  color: var(--text);
+  background: rgb(255 209 102 / 0.07);
+}
+
+.availability-warning span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.route-steps {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.route-step {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
+}
+
+.breeding-equation {
+  display: flex;
+  align-items: stretch;
+  gap: 0.65rem;
+}
+
+.breeding-equation span {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 0.2rem;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.breeding-equation strong,
+.breeding-equation small {
+  overflow-wrap: anywhere;
+}
+
+.breeding-equation small {
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.breeding-equation b {
+  align-self: center;
+  color: var(--accent);
+}
+
+.result-kind {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+}
+
+.provenance-disclosure {
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+}
+
+.source-hash-list,
+.identifier-list {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.25rem;
+}
+
+.source-hash-list code,
+.identifier-list code {
+  color: var(--signal);
+}
+
 @media (max-width: 52rem) {
   .site-header {
     align-items: flex-start;
@@ -536,6 +734,7 @@ code {
   }
 
   .knowledge-form,
+  .breeding-form,
   .result-panel {
     padding: 0.85rem;
   }
@@ -550,6 +749,24 @@ code {
 
   .button {
     width: 100%;
+  }
+
+  .workspace-switcher {
+    width: min(100% - 1rem, 90rem);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .inventory-row-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .breeding-equation {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .breeding-equation b {
+    transform: rotate(90deg);
   }
 }
 
