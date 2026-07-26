@@ -9,6 +9,12 @@ import {
   type BreedingSuccessResponse,
   type BreedingUnreachableResponse,
 } from "../src/api/breedingContract";
+import {
+  SPECIES_CATALOG_LOCALE_TAGS,
+  type SpeciesCatalogLocale,
+  type SpeciesCatalogRecord,
+  type SpeciesCatalogSuccessResponse,
+} from "../src/api/breedingCatalogContract";
 import goldenContracts from "./golden/knowledge-contracts.json";
 
 const clone = <T>(value: T): T =>
@@ -121,5 +127,54 @@ export function breedingInvalid(): BreedingInvalidResponse {
       },
     ],
     message: "The route request was rejected.",
+  };
+}
+
+function catalogNames(
+  speciesId: string,
+): Record<SpeciesCatalogLocale, string> {
+  const anubisNames: Partial<Record<SpeciesCatalogLocale, string>> = {
+    en: "Anubis",
+    ja: "アヌビス",
+    "zh-Hans": "阿努比斯",
+    "zh-Hant": "阿努比斯",
+  };
+  return Object.fromEntries(
+    SPECIES_CATALOG_LOCALE_TAGS.map((locale) => [
+      locale,
+      speciesId === "anubis"
+        ? anubisNames[locale] ?? `Anubis ${locale}`
+        : `${speciesId} ${locale}`,
+    ]),
+  ) as Record<SpeciesCatalogLocale, string>;
+}
+
+export function speciesCatalogSuccess(): SpeciesCatalogSuccessResponse {
+  const speciesIds = [
+    "anubis",
+    ...Array.from(
+      { length: 298 },
+      (_value, index) => `pal_${index.toString().padStart(3, "0")}`,
+    ),
+  ].sort();
+  const records: SpeciesCatalogRecord[] = speciesIds.map(
+    (speciesId, index) => ({
+      species_id: speciesId,
+      paldeck_number: index + 1,
+      paldeck_suffix: null,
+      is_variant: false,
+      localized_names: catalogNames(speciesId),
+      source_record_sha256: index.toString(16).padStart(64, "0"),
+    }),
+  );
+  return {
+    status: "success",
+    dataset_id: BREEDING_DATASET_ID,
+    content_sha256: BREEDING_CONTENT_SHA256,
+    locale_tags: [...SPECIES_CATALOG_LOCALE_TAGS],
+    records,
+    error_category: null,
+    errors: [],
+    message: null,
   };
 }

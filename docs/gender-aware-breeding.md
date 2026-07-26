@@ -8,6 +8,13 @@ Two read-only runtime paths use the accepted Palworld production breeding outcom
 - `POST /api/v1/breeding/gender-aware-routes` performs deterministic
   gender-capable multi-generation search.
 
+A third read-only presentation path,
+`GET /api/v1/palworld/species-catalog?dataset_id=<stable-id>`, returns the exact accepted
+localized display names and Paldeck metadata for the same 299-species snapshot. It exposes no
+breeding power, probability, statistics, skills, ranch output, source internal name, or local
+path. Unknown or invalid data fails closed instead of substituting another dataset or a partial
+catalog.
+
 Neither endpoint mutates inventory. The pre-existing
 `POST /api/v1/breeding/routes` endpoint, synthetic repository, request and response contracts,
 and species-only planner remain unchanged as the rollback target.
@@ -138,8 +145,17 @@ and `minimum_generations`. The dataset identity and objective are visible but no
 
 Every added inventory row is explicit. The browser rejects blank or incomplete rows, invalid
 species or instance IDs, duplicate instance IDs, and inventory overflow locally without issuing a
-request. Species IDs remain an alpha input boundary: the frontend does not bundle the production
-roster, invent display names, or add a catalogue endpoint.
+request. The form loads the fixed catalog only when the Breeding workspace is mounted, defaults
+display locale to `en`, and offers the exact locale set `de`, `en`, `es`, `es-MX`, `fr`, `id`,
+`it`, `ja`, `ko`, `pl`, `pt-BR`, `ru`, `th`, `tr`, `vi`, `zh-Hans`, and `zh-Hant`. Target and
+inventory fields share one bounded suggestion list. Suggestions display an exact localized name
+and stable ID; selection or an unambiguous exact localized name is normalized to the stable ID
+before the request is built.
+
+Catalog loading is independent from route submission and the immutable Loop 013 request
+controller. A catalog failure displays an accessible warning, leaves manual stable-ID entry
+enabled, and never starts a breeding request. Replaced catalog loads cannot overwrite newer work,
+and component disposal aborts the active load.
 
 The dedicated client reuses the same-origin, credential-omitting, redirect-rejecting,
 cache-disabling, byte-bounded transport. It strictly validates JSON media type, UTF-8, exact
@@ -166,4 +182,4 @@ repository dependency leaves that complete rollback path intact.
 
 This feature does not implement expected attempts, offspring probability cost, inventory
 persistence or consumption, passive or IV inheritance, mutation, cakes, incubation, partner
-skills, ranch outputs, a species catalogue, or save-file access.
+skills, ranch outputs, fuzzy aliases, translated or inferred display names, or save-file access.

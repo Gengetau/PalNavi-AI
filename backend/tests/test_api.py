@@ -1,3 +1,4 @@
+import json
 from collections.abc import Iterator
 from contextlib import contextmanager
 
@@ -7,6 +8,7 @@ import pytest
 from palnavi.api.dependencies import (
     get_dataset_repository,
     get_direct_breeding_repository,
+    get_species_catalog_repository,
 )
 from palnavi.api.main import app
 from palnavi.api.schemas import (
@@ -14,6 +16,7 @@ from palnavi.api.schemas import (
     GenderRouteResponse,
     RequestValidationErrorResponse,
     RouteResponse,
+    SpeciesCatalogResponse,
 )
 from palnavi.domain.data import (
     DatasetInvalid,
@@ -22,8 +25,12 @@ from palnavi.domain.data import (
     DatasetValidationCode,
     DatasetValidationIssue,
     GenderAwareDatasetLoadResult,
+    SpeciesCatalogLoadResult,
 )
-from palnavi.infrastructure.palworld_dataset_repository import PALWORLD_DATASET_ID
+from palnavi.infrastructure.palworld_dataset_repository import (
+    PALWORLD_DATASET_ID,
+    default_palworld_dataset_root,
+)
 
 pytestmark = pytest.mark.anyio
 
@@ -60,6 +67,16 @@ class StubDirectRepository:
         return self.result
 
 
+class StubSpeciesCatalogRepository:
+    def __init__(self, result: SpeciesCatalogLoadResult) -> None:
+        self.result = result
+        self.requested_ids: list[str] = []
+
+    def load(self, dataset_id: str) -> SpeciesCatalogLoadResult:
+        self.requested_ids.append(dataset_id)
+        return self.result
+
+
 @contextmanager
 def repository_override(repository: StubRepository) -> Iterator[None]:
     app.dependency_overrides[get_dataset_repository] = lambda: repository
@@ -78,12 +95,147 @@ def direct_repository_override(repository: StubDirectRepository) -> Iterator[Non
         app.dependency_overrides.pop(get_direct_breeding_repository, None)
 
 
+@contextmanager
+def species_catalog_repository_override(
+    repository: StubSpeciesCatalogRepository,
+) -> Iterator[None]:
+    app.dependency_overrides[get_species_catalog_repository] = lambda: repository
+    try:
+        yield
+    finally:
+        app.dependency_overrides.pop(get_species_catalog_repository, None)
+
+
 async def test_health() -> None:
     async with api_client() as client:
         response = await client.get("/health")
 
     assert response.status_code == 200
     assert response.json() == {"status": "healthy"}
+
+
+async def test_species_catalog_returns_exact_versioned_presentation_records() -> None:
+    async with api_client() as client:
+        response = await client.get(
+            "/api/v1/palworld/species-catalog",
+            params={"dataset_id": PALWORLD_DATASET_ID},
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    SpeciesCatalogResponse.model_validate(payload)
+    assert set(payload) == {
+        "status",
+        "dataset_id",
+        "content_sha256",
+        "locale_tags",
+        "records",
+        "error_category",
+        "errors",
+        "message",
+    }
+    assert payload["status"] == "success"
+    assert len(payload["locale_tags"]) == 17
+    assert len(payload["records"]) == 299
+    source = json.loads(
+        (default_palworld_dataset_root() / PALWORLD_DATASET_ID / "pals.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    expected_records = sorted(
+        [
+            {
+                "species_id": record["internal_id"],
+                "paldeck_number": record["paldex_number"],
+                "paldeck_suffix": record["paldex_suffix"],
+                "is_variant": record["is_variant"],
+                "localized_names": record["localized_names"],
+                "source_record_sha256": record["source_record_hash"],
+            }
+            for record in source["records"]
+        ],
+        key=lambda record: record["species_id"],
+    )
+    assert payload["records"] == expected_records
+    assert len(response.content) < 1_048_576
+    anubis = next(record for record in payload["records"] if record["species_id"] == "anubis")
+    assert {
+        locale: anubis["localized_names"][locale] for locale in ("en", "ja", "zh-Hans", "zh-Hant")
+    } == {
+        "en": "Anubis",
+        "ja": "アヌビス",
+        "zh-Hans": "阿努比斯",
+        "zh-Hant": "阿努比斯",
+    }
+    assert set(anubis) == {
+        "species_id",
+        "paldeck_number",
+        "paldeck_suffix",
+        "is_variant",
+        "localized_names",
+        "source_record_sha256",
+    }
+
+
+async def test_species_catalog_unknown_dataset_has_deterministic_not_found_shape() -> None:
+    repository = StubSpeciesCatalogRepository(DatasetNotFound(dataset_id="unknown"))
+
+    with species_catalog_repository_override(repository):
+        async with api_client() as client:
+            response = await client.get(
+                "/api/v1/palworld/species-catalog",
+                params={"dataset_id": "unknown"},
+            )
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "status": "not_found",
+        "dataset_id": "unknown",
+        "content_sha256": None,
+        "locale_tags": [],
+        "records": [],
+        "error_category": "dataset_not_found",
+        "errors": [
+            {
+                "code": "dataset_not_found",
+                "field": "dataset_id",
+                "message": "requested species catalog was not found",
+            }
+        ],
+        "message": "species catalog could not be validated",
+    }
+    assert repository.requested_ids == ["unknown"]
+
+
+async def test_species_catalog_invalid_storage_has_deterministic_invalid_shape() -> None:
+    issue = DatasetValidationIssue(
+        code=DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+        field="pals.json.records",
+        message="catalog is malformed",
+    )
+    repository = StubSpeciesCatalogRepository(
+        DatasetInvalid(dataset_id=PALWORLD_DATASET_ID, issues=(issue,))
+    )
+
+    with species_catalog_repository_override(repository):
+        async with api_client() as client:
+            response = await client.get(
+                "/api/v1/palworld/species-catalog",
+                params={"dataset_id": PALWORLD_DATASET_ID},
+            )
+
+    assert response.status_code == 422
+    payload = response.json()
+    assert payload["status"] == "invalid"
+    assert payload["error_category"] == "dataset_invalid"
+    assert payload["records"] == []
+    assert payload["errors"] == [
+        {
+            "code": "malformed_palworld_record",
+            "field": "pals.json.records",
+            "message": "catalog is malformed",
+        }
+    ]
 
 
 @pytest.mark.parametrize(

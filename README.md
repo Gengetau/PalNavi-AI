@@ -28,7 +28,7 @@ prose.
   status, and a verified SHA-256 content identity;
 - a read-only repository protocol and validated local JSON implementation;
 - FastAPI health, synthetic breeding-route, production direct-breeding, and production
-  gender-aware route endpoints;
+  gender-aware route endpoints plus a strict read-only localized species catalog;
 - asynchronous model contracts and offline-tested OpenAI, Anthropic, DeepSeek, Zhipu,
   Bailian, and custom OpenAI-compatible adapters;
 - deterministic Markdown ingestion, citation-ready SQLite knowledge storage, lexical retrieval,
@@ -37,7 +37,7 @@ prose.
   retrieval-owned citations, and fail-closed validation of untrusted model text;
 - a standalone Vue 3 and TypeScript interface with a synthetic-only knowledge workspace by
   default and a separate verified-data, manual-inventory breeding workspace over the production
-  gender-aware route endpoint;
+  gender-aware route endpoint, with version-bound localized suggestions that retain stable IDs;
 - a deterministic registry of exact official source URLs plus a credential-free, metadata-only
   fingerprint boundary with a mandatory synthetic mock fallback;
 - an exact-source, MIT-attributed Palworld v1 dataset with 299 calculation records and 44,851
@@ -103,7 +103,9 @@ OpenAPI documentation is available at `http://127.0.0.1:8000/docs`. Health is av
 at `GET /health`; exact direct breeding is available at `POST /api/v1/breeding/direct`;
 production gender-aware route planning is available at
 `POST /api/v1/breeding/gender-aware-routes`; the unchanged synthetic route planner is available
-at `POST /api/v1/breeding/routes`; citation-ready retrieval is available at
+at `POST /api/v1/breeding/routes`; the fixed localized presentation catalog is available at
+`GET /api/v1/palworld/species-catalog?dataset_id=palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47`;
+citation-ready retrieval is available at
 `POST /api/v1/knowledge/search`; and grounded explanations are available at
 `POST /api/v1/knowledge/explain`.
 
@@ -128,7 +130,8 @@ fictional synthetic
 evidence. The frontend keeps **Synthetic knowledge only** enabled and visibly labeled by default
 and does not claim that its fixtures represent verified game facts. Its separate Breeding
 workspace identifies the fixed accepted production dataset, accepts only manual stable IDs,
-and does not copy production records into frontend source or imply save-file access.
+loads exact localized display names from the read-only version-bound catalog, submits only stable
+IDs, and does not copy production records into frontend source or imply save-file access.
 
 Model provider setup, security boundaries, and the explicit live smoke command are documented
 in [docs/model-providers.md](docs/model-providers.md). Knowledge ingestion, local database setup,

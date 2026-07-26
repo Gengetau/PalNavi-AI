@@ -7,6 +7,10 @@ import type {
   BreedingClient,
 } from "../src/api/breedingContract";
 import type {
+  SpeciesCatalogCallResult,
+  SpeciesCatalogClient,
+} from "../src/api/breedingCatalogContract";
+import type {
   ExplainCallResult,
   KnowledgeClient,
   SearchCallResult,
@@ -22,6 +26,7 @@ import {
   breedingSuccess,
   breedingUnreachable,
   breedingZeroStepSuccess,
+  speciesCatalogSuccess,
 } from "./breeding-fixtures";
 
 let wrapper: VueWrapper | undefined;
@@ -421,6 +426,15 @@ function breedingClientWith(
   return { plan: vi.fn(async () => result) };
 }
 
+function catalogClientWith(
+  result: SpeciesCatalogCallResult = {
+    kind: "success",
+    response: speciesCatalogSuccess(),
+  },
+): SpeciesCatalogClient {
+  return { load: vi.fn(async () => result) };
+}
+
 async function switchToBreeding(): Promise<void> {
   await wrapper!.get<HTMLInputElement>('input[value="breeding"]').setValue();
 }
@@ -450,6 +464,161 @@ async function fillGoldenBreedingForm(): Promise<void> {
 }
 
 describe("verified breeding UI", () => {
+  it("loads the catalog only after entering breeding and exposes all locales", async () => {
+    const breedingCatalogClient = catalogClientWith();
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        breedingClient: breedingClientWith(),
+        breedingCatalogClient,
+      },
+    });
+
+    expect(breedingCatalogClient.load).not.toHaveBeenCalled();
+    await switchToBreeding();
+    await flushPromises();
+
+    expect(breedingCatalogClient.load).toHaveBeenCalledTimes(1);
+    expect(wrapper.text()).toContain("299 verified species available");
+    expect(
+      wrapper.findAll("#species-display-locale option").map((option) =>
+        option.attributes("value"),
+      ),
+    ).toEqual([
+      "de",
+      "en",
+      "es",
+      "es-MX",
+      "fr",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt-BR",
+      "ru",
+      "th",
+      "tr",
+      "vi",
+      "zh-Hans",
+      "zh-Hant",
+    ]);
+    const anubis = wrapper.get(
+      '#species-catalog-suggestions option[value="anubis"]',
+    );
+    expect(anubis.attributes("label")).toBe("Anubis · anubis");
+  });
+
+  it("normalizes localized target and inventory choices to stable IDs", async () => {
+    const breedingClient = breedingClientWith();
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        breedingClient,
+        breedingCatalogClient: catalogClientWith(),
+      },
+    });
+    await switchToBreeding();
+    await flushPromises();
+    await wrapper.get("#species-display-locale").setValue("ja");
+    expect(
+      wrapper
+        .get('#species-catalog-suggestions option[value="anubis"]')
+        .attributes("label"),
+    ).toBe("アヌビス · anubis");
+
+    await wrapper.get("#breeding-target-species").setValue("アヌビス");
+    await wrapper
+      .get(".breeding-form fieldset:nth-of-type(2) > button")
+      .trigger("click");
+    await wrapper
+      .get('[name="inventory-0-instance-id"]')
+      .setValue("anubis-owned");
+    await wrapper
+      .get('[name="inventory-0-species-id"]')
+      .setValue("アヌビス");
+    await wrapper
+      .get('[name="inventory-0-gender"]')
+      .setValue("female");
+    await wrapper.get(".breeding-form").trigger("submit");
+    await flushPromises();
+
+    expect(
+      wrapper.get<HTMLInputElement>("#breeding-target-species").element.value,
+    ).toBe("anubis");
+    expect(
+      wrapper.get<HTMLInputElement>('[name="inventory-0-species-id"]').element
+        .value,
+    ).toBe("anubis");
+    expect(breedingClient.plan).toHaveBeenCalledWith(
+      {
+        dataset_id:
+          "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+        target: { species_id: "anubis", gender: "female" },
+        inventory: [
+          {
+            instance_id: "anubis-owned",
+            species_id: "anubis",
+            gender: "female",
+          },
+        ],
+        objective: "minimum_generations",
+      },
+      { signal: expect.any(AbortSignal) },
+    );
+  });
+
+  it("keeps explicit manual ID entry when catalog loading fails", async () => {
+    const breedingClient = breedingClientWith();
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        breedingClient,
+        breedingCatalogClient: catalogClientWith({
+          kind: "network-error",
+          message: "Catalog offline.",
+        }),
+      },
+    });
+
+    await switchToBreeding();
+    await flushPromises();
+
+    expect(wrapper.text()).toContain(
+      "Catalog unavailable. Manual stable-ID entry remains available.",
+    );
+    expect(breedingClient.plan).not.toHaveBeenCalled();
+    expect(
+      wrapper.get<HTMLInputElement>("#breeding-target-species").element
+        .disabled,
+    ).toBe(false);
+  });
+
+  it("renders hostile-looking localized names as inert option text", async () => {
+    const catalog = speciesCatalogSuccess();
+    const anubis = catalog.records.find(
+      (record) => record.species_id === "anubis",
+    )!;
+    anubis.localized_names.en = "<img src=x onerror=alert(1)>";
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        breedingClient: breedingClientWith(),
+        breedingCatalogClient: catalogClientWith({
+          kind: "success",
+          response: catalog,
+        }),
+      },
+    });
+
+    await switchToBreeding();
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("<img src=x onerror=alert(1)>");
+    expect(wrapper.find("img").exists()).toBe(false);
+    expect(wrapper.find('a[href^="javascript:"]').exists()).toBe(false);
+  });
+
   it("keeps knowledge as the default and switches to a truthful breeding disclosure", async () => {
     const breedingClient = breedingClientWith();
     wrapper = mount(App, {

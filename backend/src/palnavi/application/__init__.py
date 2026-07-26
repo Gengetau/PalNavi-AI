@@ -59,6 +59,13 @@ from palnavi.application.official_source_acquisition import (
     snapshot_manifest_document,
     snapshot_manifest_sha256,
 )
+from palnavi.application.species_catalog import (
+    SpeciesCatalogFailure,
+    SpeciesCatalogFailureKind,
+    SpeciesCatalogOutcome,
+    SpeciesCatalogService,
+    SpeciesCatalogSuccess,
+)
 
 __all__ = [
     "BreedingPlanningService",
@@ -108,4 +115,9 @@ __all__ = [
     "format_utc",
     "snapshot_manifest_document",
     "snapshot_manifest_sha256",
+    "SpeciesCatalogFailure",
+    "SpeciesCatalogFailureKind",
+    "SpeciesCatalogOutcome",
+    "SpeciesCatalogService",
+    "SpeciesCatalogSuccess",
 ]

@@ -1,10 +1,24 @@
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+} from "vue";
 
 import {
   BREEDING_DATASET_ID,
   type BreedingRequest,
 } from "../api/breedingContract";
+import {
+  SPECIES_CATALOG_LOCALE_TAGS,
+  type SpeciesCatalogClient,
+  type SpeciesCatalogLocale,
+  type SpeciesCatalogRecord,
+} from "../api/breedingCatalogContract";
+import { useSpeciesCatalog } from "../composables/useSpeciesCatalog";
 import {
   createInitialBreedingForm,
   MAX_INVENTORY_ROWS,
@@ -13,6 +27,7 @@ import {
   validateAndBuildBreedingRequest,
 } from "../form/breedingRequest";
 
+const props = defineProps<{ catalogClient: SpeciesCatalogClient }>();
 const emit = defineEmits<{ submit: [request: BreedingRequest] }>();
 
 const form = reactive(createInitialBreedingForm());
@@ -20,6 +35,19 @@ const errors = ref<BreedingFieldErrors>({ rows: {} });
 const formElement = ref<HTMLFormElement | null>(null);
 const targetInput = ref<HTMLInputElement | null>(null);
 let nextRowKey = 1;
+const locale = ref<SpeciesCatalogLocale>("en");
+const catalog = useSpeciesCatalog(props.catalogClient);
+const catalogRecords = computed<readonly SpeciesCatalogRecord[]>(() =>
+  catalog.state.value.kind === "success"
+    ? catalog.state.value.response.records
+    : [],
+);
+const catalogUnavailable = computed(
+  () =>
+    catalog.state.value.kind !== "idle" &&
+    catalog.state.value.kind !== "loading" &&
+    catalog.state.value.kind !== "success",
+);
 
 const errorEntries = computed(() => {
   const entries: string[] = [];
@@ -71,6 +99,44 @@ function clearTargetError(): void {
   errors.value = next;
 }
 
+function displayName(record: SpeciesCatalogRecord): string {
+  return record.localized_names[locale.value];
+}
+
+function normalizeSpeciesValue(value: string): string {
+  const trimmed = value.trim();
+  const direct = catalogRecords.value.find(
+    (record) => record.species_id === trimmed,
+  );
+  if (direct !== undefined) {
+    return direct.species_id;
+  }
+  const exactNameMatches = catalogRecords.value.filter(
+    (record) => displayName(record) === trimmed,
+  );
+  if (exactNameMatches.length === 1) {
+    return exactNameMatches[0]!.species_id;
+  }
+  const labeled = catalogRecords.value.find(
+    (record) => `${displayName(record)} · ${record.species_id}` === trimmed,
+  );
+  return labeled?.species_id ?? value;
+}
+
+function normalizeTargetSpecies(): void {
+  form.targetSpeciesId = normalizeSpeciesValue(form.targetSpeciesId);
+  clearTargetError();
+}
+
+function normalizeRowSpecies(index: number): void {
+  const row = form.inventory[index];
+  if (row === undefined) {
+    return;
+  }
+  row.speciesId = normalizeSpeciesValue(row.speciesId);
+  clearRowError(index, "speciesId");
+}
+
 function clearRowError(
   index: number,
   field: keyof BreedingRowErrors,
@@ -101,6 +167,8 @@ function rowDescribedBy(
 }
 
 async function submit(): Promise<void> {
+  normalizeTargetSpecies();
+  form.inventory.forEach((_row, index) => normalizeRowSpecies(index));
   const result = validateAndBuildBreedingRequest(form);
   if (!result.ok) {
     errors.value = result.errors;
@@ -126,6 +194,14 @@ async function submit(): Promise<void> {
   errors.value = { rows: {} };
   emit("submit", result.request);
 }
+
+onMounted(() => {
+  void catalog.load();
+});
+
+onBeforeUnmount(() => {
+  catalog.dispose();
+});
 </script>
 
 <template>
@@ -149,6 +225,63 @@ async function submit(): Promise<void> {
       <strong>Fixed production dataset</strong>
       <code>{{ BREEDING_DATASET_ID }}</code>
     </div>
+
+    <section class="catalog-controls" aria-labelledby="species-catalog-title">
+      <div>
+        <h3 id="species-catalog-title">Localized species catalog</h3>
+        <p v-if="catalog.state.value.kind === 'loading'" role="status">
+          Loading 299 verified species suggestions…
+        </p>
+        <p v-else-if="catalog.state.value.kind === 'success'" role="status">
+          {{ catalogRecords.length }} verified species available. Field values
+          remain stable IDs.
+        </p>
+        <div
+          v-else-if="catalogUnavailable"
+          class="catalog-warning"
+          role="status"
+        >
+          <p>
+            Catalog unavailable. Manual stable-ID entry remains available.
+          </p>
+          <button
+            type="button"
+            class="button button-compact"
+            @click="catalog.load"
+          >
+            Retry catalog
+          </button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="species-display-locale">Suggestion language</label>
+        <select
+          id="species-display-locale"
+          v-model="locale"
+          name="species-display-locale"
+          :disabled="catalog.state.value.kind !== 'success'"
+        >
+          <option
+            v-for="localeTag in SPECIES_CATALOG_LOCALE_TAGS"
+            :key="localeTag"
+            :value="localeTag"
+          >
+            {{ localeTag }}
+          </option>
+        </select>
+      </div>
+    </section>
+
+    <datalist id="species-catalog-suggestions">
+      <option
+        v-for="record in catalogRecords"
+        :key="record.species_id"
+        :value="record.species_id"
+        :label="`${displayName(record)} · ${record.species_id}`"
+      >
+        {{ displayName(record) }} · {{ record.species_id }}
+      </option>
+    </datalist>
 
     <div
       v-if="errorEntries.length"
@@ -174,6 +307,7 @@ async function submit(): Promise<void> {
           v-model="form.targetSpeciesId"
           name="target-species-id"
           type="text"
+          list="species-catalog-suggestions"
           maxlength="64"
           placeholder="wixen_noct"
           :aria-describedby="
@@ -183,9 +317,10 @@ async function submit(): Promise<void> {
           "
           :aria-invalid="Boolean(errors.targetSpeciesId)"
           @input="clearTargetError"
+          @change="normalizeTargetSpecies"
         />
         <p id="target-species-help" class="field-help">
-          Lowercase stable ID; display names are not accepted in this alpha.
+          Choose a localized suggestion or enter a lowercase stable ID.
         </p>
         <p
           v-if="errors.targetSpeciesId"
@@ -277,6 +412,7 @@ async function submit(): Promise<void> {
               v-model="row.speciesId"
               :name="`inventory-${index}-species-id`"
               type="text"
+              list="species-catalog-suggestions"
               maxlength="64"
               placeholder="dumud"
               :data-row-index="index"
@@ -290,12 +426,13 @@ async function submit(): Promise<void> {
               "
               :aria-invalid="Boolean(errors.rows[index]?.speciesId)"
               @input="clearRowError(index, 'speciesId')"
+              @change="normalizeRowSpecies(index)"
             />
             <p
               :id="`inventory-${row.key}-species-help`"
               class="field-help"
             >
-              Stable lowercase internal ID.
+              Localized suggestions always resolve to a stable internal ID.
             </p>
             <p
               v-if="errors.rows[index]?.speciesId"
