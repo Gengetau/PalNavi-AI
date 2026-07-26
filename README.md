@@ -35,8 +35,9 @@ prose.
   and a read-only knowledge search endpoint;
 - a retrieval-first `POST /api/v1/knowledge/explain` endpoint with bounded evidence, canonical
   retrieval-owned citations, and fail-closed validation of untrusted model text;
-- a standalone Vue 3 and TypeScript knowledge workspace that defaults visibly to synthetic-only,
-  preserves typed search and explanation outcomes, and renders backend content as inert text;
+- a standalone Vue 3 and TypeScript interface with a synthetic-only knowledge workspace by
+  default and a separate verified-data, manual-inventory breeding workspace over the production
+  gender-aware route endpoint;
 - a deterministic registry of exact official source URLs plus a credential-free, metadata-only
   fingerprint boundary with a mandatory synthetic mock fallback;
 - an exact-source, MIT-attributed Palworld v1 dataset with 299 calculation records and 44,851
@@ -125,7 +126,9 @@ is not an explanation corpus or the legacy multi-generation planner default. It 
 the read-only direct and gender-aware route endpoints. The explanation endpoint supports only
 fictional synthetic
 evidence. The frontend keeps **Synthetic knowledge only** enabled and visibly labeled by default
-and does not claim that its fixtures represent verified game facts.
+and does not claim that its fixtures represent verified game facts. Its separate Breeding
+workspace identifies the fixed accepted production dataset, accepts only manual stable IDs,
+and does not copy production records into frontend source or imply save-file access.
 
 Model provider setup, security boundaries, and the explicit live smoke command are documented
 in [docs/model-providers.md](docs/model-providers.md). Knowledge ingestion, local database setup,

@@ -129,6 +129,35 @@ Route success costs contain generations and breeding-step count. They always inc
 `probability_dependent_cost_available: false` and `expected_attempts: null`; the planner does not
 invent a 50:50 distribution or a probability-weighted cost model.
 
+## Manual frontend workspace
+
+The Vue interface defaults to the existing synthetic Knowledge workspace and offers a separate
+verified-data Breeding workspace. The breeding form always submits the accepted dataset identity,
+a concrete target gender, a stable target species ID, zero through 299 complete inventory rows,
+and `minimum_generations`. The dataset identity and objective are visible but not editable.
+
+Every added inventory row is explicit. The browser rejects blank or incomplete rows, invalid
+species or instance IDs, duplicate instance IDs, and inventory overflow locally without issuing a
+request. Species IDs remain an alpha input boundary: the frontend does not bundle the production
+roster, invent display names, or add a catalogue endpoint.
+
+The dedicated client reuses the same-origin, credential-omitting, redirect-rejecting,
+cache-disabling, byte-bounded transport. It strictly validates JSON media type, UTF-8, exact
+object keys, accepted content identities, state and identifier shapes, step order and generation
+continuity, generated-parent availability, source-record SHA-256 values, target consistency, and
+cost consistency before presentation.
+
+The UI distinguishes successful routes, zero-step already-owned targets, `gender_required`,
+`unreachable`, product `invalid`, FastAPI request validation, HTTP/contract conflicts, malformed
+responses, and network failures. It renders backend values only as inert Vue text and keeps
+dataset digests and source-record hashes in a secondary provenance disclosure. Request snapshots
+are immutable; a newer submission aborts and supersedes an older one, retry reuses the last
+snapshot, and component disposal aborts active work.
+
+Inventory remains in component memory only. It is not stored in local storage, session storage,
+IndexedDB, cookies, or a URL, and it is sent only to the same-origin route endpoint after explicit
+submission.
+
 ## Rollback and non-goals
 
 The pre-existing synthetic repository, multi-generation planner, route request, and route
@@ -137,4 +166,4 @@ repository dependency leaves that complete rollback path intact.
 
 This feature does not implement expected attempts, offspring probability cost, inventory
 persistence or consumption, passive or IV inheritance, mutation, cakes, incubation, partner
-skills, ranch outputs, frontend planning, or save-file access.
+skills, ranch outputs, a species catalogue, or save-file access.

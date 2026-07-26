@@ -3,6 +3,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import App from "../src/App.vue";
 import type {
+  BreedingCallResult,
+  BreedingClient,
+} from "../src/api/breedingContract";
+import type {
   ExplainCallResult,
   KnowledgeClient,
   SearchCallResult,
@@ -12,6 +16,13 @@ import {
   syntheticExplainCitation,
   syntheticSearchItem,
 } from "./fixtures";
+import {
+  breedingGenderRequired,
+  breedingRequest,
+  breedingSuccess,
+  breedingUnreachable,
+  breedingZeroStepSuccess,
+} from "./breeding-fixtures";
 
 let wrapper: VueWrapper | undefined;
 
@@ -398,5 +409,242 @@ describe("synthetic knowledge UI", () => {
     });
     await flushPromises();
     expect(wrapper.text()).not.toContain("STALE RESULT");
+  });
+});
+
+function breedingClientWith(
+  result: BreedingCallResult = {
+    kind: "success",
+    response: breedingSuccess(),
+  },
+): BreedingClient {
+  return { plan: vi.fn(async () => result) };
+}
+
+async function switchToBreeding(): Promise<void> {
+  await wrapper!.get<HTMLInputElement>('input[value="breeding"]').setValue();
+}
+
+async function fillGoldenBreedingForm(): Promise<void> {
+  const request = breedingRequest();
+  await wrapper!.get("#breeding-target-species").setValue(
+    request.target.species_id,
+  );
+  await wrapper!.get("#breeding-target-gender").setValue(
+    request.target.gender,
+  );
+  for (const [index, item] of request.inventory.entries()) {
+    await wrapper!
+      .get(".breeding-form fieldset:nth-of-type(2) > button")
+      .trigger("click");
+    await wrapper!
+      .get(`[name="inventory-${index}-instance-id"]`)
+      .setValue(item.instance_id);
+    await wrapper!
+      .get(`[name="inventory-${index}-species-id"]`)
+      .setValue(item.species_id);
+    await wrapper!
+      .get(`[name="inventory-${index}-gender"]`)
+      .setValue(item.gender);
+  }
+}
+
+describe("verified breeding UI", () => {
+  it("keeps knowledge as the default and switches to a truthful breeding disclosure", async () => {
+    const breedingClient = breedingClientWith();
+    wrapper = mount(App, {
+      props: { client: clientWith(), breedingClient },
+    });
+
+    expect(wrapper.get("h1").text()).toBe(
+      "Synthetic Knowledge Navigator",
+    );
+    expect(wrapper.get<HTMLInputElement>('input[value="knowledge"]').element.checked)
+      .toBe(true);
+    expect(wrapper.text()).toContain("No verified game facts loaded");
+    expect(breedingClient.plan).not.toHaveBeenCalled();
+
+    await switchToBreeding();
+    expect(wrapper.get("h1").text()).toBe("Production Breeding Planner");
+    expect(wrapper.text()).toContain("Read-only planning");
+    expect(wrapper.text()).toContain(
+      "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    );
+    expect(wrapper.text()).toContain("does not read or modify a save file");
+    expect(breedingClient.plan).not.toHaveBeenCalled();
+  });
+
+  it("rejects target and incomplete inventory locally and focuses the target", async () => {
+    const breedingClient = breedingClientWith();
+    wrapper = mount(App, {
+      props: { client: clientWith(), breedingClient },
+      attachTo: document.body,
+    });
+    await switchToBreeding();
+    await wrapper
+      .get(".breeding-form fieldset:nth-of-type(2) > button")
+      .trigger("click");
+    await wrapper.get(".breeding-form").trigger("submit");
+
+    expect(breedingClient.plan).not.toHaveBeenCalled();
+    expect(wrapper.get('[aria-label="Breeding form errors"]').text()).toContain(
+      "Inventory row 1",
+    );
+    expect(wrapper.get("#breeding-target-species").attributes("aria-invalid"))
+      .toBe("true");
+    expect(document.activeElement).toBe(
+      wrapper.get("#breeding-target-species").element,
+    );
+  });
+
+  it("submits only the fixed accepted request and renders the two-generation route in order", async () => {
+    const breedingClient = breedingClientWith();
+    wrapper = mount(App, {
+      props: { client: clientWith(), breedingClient },
+    });
+    await switchToBreeding();
+    await fillGoldenBreedingForm();
+    await wrapper.get(".breeding-form").trigger("submit");
+    await flushPromises();
+
+    expect(breedingClient.plan).toHaveBeenCalledWith(
+      breedingRequest(),
+      { signal: expect.any(AbortSignal) },
+    );
+    const steps = wrapper.findAll(".route-step");
+    expect(steps).toHaveLength(2);
+    expect(steps[0]!.text()).toContain(
+      "dumud",
+    );
+    expect(steps[0]!.text()).toContain("katress_ignis");
+    expect(steps[0]!.text()).toContain("katress");
+    expect(steps[0]!.text()).toContain("ordinary_power");
+    expect(steps[1]!.text()).toContain("katress");
+    expect(steps[1]!.text()).toContain("wixen");
+    expect(steps[1]!.text()).toContain("wixen_noct");
+    expect(steps[1]!.text()).toContain("gender_directed");
+    expect(wrapper.text()).toContain(
+      "Probability-dependent cost is unavailable",
+    );
+    expect(wrapper.get('[role="status"]').text()).toContain(
+      "2 breeding steps",
+    );
+  });
+
+  it("renders a zero-step success without inventing a breeding step", async () => {
+    const response = breedingZeroStepSuccess();
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        breedingClient: breedingClientWith({
+          kind: "success",
+          response,
+        }),
+      },
+    });
+    await switchToBreeding();
+    await wrapper.get("#breeding-target-species").setValue("wixen_noct");
+    await wrapper
+      .get(".breeding-form fieldset:nth-of-type(2) > button")
+      .trigger("click");
+    await wrapper
+      .get('[name="inventory-0-instance-id"]')
+      .setValue("wixen-noct-owned");
+    await wrapper
+      .get('[name="inventory-0-species-id"]')
+      .setValue("wixen_noct");
+    await wrapper
+      .get('[name="inventory-0-gender"]')
+      .setValue("female");
+    await wrapper.get(".breeding-form").trigger("submit");
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("Target already owned");
+    expect(wrapper.findAll(".route-step")).toHaveLength(0);
+  });
+
+  it.each([
+    {
+      result: {
+        kind: "gender-required",
+        response: breedingGenderRequired(),
+      } satisfies BreedingCallResult,
+      copy: "Inventory genders are incomplete",
+      detail: "katress-unknown",
+      alert: false,
+    },
+    {
+      result: {
+        kind: "unreachable",
+        response: breedingUnreachable(),
+      } satisfies BreedingCallResult,
+      copy: "Target is unreachable",
+      detail: "dumud",
+      alert: false,
+    },
+    {
+      result: {
+        kind: "http-invalid",
+        reason: "response-shape",
+        httpStatus: 200,
+        message: "Invalid response.",
+      } satisfies BreedingCallResult,
+      copy: "Breeding response could not be used",
+      detail: "response-shape",
+      alert: true,
+    },
+    {
+      result: {
+        kind: "network-error",
+        message: "Local service offline.",
+      } satisfies BreedingCallResult,
+      copy: "Breeding service could not be reached",
+      detail: "Local service offline",
+      alert: true,
+    },
+  ])("presents distinct $copy state", async ({
+    result,
+    copy,
+    detail,
+    alert,
+  }) => {
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        breedingClient: breedingClientWith(result),
+      },
+    });
+    await switchToBreeding();
+    await fillGoldenBreedingForm();
+    await wrapper.get(".breeding-form").trigger("submit");
+    await flushPromises();
+
+    expect(wrapper.text()).toContain(copy);
+    expect(wrapper.text()).toContain(detail);
+    expect(wrapper.find('[role="alert"]').exists()).toBe(alert);
+  });
+
+  it("renders hostile backend identifiers and messages as inert text", async () => {
+    const response = breedingUnreachable();
+    response.message = "<img src=x onerror=alert(1)>";
+    response.reachable_states[0]!.species_id = "script";
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        breedingClient: breedingClientWith({
+          kind: "unreachable",
+          response,
+        }),
+      },
+    });
+    await switchToBreeding();
+    await fillGoldenBreedingForm();
+    await wrapper.get(".breeding-form").trigger("submit");
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("<img src=x onerror=alert(1)>");
+    expect(wrapper.find("img").exists()).toBe(false);
+    expect(wrapper.find("script").exists()).toBe(false);
+    expect(wrapper.find('a[href^="javascript:"]').exists()).toBe(false);
   });
 });

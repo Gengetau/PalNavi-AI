@@ -1,8 +1,10 @@
 # PalNavi AI Frontend
 
-This package is the standalone Vue 3 and TypeScript interface for the local PalNavi knowledge
-services. It is intentionally synthetic-first: **Synthetic knowledge only** is enabled and visibly
-labeled by default, and the current repository does not contain reviewed real Palworld knowledge.
+This package is the standalone Vue 3 and TypeScript interface for local PalNavi services. It is
+intentionally synthetic-first: **Synthetic knowledge only** is enabled and visibly labeled by
+default, and the repository does not contain reviewed real Palworld knowledge prose. A separate
+Breeding workspace consumes the fixed, reviewed production breeding endpoint without mixing
+structured game data into the synthetic knowledge corpus.
 
 ## Requirements
 
@@ -46,9 +48,9 @@ transports, replace global `fetch` with a rejecting guard, and make no live HTTP
 explicit no-network variant additionally blocks TCP, TLS, HTTP, DNS, UDP, and subprocess APIs
 before Vitest starts.
 
-## Current workflow
+## Current workspaces
 
-The one-page workspace supports:
+The default Knowledge workspace supports:
 
 - deterministic `POST /api/v1/knowledge/search`;
 - retrieval-first `POST /api/v1/knowledge/explain`;
@@ -62,15 +64,35 @@ The one-page workspace supports:
 Knowledge search does not require model configuration. Explanation may require an optional provider
 configured locally in the backend; the browser never asks for or stores a provider key or endpoint.
 
+The separate Breeding workspace supports:
+
+- fixed-dataset `POST /api/v1/breeding/gender-aware-routes`;
+- a concrete target species ID and gender;
+- zero through 299 explicit inventory rows with stable instance IDs, species IDs, and known or
+  unknown genders;
+- local rejection of incomplete rows, invalid IDs, duplicate instance IDs, and overflow before
+  transport activity;
+- distinct success, `gender_required`, `unreachable`, product-invalid, FastAPI-validation,
+  invalid-response, and network states;
+- deterministic ordered route steps, generation and breeding-step costs, source-record hashes,
+  and accepted dataset identities;
+- immutable submitted-request snapshots, latest-request-wins cancellation, retry, and disposal
+  abort behavior.
+
+Species IDs are stable internal identifiers in this alpha. There is no bundled species catalogue,
+display-name lookup, or user-editable dataset identity.
+
 ## Safety boundary
 
 Backend answers, result text, titles, IDs, locators, and error messages are untrusted text. The UI
 does not parse Markdown or HTML, does not use `v-html`, and does not turn source locators into links.
-All locators remain inert code text. Response bodies are byte-bounded and decoded as strict UTF-8;
-malformed encoding, unexpected successful HTTP statuses, contradictory outcome fields, and results
-that violate the submitted synthetic-only or citation-limit constraints fail closed.
+All locators, breeding identifiers, source hashes, and backend messages remain inert text.
+Response bodies are byte-bounded and decoded as strict UTF-8; malformed encoding, unexpected
+HTTP/status combinations, extra or contradictory fields, unaccepted dataset identities, and
+results that violate submitted request scope fail closed.
 
 The frontend does not access a game installation, game process, save, mod loader, or multiplayer
 session. It contains no game artwork, external fonts, analytics, trackers, or CDN runtime assets.
-Real Palworld data remains unavailable until a separate provenance review and versioned import are
-accepted.
+It never persists inventory in local storage, session storage, IndexedDB, cookies, or URLs.
+Production structured breeding data is available only through the fixed same-origin read-only
+endpoint; verified knowledge prose remains unavailable.
