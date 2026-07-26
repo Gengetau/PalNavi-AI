@@ -51,6 +51,12 @@ The request controller deep-copies each submitted request, aborts replaced work,
 ignores stale completion, retries the last immutable snapshot, and aborts on
 disposal.
 
+Unreachable responses are bound to the immutable submitted request before
+presentation. Their unique generation-zero reachable species-and-gender keys
+must exactly equal the unique concrete inventory species-and-gender keys, so a
+stale or misrouted same-target response cannot add an unowned seed state or
+omit an owned seed state.
+
 The result panel presents success, zero-step already-owned success,
 `gender_required`, `unreachable`, product-invalid, FastAPI-validation,
 HTTP-contract, malformed-response, and network outcomes distinctly. Ordered
@@ -73,7 +79,7 @@ added 115 packages
 
 npm run test:unit:no-network
 12 test files passed
-203 tests passed
+206 tests passed
 
 npm run type-check
 passed
@@ -86,9 +92,10 @@ The frontend suite includes the accepted two-generation production fixture,
 zero-step success, every product outcome, FastAPI validation, malformed JSON,
 wrong content type, oversized response, invalid UTF-8 marker, HTTP/status
 conflicts, response-shape tampering, invalid and duplicate identifiers,
-inventory overflow, latest-request-wins cancellation, retry, disposal, inert
-hostile text, and the unchanged knowledge-workspace suite. The existing golden
-contract JSON remains byte-identical.
+inventory overflow, request-bound unreachable generation-zero state closure,
+latest-request-wins cancellation, retry, disposal, inert hostile text, and the
+unchanged knowledge-workspace suite. The existing golden contract JSON remains
+byte-identical.
 
 Backend:
 
@@ -151,7 +158,7 @@ npm audit --audit-level=high
 found 0 vulnerabilities
 ```
 
-The complete 203-test frontend suite, strict type check, production build, and
+The complete 206-test frontend suite, strict type check, production build, and
 all backend gates pass after the clean install. No audit exception is claimed.
 
 ## Rollback

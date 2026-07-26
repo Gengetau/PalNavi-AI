@@ -92,6 +92,7 @@ export function breedingUnreachable(): BreedingUnreachableResponse {
         species_id: "katress_ignis",
         gender: "female",
       }),
+      breedingState({ species_id: "wixen", gender: "female" }),
     ],
     unknown_instance_ids: [],
     error_category: null,

@@ -506,7 +506,23 @@ export function responseMatchesRequest(
     return false;
   }
   if (response.status === "unreachable") {
-    return true;
+    const submittedGenerationZeroStates = new Set(
+      request.inventory
+        .filter((item) => item.gender !== "unknown")
+        .map((item) => `${item.species_id}:${item.gender}`),
+    );
+    const reachableGenerationZeroStates = new Set(
+      response.reachable_states
+        .filter((state) => state.generation_depth === 0)
+        .map((state) => `${state.species_id}:${state.gender}`),
+    );
+    return (
+      submittedGenerationZeroStates.size ===
+        reachableGenerationZeroStates.size &&
+      [...submittedGenerationZeroStates].every((identity) =>
+        reachableGenerationZeroStates.has(identity),
+      )
+    );
   }
   const owned = new Set(
     request.inventory

@@ -8,6 +8,7 @@ import {
   breedingGenderRequired,
   breedingInvalid,
   breedingRequest,
+  breedingState,
   breedingSuccess,
   breedingUnreachable,
   breedingZeroStepSuccess,
@@ -195,6 +196,28 @@ describe("breeding runtime validation", () => {
         }),
       ),
     ).toBe(true);
+  });
+
+  it("accepts the canonical request-bound unreachable boundary", () => {
+    expect(
+      responseMatchesRequest(breedingUnreachable(), breedingRequest()),
+    ).toBe(true);
+  });
+
+  it("rejects an unreachable response with an unowned generation-zero state", () => {
+    const response = breedingUnreachable();
+    response.reachable_states.push(
+      breedingState({ species_id: "lamball", gender: "male" }),
+    );
+
+    expect(responseMatchesRequest(response, breedingRequest())).toBe(false);
+  });
+
+  it("rejects an unreachable response missing an owned generation-zero state", () => {
+    const response = breedingUnreachable();
+    response.reachable_states.pop();
+
+    expect(responseMatchesRequest(response, breedingRequest())).toBe(false);
   });
 
   it("binds target and generated parents to the submitted request", () => {
