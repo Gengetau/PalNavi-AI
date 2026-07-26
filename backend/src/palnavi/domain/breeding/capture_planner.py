@@ -449,11 +449,15 @@ class CaptureAwareRoutePlanner:
 
     @staticmethod
     def _dominates(left: _Plan, right: _Plan) -> bool:
-        return left.captures.issubset(right.captures) and (
-            left.generation,
-            len(left.producers),
-            left.signature,
-        ) <= (right.generation, len(right.producers), right.signature)
+        if (
+            not left.captures.issubset(right.captures)
+            or left.generation > right.generation
+            or len(left.producers) > len(right.producers)
+        ):
+            return False
+        if left.generation < right.generation or len(left.producers) < len(right.producers):
+            return True
+        return left.signature <= right.signature
 
     @classmethod
     def _combine(

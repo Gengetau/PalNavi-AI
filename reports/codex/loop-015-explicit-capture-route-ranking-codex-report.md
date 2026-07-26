@@ -33,9 +33,11 @@ The planner searches state identities of stable species ID plus concrete
 gender. Owned states begin with an empty capture set; user-supplied candidates
 begin with their singleton candidate ID. It retains capture-set Pareto labels
 and combines parent labels by exact set union. A label is dominated only by a
-subset capture set whose stable `(generation, step count, full signature)`
-priority is no worse. Equal-cardinality sets with different candidate members
-therefore remain available for later overlap.
+subset capture set whose generation and step count are both no worse; the full
+signature breaks ties only when both numeric dimensions are equal.
+Equal-cardinality sets with different candidate members and shallower/longer
+versus deeper/shorter route trade-offs therefore remain available for later
+combination.
 
 Target results are ranked by distinct capture count, maximum generation depth,
 breeding-step count, ordered candidate-ID tuple, and the full source-bound
@@ -112,12 +114,14 @@ Focused regressions prove:
   collisions, unknown candidate gender, excess candidates, unknown keys, and
   label-bound overflow fail closed.
 
-The real 44,851-rule one-candidate production route completed in 11.29 seconds
-under a 60-second safety command. An earlier Pareto implementation exceeded
-that limit because it compared signature as a separate dominance component.
-Changing dominance to the specified stable
-`(generation, step count, signature)` priority preserved distinct capture
-sets and reduced the same test to the passing result above.
+The real 44,851-rule one-candidate production route completed in 34.06 seconds
+under a 60-second safety command. An independent control review exposed a
+generation-equalization counterexample in the original lexicographic
+dominance rule: a shallower seven-step shared parent incorrectly pruned a
+deeper four-step parent, worsening the final route from ten to thirteen steps.
+The repaired componentwise generation/step Pareto rule retains both labels,
+and the regression proves that adding the shallower route cannot worsen the
+one-capture, six-generation, ten-step optimum.
 
 ## Validation results
 
@@ -125,7 +129,7 @@ Backend:
 
 ```text
 python -m pytest
-396 passed
+397 passed
 
 python -m ruff format --check .
 72 files already formatted

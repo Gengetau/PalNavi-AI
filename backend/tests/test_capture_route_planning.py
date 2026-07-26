@@ -188,6 +188,104 @@ def test_equal_cardinality_labels_survive_for_later_capture_overlap() -> None:
     }
 
 
+def test_shallower_longer_label_does_not_prune_deeper_shorter_route() -> None:
+    rules = (
+        # A shallow seven-step tree to the shared state.
+        _rule("capture", "shallow_owned_1", "shallow_1", source_hash=f"{1:064x}"),
+        _rule(
+            "shallow_owned_2",
+            "shallow_owned_3",
+            "shallow_2",
+            source_hash=f"{2:064x}",
+        ),
+        _rule(
+            "shallow_owned_4",
+            "shallow_owned_5",
+            "shallow_3",
+            source_hash=f"{3:064x}",
+        ),
+        _rule(
+            "shallow_owned_6",
+            "shallow_owned_7",
+            "shallow_4",
+            source_hash=f"{4:064x}",
+        ),
+        _rule("shallow_1", "shallow_2", "shallow_5", source_hash=f"{5:064x}"),
+        _rule("shallow_3", "shallow_4", "shallow_6", source_hash=f"{6:064x}"),
+        _rule(
+            "shallow_5",
+            "shallow_6",
+            "shared",
+            source_hash=f"{7:064x}",
+        ),
+        # A deeper four-step chain to the same shared state and capture set.
+        _rule("capture", "deep_owned_1", "deep_1", source_hash=f"{8:064x}"),
+        _rule("deep_1", "deep_owned_2", "deep_2", source_hash=f"{9:064x}"),
+        _rule("deep_2", "deep_owned_3", "deep_3", source_hash=f"{10:064x}"),
+        _rule("deep_3", "deep_owned_4", "shared", source_hash=f"{11:064x}"),
+        # A five-generation other parent equalizes the final target generation.
+        _rule("other_owned_1", "other_owned_2", "other_1", source_hash=f"{12:064x}"),
+        _rule("other_1", "other_owned_3", "other_2", source_hash=f"{13:064x}"),
+        _rule("other_2", "other_owned_4", "other_3", source_hash=f"{14:064x}"),
+        _rule("other_3", "other_owned_5", "other_4", source_hash=f"{15:064x}"),
+        _rule("other_4", "other_owned_6", "other", source_hash=f"{16:064x}"),
+        _rule("shared", "other", "target", source_hash=f"{17:064x}"),
+    )
+    owned_species = (
+        *(f"shallow_owned_{index}" for index in range(1, 8)),
+        *(f"deep_owned_{index}" for index in range(1, 5)),
+        *(f"other_owned_{index}" for index in range(1, 7)),
+    )
+    produced_species = (
+        *(f"shallow_{index}" for index in range(1, 7)),
+        *(f"deep_{index}" for index in range(1, 4)),
+        *(f"other_{index}" for index in range(1, 5)),
+        "shared",
+        "other",
+        "target",
+    )
+    male_owned_species = {
+        "shallow_owned_2",
+        "shallow_owned_4",
+        "shallow_owned_6",
+        "other_owned_1",
+    }
+    inventory = tuple(
+        _owned(
+            f"owned-{species}",
+            species,
+            (InventoryGender.MALE if species in male_owned_species else InventoryGender.FEMALE),
+        )
+        for species in owned_species
+    )
+    request = _request(
+        "target",
+        InventoryGender.MALE,
+        inventory=inventory,
+        candidates=(_candidate("capture-one", "capture", InventoryGender.MALE),),
+    )
+
+    planner = CaptureAwareRoutePlanner()
+    baseline = planner.plan(
+        request,
+        rules[7:],
+        _profiles("capture", *owned_species, *produced_species),
+    )
+    result = planner.plan(
+        request,
+        rules,
+        _profiles("capture", *owned_species, *produced_species),
+    )
+
+    assert isinstance(baseline, SuccessfulCaptureRouteResult)
+    assert baseline.cost.new_capture_count == 1
+    assert baseline.cost.generations == 6
+    assert baseline.cost.breeding_steps == 10
+    assert isinstance(result, SuccessfulCaptureRouteResult)
+    assert result.cost == baseline.cost
+    assert not any(step.child.species.value.startswith("shallow_") for step in result.steps)
+
+
 def test_zero_candidates_matches_owned_only_reachability_for_production_route() -> None:
     loaded = LocalPalworldBreedingDatasetRepository(default_palworld_dataset_root()).load(
         PALWORLD_DATASET_ID
