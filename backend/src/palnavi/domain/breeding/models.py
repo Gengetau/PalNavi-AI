@@ -303,6 +303,142 @@ GenderRouteResult = (
 )
 
 
+class CaptureRouteObjective(StrEnum):
+    """The only exact hypothetical-acquisition objective supported by v1."""
+
+    MINIMUM_NEW_CAPTURES = "minimum_new_captures"
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureCandidate:
+    """One user-asserted concrete individual that may be newly acquired."""
+
+    candidate_id: str
+    species: SpeciesId
+    gender: InventoryGender
+
+    def __post_init__(self) -> None:
+        if not INSTANCE_ID_PATTERN.fullmatch(self.candidate_id):
+            raise ValueError("candidate identifiers contain unsupported characters")
+        if self.gender is InventoryGender.UNKNOWN:
+            raise ValueError("capture candidates require a concrete gender")
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureRoutePlanningRequest:
+    target_species: SpeciesId
+    target_gender: InventoryGender
+    inventory: tuple[OwnedBreedingCandidate, ...]
+    capture_candidates: tuple[CaptureCandidate, ...]
+    objective: CaptureRouteObjective = CaptureRouteObjective.MINIMUM_NEW_CAPTURES
+
+    def __post_init__(self) -> None:
+        if self.target_gender is InventoryGender.UNKNOWN:
+            raise ValueError("route targets require a concrete gender")
+        if len(self.capture_candidates) > 16:
+            raise ValueError("capture candidate count exceeds sixteen")
+
+        instance_ids = [candidate.instance_id for candidate in self.inventory]
+        if len(instance_ids) != len(set(instance_ids)):
+            raise ValueError("route inventory contains duplicate instance identifiers")
+
+        candidate_ids = [candidate.candidate_id for candidate in self.capture_candidates]
+        if len(candidate_ids) != len(set(candidate_ids)):
+            raise ValueError("capture candidates contain duplicate candidate identifiers")
+        if set(instance_ids).intersection(candidate_ids):
+            raise ValueError("capture candidate identifiers collide with inventory identifiers")
+
+        candidate_states = [
+            (candidate.species, candidate.gender) for candidate in self.capture_candidates
+        ]
+        if len(candidate_states) != len(set(candidate_states)):
+            raise ValueError("capture candidates contain duplicate species and gender states")
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureRequirement:
+    candidate_id: str
+    species: SpeciesId
+    gender: InventoryGender
+
+    def __post_init__(self) -> None:
+        if self.gender is InventoryGender.UNKNOWN:
+            raise ValueError("capture requirements require a concrete gender")
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureRouteCost:
+    new_capture_count: int
+    generations: int
+    breeding_steps: int
+    probability_dependent_cost_available: bool = field(default=False, init=False)
+    expected_attempts: None = field(default=None, init=False)
+
+
+class CaptureRouteStatus(StrEnum):
+    SUCCESS = "success"
+    GENDER_REQUIRED = "gender_required"
+    UNREACHABLE = "unreachable"
+    INVALID = "invalid"
+    SEARCH_LIMIT_EXCEEDED = "search_limit_exceeded"
+
+
+@dataclass(frozen=True, slots=True)
+class SuccessfulCaptureRouteResult:
+    target: GenderRouteState
+    steps: tuple[GenderRouteStep, ...]
+    capture_requirements: tuple[CaptureRequirement, ...]
+    cost: CaptureRouteCost
+    status: CaptureRouteStatus = field(default=CaptureRouteStatus.SUCCESS, init=False)
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureGenderRequiredResult:
+    unknown_instance_ids: tuple[str, ...]
+    reason: str
+    status: CaptureRouteStatus = field(
+        default=CaptureRouteStatus.GENDER_REQUIRED,
+        init=False,
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class UnreachableCaptureRouteResult:
+    target: GenderRouteState
+    reachable_states: tuple[GenderRouteState, ...]
+    reason: str
+    status: CaptureRouteStatus = field(
+        default=CaptureRouteStatus.UNREACHABLE,
+        init=False,
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class InvalidCaptureRouteResult:
+    target_species: SpeciesId
+    errors: tuple[str, ...]
+    status: CaptureRouteStatus = field(default=CaptureRouteStatus.INVALID, init=False)
+
+
+@dataclass(frozen=True, slots=True)
+class CaptureRouteSearchLimitExceeded:
+    target_species: SpeciesId
+    reason: str
+    status: CaptureRouteStatus = field(
+        default=CaptureRouteStatus.SEARCH_LIMIT_EXCEEDED,
+        init=False,
+    )
+
+
+CaptureRouteResult = (
+    SuccessfulCaptureRouteResult
+    | CaptureGenderRequiredResult
+    | UnreachableCaptureRouteResult
+    | InvalidCaptureRouteResult
+    | CaptureRouteSearchLimitExceeded
+)
+
+
 @dataclass(frozen=True, slots=True)
 class OwnedSpeciesInventory:
     """Species known to be available before route execution begins."""

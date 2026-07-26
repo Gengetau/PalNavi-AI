@@ -12,6 +12,7 @@ from palnavi.api.dependencies import (
 )
 from palnavi.api.main import app
 from palnavi.api.schemas import (
+    CaptureRouteResponse,
     DirectBreedingResponse,
     GenderRouteResponse,
     RequestValidationErrorResponse,
@@ -800,3 +801,179 @@ async def test_openapi_documents_both_http_422_response_shapes() -> None:
     components = document["components"]["schemas"]
     for reference in references:
         assert reference.removeprefix("#/components/schemas/") in components
+
+
+async def test_capture_ranked_route_direct_target_has_exact_requirement_and_boundary() -> None:
+    submitted_candidate = {
+        "candidate_id": "anubis-f",
+        "species_id": "anubis",
+        "gender": "female",
+    }
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/capture-ranked-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "anubis", "gender": "female"},
+                "inventory": [],
+                "capture_candidates": [submitted_candidate],
+                "objective": "minimum_new_captures",
+            },
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    CaptureRouteResponse.model_validate(payload)
+    assert payload["status"] == "success"
+    assert payload["target"] == {
+        "species_id": "anubis",
+        "gender": "female",
+        "required_passive_ids": [],
+        "required_iv_constraints": [],
+        "generation_depth": 0,
+    }
+    assert payload["steps"] == []
+    assert payload["capture_requirements"] == [submitted_candidate]
+    assert payload["cost"] == {
+        "new_capture_count": 1,
+        "generations": 0,
+        "breeding_steps": 0,
+        "probability_dependent_cost_available": False,
+        "expected_attempts": None,
+    }
+    assert payload["acquisition_boundary"] == {
+        "candidates_are_user_supplied": True,
+        "catchability_verified": False,
+        "message": (
+            "Capture candidates are user-supplied hypothetical individuals; "
+            "PalNavi does not verify catchability or encounter availability."
+        ),
+    }
+    assert payload["reachable_states"] == []
+    assert payload["unknown_instance_ids"] == []
+    assert payload["error_category"] is None
+    assert payload["errors"] == []
+    assert payload["message"] is None
+
+
+async def test_capture_ranked_route_unknown_owned_gender_is_machine_readable() -> None:
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/capture-ranked-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "anubis", "gender": "female"},
+                "inventory": [
+                    {
+                        "instance_id": "unknown-pal",
+                        "species_id": "lamball",
+                        "gender": "unknown",
+                    }
+                ],
+                "capture_candidates": [
+                    {
+                        "candidate_id": "anubis-f",
+                        "species_id": "anubis",
+                        "gender": "female",
+                    }
+                ],
+            },
+        )
+
+    assert response.status_code == 200
+    payload = response.json()
+    CaptureRouteResponse.model_validate(payload)
+    assert payload["status"] == "gender_required"
+    assert payload["unknown_instance_ids"] == ["unknown-pal"]
+    assert payload["capture_requirements"] == []
+    assert payload["cost"] is None
+
+
+async def test_capture_ranked_route_rejects_duplicate_candidate_ids() -> None:
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/capture-ranked-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "anubis", "gender": "female"},
+                "inventory": [],
+                "capture_candidates": [
+                    {
+                        "candidate_id": "duplicate",
+                        "species_id": "anubis",
+                        "gender": "female",
+                    },
+                    {
+                        "candidate_id": "duplicate",
+                        "species_id": "lamball",
+                        "gender": "male",
+                    },
+                ],
+            },
+        )
+
+    assert response.status_code == 422
+    payload = response.json()
+    CaptureRouteResponse.model_validate(payload)
+    assert payload["status"] == "invalid"
+    assert payload["error_category"] == "request_invalid"
+    assert payload["errors"][0]["code"] == "invalid_capture_route_request"
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        {"capture_candidates": [{"candidate_id": "x", "species_id": "anubis"}]},
+        {
+            "capture_candidates": [
+                {
+                    "candidate_id": "x",
+                    "species_id": "anubis",
+                    "gender": "unknown",
+                }
+            ]
+        },
+        {"unexpected": True},
+    ],
+)
+async def test_capture_ranked_route_schema_rejects_missing_unknown_or_extra_keys(
+    mutation: dict[str, object],
+) -> None:
+    body: dict[str, object] = {
+        "dataset_id": PALWORLD_DATASET_ID,
+        "target": {"species_id": "anubis", "gender": "female"},
+        "inventory": [],
+        "capture_candidates": [],
+    }
+    body.update(mutation)
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/capture-ranked-routes",
+            json=body,
+        )
+
+    assert response.status_code == 422
+    RequestValidationErrorResponse.model_validate(response.json())
+
+
+async def test_capture_ranked_route_schema_rejects_more_than_sixteen_candidates() -> None:
+    async with api_client() as client:
+        response = await client.post(
+            "/api/v1/breeding/capture-ranked-routes",
+            json={
+                "dataset_id": PALWORLD_DATASET_ID,
+                "target": {"species_id": "anubis", "gender": "female"},
+                "inventory": [],
+                "capture_candidates": [
+                    {
+                        "candidate_id": f"candidate-{index}",
+                        "species_id": "anubis",
+                        "gender": "female",
+                    }
+                    for index in range(17)
+                ],
+            },
+        )
+
+    assert response.status_code == 422
+    RequestValidationErrorResponse.model_validate(response.json())

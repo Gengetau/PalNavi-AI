@@ -20,15 +20,15 @@ prose.
 ## What is implemented
 
 - framework-independent species, relationship, inventory, request, step, cost, and result models;
-- deterministic direct, species-only synthetic route, and gender-capable production route
-  planning;
+- deterministic direct, species-only synthetic route, gender-capable production route, and
+  explicit minimum-new-capture planning;
 - a gender-aware direct-rule model that preserves parent species and sex association;
 - stable tie-breaking, cycle safety, invalid-input results, and unreachable results;
 - immutable dataset metadata with classification, game-version scope, provenance, validation
   status, and a verified SHA-256 content identity;
 - a read-only repository protocol and validated local JSON implementation;
-- FastAPI health, synthetic breeding-route, production direct-breeding, and production
-  gender-aware route endpoints plus a strict read-only localized species catalog;
+- FastAPI health, synthetic breeding-route, production direct-breeding, production gender-aware
+  route, and explicit capture-ranked endpoints plus a strict read-only localized species catalog;
 - asynchronous model contracts and offline-tested OpenAI, Anthropic, DeepSeek, Zhipu,
   Bailian, and custom OpenAI-compatible adapters;
 - deterministic Markdown ingestion, citation-ready SQLite knowledge storage, lexical retrieval,
@@ -102,7 +102,8 @@ python -m uvicorn palnavi.api.main:app --reload
 OpenAPI documentation is available at `http://127.0.0.1:8000/docs`. Health is available
 at `GET /health`; exact direct breeding is available at `POST /api/v1/breeding/direct`;
 production gender-aware route planning is available at
-`POST /api/v1/breeding/gender-aware-routes`; the unchanged synthetic route planner is available
+`POST /api/v1/breeding/gender-aware-routes`; explicit candidate-bounded capture ranking is
+available at `POST /api/v1/breeding/capture-ranked-routes`; the unchanged synthetic route planner is available
 at `POST /api/v1/breeding/routes`; the fixed localized presentation catalog is available at
 `GET /api/v1/palworld/species-catalog?dataset_id=palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47`;
 citation-ready retrieval is available at

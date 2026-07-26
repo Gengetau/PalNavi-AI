@@ -7,6 +7,10 @@ import type {
   BreedingClient,
 } from "../src/api/breedingContract";
 import type {
+  CaptureRouteCallResult,
+  CaptureRouteClient,
+} from "../src/api/captureRouteContract";
+import type {
   SpeciesCatalogCallResult,
   SpeciesCatalogClient,
 } from "../src/api/breedingCatalogContract";
@@ -28,6 +32,10 @@ import {
   breedingZeroStepSuccess,
   speciesCatalogSuccess,
 } from "./breeding-fixtures";
+import {
+  captureRequest,
+  captureSuccess,
+} from "./capture-route-fixtures";
 
 let wrapper: VueWrapper | undefined;
 
@@ -814,6 +822,132 @@ describe("verified breeding UI", () => {
     expect(wrapper.text()).toContain("<img src=x onerror=alert(1)>");
     expect(wrapper.find("img").exists()).toBe(false);
     expect(wrapper.find("script").exists()).toBe(false);
+    expect(wrapper.find('a[href^="javascript:"]').exists()).toBe(false);
+  });
+});
+
+function captureClientWith(
+  result: CaptureRouteCallResult = {
+    kind: "success",
+    response: captureSuccess(),
+  },
+): CaptureRouteClient {
+  return { plan: vi.fn(async () => result) };
+}
+
+async function switchToCapture(): Promise<void> {
+  await wrapper!.get<HTMLInputElement>('input[value="capture"]').setValue();
+}
+
+describe("explicit capture-ranked UI", () => {
+  it("loads lazily, shows the boundary, and makes no planning request on entry", async () => {
+    const captureRouteClient = captureClientWith();
+    const breedingCatalogClient = catalogClientWith();
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        captureRouteClient,
+        breedingCatalogClient,
+      },
+    });
+
+    expect(breedingCatalogClient.load).not.toHaveBeenCalled();
+    await switchToCapture();
+    await flushPromises();
+
+    expect(wrapper.get("h1").text()).toBe("Capture-ranked Route Planner");
+    expect(breedingCatalogClient.load).toHaveBeenCalledTimes(1);
+    expect(captureRouteClient.plan).not.toHaveBeenCalled();
+    expect(wrapper.text()).toContain(
+      "PalNavi does not verify catchability or encounter availability",
+    );
+    expect(wrapper.text()).toContain(
+      "Allowing the target itself may produce a one-capture, zero-step result",
+    );
+  });
+
+  it("normalizes localized suggestions to stable IDs and renders direct capture distinctly", async () => {
+    const captureRouteClient = captureClientWith();
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        captureRouteClient,
+        breedingCatalogClient: catalogClientWith(),
+      },
+    });
+    await switchToCapture();
+    await flushPromises();
+    await wrapper.get("#capture-species-locale").setValue("ja");
+    await wrapper.get("#capture-target-species").setValue("アヌビス");
+    await wrapper
+      .get(".capture-route-form fieldset:nth-of-type(3) > button")
+      .trigger("click");
+    await wrapper.get("#capture-candidate-1-id").setValue("anubis-f");
+    await wrapper
+      .get("#capture-candidate-1-species")
+      .setValue("アヌビス");
+    await wrapper.get(".capture-route-form").trigger("submit");
+    await flushPromises();
+
+    expect(captureRouteClient.plan).toHaveBeenCalledWith(
+      captureRequest({ inventory: [] }),
+      { signal: expect.any(AbortSignal) },
+    );
+    expect(wrapper.text()).toContain("Direct target acquisition");
+    expect(wrapper.text()).toContain("New captures");
+    expect(wrapper.text()).toContain("anubis-f");
+  });
+
+  it("keeps manual stable-ID entry enabled when the catalog fails", async () => {
+    const captureRouteClient = captureClientWith();
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        captureRouteClient,
+        breedingCatalogClient: catalogClientWith({
+          kind: "network-error",
+          message: "Catalog offline.",
+        }),
+      },
+    });
+    await switchToCapture();
+    await flushPromises();
+
+    expect(wrapper.text()).toContain(
+      "Catalog unavailable. Manual stable-ID entry remains available.",
+    );
+    expect(
+      wrapper.get<HTMLInputElement>("#capture-target-species").element
+        .disabled,
+    ).toBe(false);
+    expect(captureRouteClient.plan).not.toHaveBeenCalled();
+  });
+
+  it("renders hostile backend text inertly", async () => {
+    const response = captureSuccess();
+    response.capture_requirements[0]!.candidate_id =
+      "<img src=x onerror=alert(1)>";
+    wrapper = mount(App, {
+      props: {
+        client: clientWith(),
+        captureRouteClient: captureClientWith({
+          kind: "success",
+          response,
+        }),
+      },
+    });
+    await switchToCapture();
+    await wrapper.get("#capture-target-species").setValue("anubis");
+    await wrapper
+      .get(".capture-route-form fieldset:nth-of-type(3) > button")
+      .trigger("click");
+    await wrapper.get("#capture-candidate-1-id").setValue("anubis-f");
+    await wrapper.get("#capture-candidate-1-species").setValue("anubis");
+    await wrapper.get(".capture-route-form").trigger("submit");
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("<img src=x onerror=alert(1)>");
+    expect(wrapper.find("img").exists()).toBe(false);
     expect(wrapper.find('a[href^="javascript:"]').exists()).toBe(false);
   });
 });

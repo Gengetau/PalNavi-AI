@@ -8,6 +8,7 @@ from fastapi import Depends
 
 from palnavi.application import (
     BreedingPlanningService,
+    CaptureRoutePlanningService,
     DirectBreedingService,
     GenderRoutePlanningService,
     KnowledgeExplanationService,
@@ -18,7 +19,11 @@ from palnavi.application import (
     ModelResponse,
     SpeciesCatalogService,
 )
-from palnavi.domain.breeding import BreedingRoutePlanner, GenderAwareRoutePlanner
+from palnavi.domain.breeding import (
+    BreedingRoutePlanner,
+    CaptureAwareRoutePlanner,
+    GenderAwareRoutePlanner,
+)
 from palnavi.domain.data import (
     BreedingDatasetRepository,
     GenderAwareBreedingDatasetRepository,
@@ -115,6 +120,18 @@ def get_gender_route_planning_service(
     return GenderRoutePlanningService(
         repository=repository,
         planner=GenderAwareRoutePlanner(),
+    )
+
+
+def get_capture_route_planning_service(
+    repository: Annotated[
+        GenderAwareBreedingDatasetRepository,
+        Depends(get_direct_breeding_repository),
+    ],
+) -> CaptureRoutePlanningService:
+    return CaptureRoutePlanningService(
+        repository=repository,
+        planner=CaptureAwareRoutePlanner(),
     )
 
 
