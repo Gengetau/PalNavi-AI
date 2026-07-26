@@ -5,8 +5,9 @@
 - Program: `palnavi-ai-v1`
 - Loop: `loop-013-production-breeding-workspace`
 - Target version: `1.0.0-alpha.13`
+- Attempt: `2`
 - Command nonce:
-  `palnavi-ai-v1-loop-013-production-breeding-workspace-command-001`
+  `palnavi-ai-v1-loop-013-production-breeding-workspace-command-002`
 - Exact business base: `988908d46fe8f3b32a37f0c6e7ce033d73745f73`
 - Work branch: `codex/loop-013-production-breeding-workspace`
 
@@ -67,6 +68,9 @@ request, raw HTML rendering, dynamic evaluation, or credential path was added.
 Frontend:
 
 ```text
+npm ci
+added 115 packages
+
 npm run test:unit:no-network
 12 test files passed
 203 tests passed
@@ -111,8 +115,9 @@ passed
 allowed tracked and untracked paths
 passed
 
-backend, dataset, sample, configuration, dependency manifest, shared transport,
-knowledge module, and golden-fixture rollback comparison to exact base
+backend, dataset, sample, configuration, production dependency, shared
+transport, knowledge module, and golden-fixture rollback comparison to exact
+base
 passed
 
 persistence, external URL, dynamic execution, raw HTML, console logging, and
@@ -120,40 +125,40 @@ credential scans over new runtime source and diff
 passed
 ```
 
-## Audit exception requiring control review
+The dependency-manifest delta is limited to the exact direct development pin
+and its mechanically generated lockfile graph. No production dependency or
+other direct dependency changed.
 
-The exact required command:
+## Attempt 2 audit remediation
+
+Attempt 1 reported six high-severity findings in the pre-existing
+development-only `@vue/test-utils -> js-beautify -> glob/minimatch ->
+brace-expansion` chain. Attempt 2 applies the control-authorized exact pin:
 
 ```text
+@vue/test-utils: 2.4.11 -> 2.2.7
+```
+
+The lockfile delta was generated from the updated direct pin and removes only
+the obsolete test-utility dependency subtree. A clean lockfile installation
+followed by the exact required audit now passes:
+
+```text
+npm ci
+added 115 packages
+
 npm audit --audit-level=high
-```
-
-reports six high-severity findings in the pre-existing development-only chain:
-
-```text
-@vue/test-utils
-  -> js-beautify / glob
-  -> minimatch
-  -> brace-expansion
-```
-
-The advisory reports no fix available. Loop 013 did not change
-`frontend/package.json` or `frontend/package-lock.json`, and both files are
-forbidden paths in the active command. The production dependency audit:
-
-```text
-npm audit --omit=dev --audit-level=high
 found 0 vulnerabilities
 ```
 
-passes. No dependency exception is silently claimed here. The full audit gate
-remains non-passing and must be evaluated by the independent Control Work Agent
-against the exact accepted base, the forbidden dependency-manifest boundary,
-and any focused remediation-loop policy.
+The complete 203-test frontend suite, strict type check, production build, and
+all backend gates pass after the clean install. No audit exception is claimed.
 
 ## Rollback
 
 The change is frontend-only. Reverting the Loop 013 business commit removes the
 Breeding workspace and leaves the accepted Loop 012 endpoint, backend tree,
-production datasets, configuration, dependency graph, shared transport,
-synthetic Knowledge workspace modules, and golden contracts unchanged.
+production datasets, configuration, production dependency graph, shared
+transport, synthetic Knowledge workspace modules, and golden contracts
+unchanged. It also restores the prior development-test utility version and its
+lockfile subtree.
