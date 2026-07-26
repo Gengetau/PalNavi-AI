@@ -206,6 +206,26 @@ class GenderRouteResponse(BaseModel):
     message: str | None = None
 
 
+class SpeciesCatalogRecordResponse(BaseModel):
+    species_id: str
+    paldeck_number: int
+    paldeck_suffix: str | None
+    is_variant: bool
+    localized_names: dict[str, str]
+    source_record_sha256: str
+
+
+class SpeciesCatalogResponse(BaseModel):
+    status: Literal["success", "not_found", "invalid"]
+    dataset_id: str
+    content_sha256: str | None = None
+    locale_tags: list[str] = Field(default_factory=list)
+    records: list[SpeciesCatalogRecordResponse] = Field(default_factory=list)
+    error_category: str | None = None
+    errors: list[ValidationIssueResponse] = Field(default_factory=list)
+    message: str | None = None
+
+
 class RequestValidationErrorDetail(BaseModel):
     """FastAPI-compatible detail item returned before route execution."""
 

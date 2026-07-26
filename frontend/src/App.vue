@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from "vue";
 
+import { createSpeciesCatalogClient } from "./api/breedingCatalogClient";
+import type { SpeciesCatalogClient } from "./api/breedingCatalogContract";
 import { createBreedingClient } from "./api/breedingClient";
 import type {
   BreedingClient,
@@ -22,6 +24,7 @@ import { useKnowledgeRequest } from "./composables/useKnowledgeRequest";
 const props = defineProps<{
   client?: KnowledgeClient;
   breedingClient?: BreedingClient;
+  breedingCatalogClient?: SpeciesCatalogClient;
 }>();
 const activeWorkspace = ref<"knowledge" | "breeding">("knowledge");
 const knowledgeController = useKnowledgeRequest(
@@ -30,6 +33,8 @@ const knowledgeController = useKnowledgeRequest(
 const breedingController = useBreedingRequest(
   props.breedingClient ?? createBreedingClient(),
 );
+const breedingCatalogClient =
+  props.breedingCatalogClient ?? createSpeciesCatalogClient();
 
 const announcedScope = (syntheticOnly: boolean): string =>
   syntheticOnly
@@ -183,7 +188,10 @@ onBeforeUnmount(() => {
 
   <main v-else id="main-content" class="workspace breeding-workspace">
     <aside class="form-panel">
-      <BreedingForm @submit="runBreeding" />
+      <BreedingForm
+        :catalog-client="breedingCatalogClient"
+        @submit="runBreeding"
+      />
     </aside>
     <BreedingResultPanel
       :state="breedingController.state.value"

@@ -2,7 +2,7 @@
 
 from typing import Annotated, Literal, cast
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Query, Response, status
 from fastapi.responses import JSONResponse
 
 from palnavi.api.dependencies import (
@@ -11,6 +11,7 @@ from palnavi.api.dependencies import (
     get_gender_route_planning_service,
     get_knowledge_explanation_service,
     get_knowledge_retrieval_service,
+    get_species_catalog_service,
 )
 from palnavi.api.schemas import (
     DatasetMetadataResponse,
@@ -41,6 +42,8 @@ from palnavi.api.schemas import (
     RouteRequestBody,
     RouteResponse,
     RouteStepResponse,
+    SpeciesCatalogRecordResponse,
+    SpeciesCatalogResponse,
     ValidationIssueResponse,
 )
 from palnavi.application import (
@@ -65,6 +68,10 @@ from palnavi.application import (
     PlanningFailure,
     PlanningFailureKind,
     PlanningSuccess,
+    SpeciesCatalogFailure,
+    SpeciesCatalogFailureKind,
+    SpeciesCatalogService,
+    SpeciesCatalogSuccess,
 )
 from palnavi.domain.breeding import (
     DirectBreedingGenderRequired,
@@ -170,6 +177,69 @@ _UNSUPPORTED_EXPLANATION_MESSAGE = "No usable knowledge evidence was found."
 @router.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
     return HealthResponse(status="healthy")
+
+
+@router.get(
+    "/api/v1/palworld/species-catalog",
+    response_model=SpeciesCatalogResponse,
+    responses={
+        404: {"model": SpeciesCatalogResponse},
+        422: {
+            "model": SpeciesCatalogResponse | RequestValidationErrorResponse,
+            "description": "Invalid stored catalog or query validation error",
+        },
+    },
+)
+def get_species_catalog(
+    response: Response,
+    service: Annotated[SpeciesCatalogService, Depends(get_species_catalog_service)],
+    dataset_id: Annotated[str, Query(min_length=1, max_length=128)],
+) -> SpeciesCatalogResponse:
+    outcome = service.load(dataset_id)
+    if isinstance(outcome, SpeciesCatalogFailure):
+        result_status: Literal["not_found", "invalid"]
+        if outcome.kind is SpeciesCatalogFailureKind.DATASET_NOT_FOUND:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            issues = [
+                ValidationIssueResponse(
+                    code="dataset_not_found",
+                    field="dataset_id",
+                    message="requested species catalog was not found",
+                )
+            ]
+            result_status = "not_found"
+        else:
+            response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+            issues = [_validation_issue_response(issue) for issue in outcome.issues]
+            result_status = "invalid"
+        return SpeciesCatalogResponse(
+            status=result_status,
+            dataset_id=outcome.dataset_id,
+            error_category=outcome.kind.value,
+            errors=issues,
+            message="species catalog could not be validated",
+        )
+    if not isinstance(outcome, SpeciesCatalogSuccess):
+        raise AssertionError("species catalog service returned an unsupported result")
+
+    snapshot = outcome.snapshot
+    return SpeciesCatalogResponse(
+        status="success",
+        dataset_id=snapshot.dataset_id,
+        content_sha256=snapshot.content_identity.digest,
+        locale_tags=list(snapshot.locale_tags),
+        records=[
+            SpeciesCatalogRecordResponse(
+                species_id=record.species_id.value,
+                paldeck_number=record.paldeck_number,
+                paldeck_suffix=record.paldeck_suffix,
+                is_variant=record.is_variant,
+                localized_names=dict(record.localized_names),
+                source_record_sha256=record.source_record_sha256,
+            )
+            for record in snapshot.records
+        ],
+    )
 
 
 @router.post(

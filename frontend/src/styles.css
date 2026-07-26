@@ -599,6 +599,32 @@ code {
   color: var(--signal);
 }
 
+.catalog-controls {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  background: rgb(111 255 210 / 0.035);
+}
+
+.catalog-controls h3,
+.catalog-controls p {
+  margin-bottom: 0.35rem;
+}
+
+.catalog-controls .field {
+  margin: 0;
+}
+
+.catalog-warning {
+  color: var(--accent);
+}
+
+.catalog-warning p {
+  margin-top: 0;
+}
+
 .inventory-row {
   margin: 1rem 0;
   padding: 0.85rem;

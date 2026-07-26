@@ -67,6 +67,8 @@ configured locally in the backend; the browser never asks for or stores a provid
 The separate Breeding workspace supports:
 
 - fixed-dataset `POST /api/v1/breeding/gender-aware-routes`;
+- lazy fixed-dataset `GET /api/v1/palworld/species-catalog` loading with all 17 exact source
+  locales and one shared target/inventory suggestion list;
 - a concrete target species ID and gender;
 - zero through 299 explicit inventory rows with stable instance IDs, species IDs, and known or
   unknown genders;
@@ -79,8 +81,11 @@ The separate Breeding workspace supports:
 - immutable submitted-request snapshots, latest-request-wins cancellation, retry, and disposal
   abort behavior.
 
-Species IDs are stable internal identifiers in this alpha. There is no bundled species catalogue,
-display-name lookup, or user-editable dataset identity.
+Localized names are presentation-only. Selecting a suggestion or entering one unambiguous exact
+localized name normalizes the field to its stable species ID, and only that stable ID enters the
+immutable breeding request. Catalog failure leaves an explicit manual-ID fallback and never
+submits a route request. There is no bundled roster, fuzzy alias table, translated fallback, or
+user-editable dataset identity.
 
 ## Safety boundary
 
@@ -94,5 +99,6 @@ results that violate submitted request scope fail closed.
 The frontend does not access a game installation, game process, save, mod loader, or multiplayer
 session. It contains no game artwork, external fonts, analytics, trackers, or CDN runtime assets.
 It never persists inventory in local storage, session storage, IndexedDB, cookies, or URLs.
+It also never persists locale choice, catalog data, or species entry text.
 Production structured breeding data is available only through the fixed same-origin read-only
 endpoint; verified knowledge prose remains unavailable.

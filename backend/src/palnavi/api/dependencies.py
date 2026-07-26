@@ -16,9 +16,14 @@ from palnavi.application import (
     ModelGenerationService,
     ModelMessage,
     ModelResponse,
+    SpeciesCatalogService,
 )
 from palnavi.domain.breeding import BreedingRoutePlanner, GenderAwareRoutePlanner
-from palnavi.domain.data import BreedingDatasetRepository, GenderAwareBreedingDatasetRepository
+from palnavi.domain.data import (
+    BreedingDatasetRepository,
+    GenderAwareBreedingDatasetRepository,
+    SpeciesCatalogRepository,
+)
 from palnavi.domain.knowledge import KnowledgeRepository
 from palnavi.infrastructure.json_dataset_repository import (
     LocalJsonBreedingDatasetRepository,
@@ -29,6 +34,7 @@ from palnavi.infrastructure.model.config import load_model_provider_config
 from palnavi.infrastructure.model.factory import create_model_gateway
 from palnavi.infrastructure.palworld_dataset_repository import (
     LocalPalworldBreedingDatasetRepository,
+    LocalPalworldSpeciesCatalogRepository,
     default_palworld_dataset_root,
 )
 from palnavi.infrastructure.sqlite_knowledge_repository import (
@@ -110,6 +116,19 @@ def get_gender_route_planning_service(
         repository=repository,
         planner=GenderAwareRoutePlanner(),
     )
+
+
+def get_species_catalog_repository() -> SpeciesCatalogRepository:
+    return LocalPalworldSpeciesCatalogRepository(root=default_palworld_dataset_root())
+
+
+def get_species_catalog_service(
+    repository: Annotated[
+        SpeciesCatalogRepository,
+        Depends(get_species_catalog_repository),
+    ],
+) -> SpeciesCatalogService:
+    return SpeciesCatalogService(repository)
 
 
 def get_knowledge_repository() -> KnowledgeRepository:

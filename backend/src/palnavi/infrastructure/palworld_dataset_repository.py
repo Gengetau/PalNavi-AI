@@ -26,9 +26,14 @@ from palnavi.domain.data import (
     DatasetNotFound,
     DatasetValidationCode,
     DatasetValidationIssue,
+    GenderAwareBreedingDatasetRepository,
     GenderAwareBreedingDatasetSnapshot,
     GenderAwareDatasetFound,
     GenderAwareDatasetLoadResult,
+    SpeciesCatalogFound,
+    SpeciesCatalogLoadResult,
+    SpeciesCatalogRecord,
+    SpeciesCatalogSnapshot,
 )
 
 PALWORLD_DATASET_ID = "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47"
@@ -43,6 +48,53 @@ PALWORLD_GENDER_DATA_CONTENT_SHA256 = (
 PALWORLD_GENDER_RECORDS_SHA256 = "4e27eaf7bd4624afa47f7f57c6b24febf759081b0ea44b2f032986080083872b"
 
 _HASH_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+PALWORLD_CATALOG_LOCALE_TAGS = (
+    "de",
+    "en",
+    "es",
+    "es-MX",
+    "fr",
+    "id",
+    "it",
+    "ja",
+    "ko",
+    "pl",
+    "pt-BR",
+    "ru",
+    "th",
+    "tr",
+    "vi",
+    "zh-Hans",
+    "zh-Hant",
+)
+_PAL_RECORD_KEYS = {
+    "schema_version",
+    "source_dataset_id",
+    "source_record_hash",
+    "internal_id",
+    "source_internal_name",
+    "paldex_number",
+    "paldex_suffix",
+    "is_variant",
+    "player_visible",
+    "calculation_eligible",
+    "localized_names",
+    "breeding_power",
+    "breeding_power_priority",
+    "elements",
+    "base_stats",
+    "movement_stats",
+    "work_suitability",
+    "ranch_outputs",
+    "partner_skill_id",
+    "guaranteed_passive_skill_ids",
+    "active_skill_ids",
+    "rarity",
+    "size",
+    "nocturnal",
+    "food_amount",
+    "max_full_stomach",
+}
 _OUTCOME_KEYS = {
     "schema_version",
     "source_dataset_id",
@@ -272,6 +324,125 @@ def _validate_species(pals_bytes: bytes) -> frozenset[SpeciesId]:
             "Pal records are duplicated or not in canonical order",
         )
     return frozenset(species)
+
+
+def _validate_species_catalog(pals_bytes: bytes) -> tuple[SpeciesCatalogRecord, ...]:
+    document = _required_dict(_parse_json(pals_bytes, "pals.json"), "pals.json")
+    if set(document) != {"schema_version", "dataset_id", "records"}:
+        raise _PalworldDatasetError(
+            DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+            "pals.json",
+            "Pal catalog envelope shape is invalid",
+        )
+    if document["schema_version"] != 1 or document["dataset_id"] != PALWORLD_DATASET_ID:
+        raise _PalworldDatasetError(
+            DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+            "pals.json",
+            "Pal catalog envelope identity is invalid",
+        )
+    raw_records = document["records"]
+    if not isinstance(raw_records, list) or len(raw_records) != 299:
+        raise _PalworldDatasetError(
+            DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+            "pals.json.records",
+            "Pal catalog record count is invalid",
+        )
+
+    records: list[SpeciesCatalogRecord] = []
+    species_ids: set[SpeciesId] = set()
+    source_names: set[str] = set()
+    source_hashes: set[str] = set()
+    for index, raw in enumerate(raw_records):
+        field = f"pals.json.records[{index}]"
+        if not isinstance(raw, dict) or set(raw) != _PAL_RECORD_KEYS:
+            raise _PalworldDatasetError(
+                DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+                field,
+                "Pal catalog source record shape is invalid",
+            )
+        source_name = raw["source_internal_name"]
+        source_hash = raw["source_record_hash"]
+        paldeck_number = raw["paldex_number"]
+        paldeck_suffix = raw["paldex_suffix"]
+        localized_names = raw["localized_names"]
+        if (
+            raw["schema_version"] != 1
+            or raw["source_dataset_id"] != PALWORLD_DATASET_ID
+            or not isinstance(source_name, str)
+            or not 1 <= len(source_name) <= 64
+            or any(ord(character) < 32 or ord(character) == 127 for character in source_name)
+            or not isinstance(source_hash, str)
+            or not _HASH_PATTERN.fullmatch(source_hash)
+            or isinstance(paldeck_number, bool)
+            or not isinstance(paldeck_number, int)
+            or not 1 <= paldeck_number <= 99_999
+            or (
+                paldeck_suffix is not None
+                and (
+                    not isinstance(paldeck_suffix, str)
+                    or not re.fullmatch(r"[A-Z0-9]{1,8}", paldeck_suffix)
+                )
+            )
+            or not isinstance(raw["is_variant"], bool)
+            or not isinstance(localized_names, dict)
+            or len(localized_names) != len(PALWORLD_CATALOG_LOCALE_TAGS)
+            or set(localized_names) != set(PALWORLD_CATALOG_LOCALE_TAGS)
+        ):
+            raise _PalworldDatasetError(
+                DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+                field,
+                "Pal catalog source record metadata is invalid",
+            )
+        names: list[tuple[str, str]] = []
+        for locale in PALWORLD_CATALOG_LOCALE_TAGS:
+            name = localized_names[locale]
+            if (
+                not isinstance(name, str)
+                or not 1 <= len(name) <= 80
+                or any(ord(character) < 32 or ord(character) == 127 for character in name)
+            ):
+                raise _PalworldDatasetError(
+                    DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+                    f"{field}.localized_names.{locale}",
+                    "localized Pal name is invalid",
+                )
+            names.append((locale, name))
+        try:
+            species_id = SpeciesId(raw["internal_id"])
+        except (TypeError, ValueError) as error:
+            raise _PalworldDatasetError(
+                DatasetValidationCode.INVALID_SPECIES_IDENTIFIER,
+                f"{field}.internal_id",
+                "Pal catalog contains an invalid stable species identifier",
+            ) from error
+        if species_id in species_ids or source_name in source_names or source_hash in source_hashes:
+            raise _PalworldDatasetError(
+                DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+                field,
+                "Pal catalog contains a duplicate identity",
+            )
+        species_ids.add(species_id)
+        source_names.add(source_name)
+        source_hashes.add(source_hash)
+        records.append(
+            SpeciesCatalogRecord(
+                species_id=species_id,
+                paldeck_number=paldeck_number,
+                paldeck_suffix=paldeck_suffix,
+                is_variant=raw["is_variant"],
+                localized_names=tuple(names),
+                source_record_sha256=source_hash,
+            )
+        )
+
+    records.sort(key=lambda record: record.species_id)
+    if len(species_ids) != 299:
+        raise _PalworldDatasetError(
+            DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+            "pals.json.records",
+            "Pal catalog stable species identifiers are duplicated",
+        )
+    return tuple(records)
 
 
 def _parse_gender(value: Any, field: str) -> GenderConstraint:
@@ -672,5 +843,73 @@ class LocalPalworldBreedingDatasetRepository:
                 species_ids=species_ids,
                 rules=rules,
                 gender_feasibility=gender_feasibility,
+            )
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class LocalPalworldSpeciesCatalogRepository:
+    """Load the presentation-only catalog bound to the accepted breeding snapshot."""
+
+    root: Path
+    breeding_repository: GenderAwareBreedingDatasetRepository | None = None
+
+    def load(self, dataset_id: str) -> SpeciesCatalogLoadResult:
+        if dataset_id != PALWORLD_DATASET_ID:
+            return DatasetNotFound(dataset_id=dataset_id)
+
+        breeding_repository = self.breeding_repository or LocalPalworldBreedingDatasetRepository(
+            self.root
+        )
+        breeding_result = breeding_repository.load(dataset_id)
+        if isinstance(breeding_result, (DatasetNotFound, DatasetInvalid)):
+            return breeding_result
+
+        try:
+            dataset_root = self.root / dataset_id
+            manifest_bytes = _read_exact(dataset_root / "manifest.json", "manifest.json")
+            if _sha256(manifest_bytes) != PALWORLD_MANIFEST_SHA256:
+                raise _PalworldDatasetError(
+                    DatasetValidationCode.CONTENT_IDENTITY_MISMATCH,
+                    "manifest.json",
+                    "dataset manifest does not match the accepted identity",
+                )
+            manifest = _required_dict(
+                _parse_json(manifest_bytes, "manifest.json"),
+                "manifest.json",
+            )
+            loaded = _validate_generated_files(
+                dataset_root,
+                manifest,
+                "manifest.json.generated_files",
+            )
+            pals_bytes = loaded.get("pals.json")
+            if pals_bytes is None:
+                raise _PalworldDatasetError(
+                    DatasetValidationCode.INVALID_FILE_INVENTORY,
+                    "manifest.json.generated_files",
+                    "Pal record file is absent from the manifest",
+                )
+            records = _validate_species_catalog(pals_bytes)
+            record_species = frozenset(record.species_id for record in records)
+            if record_species != breeding_result.snapshot.species_ids:
+                raise _PalworldDatasetError(
+                    DatasetValidationCode.MALFORMED_PALWORLD_RECORD,
+                    "pals.json.records",
+                    "catalog and breeding species sets do not match",
+                )
+        except _PalworldDatasetError as error:
+            return DatasetInvalid(dataset_id=dataset_id, issues=(error.issue,))
+
+        return SpeciesCatalogFound(
+            snapshot=SpeciesCatalogSnapshot(
+                dataset_id=PALWORLD_DATASET_ID,
+                schema_version=1,
+                content_identity=ContentIdentity(
+                    algorithm="sha256",
+                    digest=PALWORLD_CONTENT_SHA256,
+                ),
+                locale_tags=PALWORLD_CATALOG_LOCALE_TAGS,
+                records=records,
             )
         )

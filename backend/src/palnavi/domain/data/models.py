@@ -98,6 +98,25 @@ class GenderAwareBreedingDatasetSnapshot:
     gender_feasibility: tuple[SpeciesGenderFeasibility, ...]
 
 
+@dataclass(frozen=True, slots=True)
+class SpeciesCatalogRecord:
+    species_id: SpeciesId
+    paldeck_number: int
+    paldeck_suffix: str | None
+    is_variant: bool
+    localized_names: tuple[tuple[str, str], ...]
+    source_record_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class SpeciesCatalogSnapshot:
+    dataset_id: str
+    schema_version: int
+    content_identity: ContentIdentity
+    locale_tags: tuple[str, ...]
+    records: tuple[SpeciesCatalogRecord, ...]
+
+
 class DatasetValidationCode(StrEnum):
     INVALID_DATASET_ID = "invalid_dataset_id"
     UNSUPPORTED_SCHEMA_VERSION = "unsupported_schema_version"
@@ -157,6 +176,14 @@ class GenderAwareDatasetFound:
 GenderAwareDatasetLoadResult = GenderAwareDatasetFound | DatasetNotFound | DatasetInvalid
 
 
+@dataclass(frozen=True, slots=True)
+class SpeciesCatalogFound:
+    snapshot: SpeciesCatalogSnapshot
+
+
+SpeciesCatalogLoadResult = SpeciesCatalogFound | DatasetNotFound | DatasetInvalid
+
+
 class BreedingDatasetRepository(Protocol):
     """Read-only access to fully validated immutable breeding dataset snapshots."""
 
@@ -167,3 +194,9 @@ class GenderAwareBreedingDatasetRepository(Protocol):
     """Read-only access to the exact accepted production rule snapshot."""
 
     def load(self, dataset_id: str) -> GenderAwareDatasetLoadResult: ...
+
+
+class SpeciesCatalogRepository(Protocol):
+    """Read-only access to a complete validated localized species catalog."""
+
+    def load(self, dataset_id: str) -> SpeciesCatalogLoadResult: ...
