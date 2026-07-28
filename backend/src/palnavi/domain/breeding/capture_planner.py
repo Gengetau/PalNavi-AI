@@ -202,6 +202,7 @@ class CaptureAwareRoutePlanner:
             owned_keys,
             candidate_by_key,
             transitions,
+            target_key,
         )
         if limit_exceeded:
             return CaptureRouteSearchLimitExceeded(
@@ -380,6 +381,7 @@ class CaptureAwareRoutePlanner:
         owned_keys: frozenset[_StateKey],
         candidate_by_key: Mapping[_StateKey, CaptureCandidate],
         transitions: tuple[_Transition, ...],
+        target_key: _StateKey,
     ) -> tuple[dict[_StateKey, list[_Plan]], bool]:
         labels: dict[_StateKey, list[_Plan]] = defaultdict(list)
         serial = count()
@@ -423,6 +425,10 @@ class CaptureAwareRoutePlanner:
             _, _, changed = heapq.heappop(heap)
             if changed not in labels.get(changed.target, ()):
                 continue
+            # Combination cannot improve either parent's priority, so the first
+            # current target popped from the heap is the exact global minimum.
+            if changed.target == target_key:
+                return dict(labels), False
             for transition in by_parent.get(changed.target, ()):
                 if transition.parent_a == changed.target:
                     pairs = (
@@ -449,15 +455,12 @@ class CaptureAwareRoutePlanner:
 
     @staticmethod
     def _dominates(left: _Plan, right: _Plan) -> bool:
-        if (
-            not left.captures.issubset(right.captures)
-            or left.generation > right.generation
-            or len(left.producers) > len(right.producers)
-        ):
-            return False
-        if left.generation < right.generation or len(left.producers) < len(right.producers):
-            return True
-        return left.signature <= right.signature
+        return (
+            left.captures.issubset(right.captures)
+            and left.generation <= right.generation
+            and len(left.producers) <= len(right.producers)
+            and left.signature <= right.signature
+        )
 
     @classmethod
     def _combine(

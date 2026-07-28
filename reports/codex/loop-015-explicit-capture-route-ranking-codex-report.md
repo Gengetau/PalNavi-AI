@@ -33,11 +33,11 @@ The planner searches state identities of stable species ID plus concrete
 gender. Owned states begin with an empty capture set; user-supplied candidates
 begin with their singleton candidate ID. It retains capture-set Pareto labels
 and combines parent labels by exact set union. A label is dominated only by a
-subset capture set whose generation and step count are both no worse; the full
-signature breaks ties only when both numeric dimensions are equal.
-Equal-cardinality sets with different candidate members and shallower/longer
-versus deeper/shorter route trade-offs therefore remain available for later
-combination.
+subset capture set whose generation, step count, and full stable signature are
+all no worse. Equal-cardinality sets with different candidate members,
+shallower/longer versus deeper/shorter route trade-offs, and
+shallower/larger-signature versus deeper/smaller-signature trade-offs therefore
+remain available for later combination.
 
 Target results are ranked by distinct capture count, maximum generation depth,
 breeding-step count, ordered candidate-ID tuple, and the full source-bound
@@ -45,6 +45,9 @@ route signature. The selected plan is reconstructed from the target
 dependency graph, unused candidates are removed, and generation depths are
 recalculated before response construction. Fixed per-state and total label
 bounds return `search_limit_exceeded`; no approximate result is returned.
+Because every combination is strictly no better than either parent under this
+priority, the first current target label popped from the priority heap is the
+exact global minimum and safely terminates a successful search.
 
 The accepted owned-only planner is reused unchanged for zero-candidate
 requests and for the zero-capture precheck. If a zero-capture route succeeds,
@@ -106,6 +109,10 @@ Focused regressions prove:
 - one capture outranks a shorter two-capture route;
 - equal-cardinality `{a}` and `{b}` labels remain distinct so later reuse of
   `{b}` reduces a two-capture union to one;
+- two equal-three-step labels with the same capture set retain a
+  generation-three route with the smaller full signature beside a
+  generation-two route with the larger signature, so later generation
+  equalization cannot worsen the exact stable optimum;
 - source-bound step order is deterministic across repeated runs;
 - the real Dumud male plus owned Katress Ignis female and Wixen female route
   uses exactly `capture-dumud`, produces Katress, and then preserves the
@@ -114,14 +121,27 @@ Focused regressions prove:
   collisions, unknown candidate gender, excess candidates, unknown keys, and
   label-bound overflow fail closed.
 
-The real 44,851-rule one-candidate production route completed in 34.06 seconds
-under a 60-second safety command. An independent control review exposed a
-generation-equalization counterexample in the original lexicographic
-dominance rule: a shallower seven-step shared parent incorrectly pruned a
-deeper four-step parent, worsening the final route from ten to thirteen steps.
-The repaired componentwise generation/step Pareto rule retains both labels,
-and the regression proves that adding the shallower route cannot worsen the
-one-capture, six-generation, ten-step optimum.
+The first independent control review exposed a generation-equalization
+counterexample in the original lexicographic dominance rule: a shallower
+seven-step shared parent incorrectly pruned a deeper four-step parent,
+worsening the final route from ten to thirteen steps. The componentwise
+generation/step repair retained both labels and preserved the one-capture,
+six-generation, ten-step optimum.
+
+The second independent review exposed the remaining stable-signature case:
+two same-capture-set, equal-three-step labels reached a shared state, with a
+generation-two route carrying a larger signature and a generation-three route
+carrying a smaller signature. A generation-three other parent equalized the
+final cost, but the shallower intermediate label incorrectly pruned the exact
+stable winner. Dominance now requires a no-worse full signature even when a
+numeric dimension is strictly better. The new deep-only and expanded
+regressions both return one capture, four generations, seven steps, and the
+same smaller complete route signature.
+
+Retaining that exact Pareto dimension initially expanded the production
+search. Monotone target-label termination restores the performance boundary
+without approximation: the real 44,851-rule one-candidate production route
+completed in 3.35 seconds under a 60-second safety command.
 
 ## Validation results
 
@@ -129,7 +149,7 @@ Backend:
 
 ```text
 python -m pytest
-397 passed
+398 passed
 
 python -m ruff format --check .
 72 files already formatted
@@ -142,7 +162,7 @@ Success: no issues found in 49 source files
 
 timeout 60s python -m pytest \
   tests/test_capture_route_planning.py::test_one_explicit_candidate_unlocks_a_production_directed_route -q
-1 passed in 11.29s
+1 passed in 3.35s
 ```
 
 Frontend after a clean lockfile install:

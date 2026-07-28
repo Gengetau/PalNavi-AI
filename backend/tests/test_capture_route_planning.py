@@ -286,6 +286,136 @@ def test_shallower_longer_label_does_not_prune_deeper_shorter_route() -> None:
     assert not any(step.child.species.value.startswith("shallow_") for step in result.steps)
 
 
+def test_shallower_equal_step_label_does_not_prune_smaller_deep_signature() -> None:
+    deep_rules = (
+        _rule(
+            "capture",
+            "deep_owned_1",
+            "deep_1",
+            source_hash=f"{1:064x}",
+        ),
+        _rule(
+            "deep_1",
+            "deep_owned_2",
+            "deep_2",
+            source_hash=f"{2:064x}",
+        ),
+        _rule(
+            "deep_2",
+            "deep_owned_3",
+            "shared",
+            source_hash=f"{3:064x}",
+        ),
+    )
+    shallow_rules = (
+        _rule(
+            "capture",
+            "shallow_owned_1",
+            "shallow_1",
+            source_hash=f"{4:064x}",
+        ),
+        _rule(
+            "shallow_owned_2",
+            "shallow_owned_3",
+            "shallow_2",
+            source_hash=f"{5:064x}",
+        ),
+        _rule(
+            "shallow_1",
+            "shallow_2",
+            "shared",
+            source_hash=f"{6:064x}",
+        ),
+    )
+    equalizing_rules = (
+        _rule(
+            "other_owned_1",
+            "other_owned_2",
+            "other_1",
+            source_hash=f"{7:064x}",
+        ),
+        _rule(
+            "other_1",
+            "other_owned_3",
+            "other_2",
+            source_hash=f"{8:064x}",
+        ),
+        _rule(
+            "other_2",
+            "other_owned_4",
+            "other",
+            source_hash=f"{9:064x}",
+        ),
+        _rule(
+            "shared",
+            "other",
+            "target",
+            source_hash=f"{10:064x}",
+        ),
+    )
+    inventory = (
+        _owned("deep-owned-1", "deep_owned_1", InventoryGender.FEMALE),
+        _owned("deep-owned-2", "deep_owned_2", InventoryGender.FEMALE),
+        _owned("deep-owned-3", "deep_owned_3", InventoryGender.FEMALE),
+        _owned("shallow-owned-1", "shallow_owned_1", InventoryGender.FEMALE),
+        _owned("shallow-owned-2", "shallow_owned_2", InventoryGender.MALE),
+        _owned("shallow-owned-3", "shallow_owned_3", InventoryGender.FEMALE),
+        _owned("other-owned-1", "other_owned_1", InventoryGender.MALE),
+        _owned("other-owned-2", "other_owned_2", InventoryGender.FEMALE),
+        _owned("other-owned-3", "other_owned_3", InventoryGender.FEMALE),
+        _owned("other-owned-4", "other_owned_4", InventoryGender.FEMALE),
+    )
+    species = (
+        "capture",
+        "deep_owned_1",
+        "deep_owned_2",
+        "deep_owned_3",
+        "deep_1",
+        "deep_2",
+        "shallow_owned_1",
+        "shallow_owned_2",
+        "shallow_owned_3",
+        "shallow_1",
+        "shallow_2",
+        "other_owned_1",
+        "other_owned_2",
+        "other_owned_3",
+        "other_owned_4",
+        "other_1",
+        "other_2",
+        "shared",
+        "other",
+        "target",
+    )
+    request = _request(
+        "target",
+        InventoryGender.MALE,
+        inventory=inventory,
+        candidates=(_candidate("capture-one", "capture", InventoryGender.MALE),),
+    )
+
+    planner = CaptureAwareRoutePlanner()
+    baseline = planner.plan(
+        request,
+        (*deep_rules, *equalizing_rules),
+        _profiles(*species),
+    )
+    result = planner.plan(
+        request,
+        (*shallow_rules, *deep_rules, *equalizing_rules),
+        _profiles(*species),
+    )
+
+    assert isinstance(baseline, SuccessfulCaptureRouteResult)
+    assert baseline.cost.new_capture_count == 1
+    assert baseline.cost.generations == 4
+    assert baseline.cost.breeding_steps == 7
+    assert isinstance(result, SuccessfulCaptureRouteResult)
+    assert result.cost == baseline.cost
+    assert result.steps == baseline.steps
+    assert not any(step.child.species.value.startswith("shallow_") for step in result.steps)
+
+
 def test_zero_candidates_matches_owned_only_reachability_for_production_route() -> None:
     loaded = LocalPalworldBreedingDatasetRepository(default_palworld_dataset_root()).load(
         PALWORLD_DATASET_ID
