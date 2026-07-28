@@ -45,9 +45,19 @@ route signature. The selected plan is reconstructed from the target
 dependency graph, unused candidates are removed, and generation depths are
 recalculated before response construction. Fixed per-state and total label
 bounds return `search_limit_exceeded`; no approximate result is returned.
-Because every combination is strictly no better than either parent under this
-priority, the first current target label popped from the priority heap is the
-exact global minimum and safely terminates a successful search.
+The general search exhausts that bounded frontier; it never treats the first
+target label as final because producer-map normalization can later remove
+capture leaves or redundant producers.
+
+One narrow exact lower-bound path avoids that general saturation. It applies
+only after the owned-only precheck has proved zero captures impossible, when
+there is exactly one candidate, the accepted gender planner returns a route
+that actually uses that candidate as a leaf, and breeding steps equal maximum
+generation with exactly one step at each generation. One capture is then the
+capture lower bound, the accepted planner supplies the minimum generation,
+and every breeding DAG requires at least one producer per generation. Equality
+proves a linear route and makes stable-signature selection
+extension-monotone. Every other case uses the full bounded Pareto search.
 
 The accepted owned-only planner is reused unchanged for zero-candidate
 requests and for the zero-capture precheck. If a zero-capture route succeeds,
@@ -113,6 +123,10 @@ Focused regressions prove:
   generation-three route with the smaller full signature beside a
   generation-two route with the larger signature, so later generation
   equalization cannot worsen the exact stable optimum;
+- the `w/x/z` target-frontier graph continues after the first target label,
+  replaces captured `x` and `z` with produced states, uses only captured `w`,
+  produces `x` and `z` once each, and returns four generations and seven
+  steps instead of the premature eight-step route;
 - source-bound step order is deterministic across repeated runs;
 - the real Dumud male plus owned Katress Ignis female and Wixen female route
   uses exactly `capture-dumud`, produces Katress, and then preserves the
@@ -138,10 +152,21 @@ numeric dimension is strictly better. The new deep-only and expanded
 regressions both return one capture, four generations, seven steps, and the
 same smaller complete route signature.
 
-Retaining that exact Pareto dimension initially expanded the production
-search. Monotone target-label termination restores the performance boundary
-without approximation: the real 44,851-rule one-candidate production route
-completed in 3.35 seconds under a 60-second safety command.
+The third independent review proved that first-target-pop termination was
+unsound. Two parent plans with capture sets `{w,x}` and `{w,z}` later supplied
+produced `z` and `x` to each other during normalization. Continuing the
+frontier reduced the result from eight to seven steps while retaining one
+capture and four generations. The early return is removed, the exact
+`w/x/z` regression passes, and all branch-shaped or multi-candidate cases
+exhaust the deterministic frontier.
+
+Immutable producer signatures, plan signatures, priorities, and producer maps
+are cached; each live parent-label pair is combined once; unchanged normalized
+producer generations are reused. These representation changes preserve the
+frontier and dominance relation. The narrow proved linear-route lower-bound
+path restores the production performance requirement without approximation:
+the real 44,851-rule one-candidate route completed in 7.74 seconds under a
+60-second safety command.
 
 ## Validation results
 
@@ -149,7 +174,7 @@ Backend:
 
 ```text
 python -m pytest
-398 passed
+399 passed
 
 python -m ruff format --check .
 72 files already formatted
@@ -162,7 +187,7 @@ Success: no issues found in 49 source files
 
 timeout 60s python -m pytest \
   tests/test_capture_route_planning.py::test_one_explicit_candidate_unlocks_a_production_directed_route -q
-1 passed in 3.35s
+1 passed in 7.74s
 ```
 
 Frontend after a clean lockfile install:

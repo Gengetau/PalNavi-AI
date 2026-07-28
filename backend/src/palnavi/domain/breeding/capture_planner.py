@@ -5,7 +5,7 @@ from __future__ import annotations
 import heapq
 from collections import defaultdict
 from collections.abc import Iterable, Mapping
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from itertools import count
 
 from palnavi.domain.breeding.direct import GenderAwareDirectBreedingIndex
@@ -28,6 +28,7 @@ from palnavi.domain.breeding.models import (
     InvalidCaptureRouteResult,
     InvalidGenderRouteResult,
     InventoryGender,
+    OwnedBreedingCandidate,
     SpeciesGenderFeasibility,
     SpeciesId,
     SuccessfulCaptureRouteResult,
@@ -52,46 +53,71 @@ class _Producer:
     child: _StateKey
     generation: int
     rule: BreedingRule
+    _signature: _ProducerSignature = field(init=False, repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "_signature",
+            (
+                self.generation,
+                self.parent_a[0].value,
+                self.parent_a[1].value,
+                self.parent_b[0].value,
+                self.parent_b[1].value,
+                self.child[0].value,
+                self.child[1].value,
+                f"{self.rule.result_kind.value}:{self.rule.source_record_hash}",
+            ),
+        )
 
     @property
     def signature(self) -> _ProducerSignature:
-        return (
-            self.generation,
-            self.parent_a[0].value,
-            self.parent_a[1].value,
-            self.parent_b[0].value,
-            self.parent_b[1].value,
-            self.child[0].value,
-            self.child[1].value,
-            f"{self.rule.result_kind.value}:{self.rule.source_record_hash}",
-        )
+        return self._signature
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True, slots=True, eq=False)
 class _Plan:
     target: _StateKey
     captures: frozenset[str]
     generation: int
     producers: tuple[_Producer, ...]
+    _signature: _PlanSignature = field(init=False, repr=False)
+    _priority: _PlanPriority = field(init=False, repr=False)
+    _producer_map: dict[_StateKey, _Producer] = field(init=False, repr=False)
 
-    @property
-    def signature(self) -> _PlanSignature:
-        return tuple(producer.signature for producer in self.producers)
-
-    @property
-    def priority(self) -> _PlanPriority:
+    def __post_init__(self) -> None:
+        signature = tuple(producer.signature for producer in self.producers)
         capture_ids = tuple(sorted(self.captures))
-        return (
-            len(capture_ids),
-            self.generation,
-            len(self.producers),
-            capture_ids,
-            self.signature,
+        object.__setattr__(self, "_signature", signature)
+        object.__setattr__(
+            self,
+            "_priority",
+            (
+                len(capture_ids),
+                self.generation,
+                len(self.producers),
+                capture_ids,
+                signature,
+            ),
+        )
+        object.__setattr__(
+            self,
+            "_producer_map",
+            {producer.child: producer for producer in self.producers},
         )
 
     @property
+    def signature(self) -> _PlanSignature:
+        return self._signature
+
+    @property
+    def priority(self) -> _PlanPriority:
+        return self._priority
+
+    @property
     def producer_map(self) -> dict[_StateKey, _Producer]:
-        return {producer.child: producer for producer in self.producers}
+        return self._producer_map
 
 
 @dataclass(frozen=True, slots=True)
@@ -197,12 +223,18 @@ class CaptureAwareRoutePlanner:
                     breeding_steps=0,
                 ),
             )
+        exact_linear_result = self._single_candidate_linear_result(
+            request,
+            rule_tuple,
+            tuple(profiles.values()),
+        )
+        if exact_linear_result is not None:
+            return exact_linear_result
         transitions = self._build_transitions(rule_tuple, profiles)
         labels, limit_exceeded = self._search(
             owned_keys,
             candidate_by_key,
             transitions,
-            target_key,
         )
         if limit_exceeded:
             return CaptureRouteSearchLimitExceeded(
@@ -268,6 +300,81 @@ class CaptureAwareRoutePlanner:
                 errors=result.errors,
             )
         raise AssertionError("owned-only route planner returned an unsupported result type")
+
+    @staticmethod
+    def _single_candidate_linear_result(
+        request: CaptureRoutePlanningRequest,
+        rules: tuple[BreedingRule, ...],
+        profiles: tuple[SpeciesGenderFeasibility, ...],
+    ) -> SuccessfulCaptureRouteResult | None:
+        """Return only a one-candidate route that meets every numeric lower bound.
+
+        The caller has already proved that owned inventory alone is unreachable and
+        that the target is not the candidate itself, so one capture is minimal. The
+        accepted gender-aware planner minimizes generation depth. Every breeding DAG
+        has at least as many producers as its maximum generation; equality proves a
+        linear route whose stable-signature tie break is extension-monotone.
+        """
+        if len(request.capture_candidates) != 1:
+            return None
+        candidate = request.capture_candidates[0]
+        candidate_key = (candidate.species, candidate.gender)
+        owned_keys = {
+            (owned_candidate.species, owned_candidate.gender)
+            for owned_candidate in request.inventory
+        }
+        if candidate_key in owned_keys:
+            return None
+
+        result = GenderAwareRoutePlanner().plan(
+            GenderRoutePlanningRequest(
+                target_species=request.target_species,
+                target_gender=request.target_gender,
+                inventory=(
+                    *request.inventory,
+                    OwnedBreedingCandidate(
+                        instance_id=candidate.candidate_id,
+                        species=candidate.species,
+                        gender=candidate.gender,
+                    ),
+                ),
+            ),
+            rules,
+            profiles,
+        )
+        if not isinstance(result, SuccessfulGenderRouteResult):
+            return None
+        if result.cost.breeding_steps != result.cost.generations:
+            return None
+        if {step.generation for step in result.steps} != set(range(1, result.cost.generations + 1)):
+            return None
+
+        produced_keys = {(step.child.species, step.child.gender) for step in result.steps}
+        leaf_keys = {
+            (parent.species, parent.gender)
+            for step in result.steps
+            for parent in (step.parent_a, step.parent_b)
+            if (parent.species, parent.gender) not in produced_keys
+        }
+        if candidate_key not in leaf_keys:
+            return None
+
+        return SuccessfulCaptureRouteResult(
+            target=result.target,
+            steps=result.steps,
+            capture_requirements=(
+                CaptureRequirement(
+                    candidate_id=candidate.candidate_id,
+                    species=candidate.species,
+                    gender=candidate.gender,
+                ),
+            ),
+            cost=CaptureRouteCost(
+                new_capture_count=1,
+                generations=result.cost.generations,
+                breeding_steps=result.cost.breeding_steps,
+            ),
+        )
 
     @staticmethod
     def _normalize_profiles(
@@ -381,11 +488,11 @@ class CaptureAwareRoutePlanner:
         owned_keys: frozenset[_StateKey],
         candidate_by_key: Mapping[_StateKey, CaptureCandidate],
         transitions: tuple[_Transition, ...],
-        target_key: _StateKey,
     ) -> tuple[dict[_StateKey, list[_Plan]], bool]:
         labels: dict[_StateKey, list[_Plan]] = defaultdict(list)
         serial = count()
         heap: list[tuple[_PlanPriority, int, _Plan]] = []
+        expanded: set[_Plan] = set()
         total_labels = 0
 
         def add(plan: _Plan) -> bool | None:
@@ -425,18 +532,19 @@ class CaptureAwareRoutePlanner:
             _, _, changed = heapq.heappop(heap)
             if changed not in labels.get(changed.target, ()):
                 continue
-            # Combination cannot improve either parent's priority, so the first
-            # current target popped from the heap is the exact global minimum.
-            if changed.target == target_key:
-                return dict(labels), False
+            expanded.add(changed)
             for transition in by_parent.get(changed.target, ()):
                 if transition.parent_a == changed.target:
                     pairs = (
-                        (changed, other) for other in tuple(labels.get(transition.parent_b, ()))
+                        (changed, other)
+                        for other in tuple(labels.get(transition.parent_b, ()))
+                        if other in expanded
                     )
                 else:
                     pairs = (
-                        (other, changed) for other in tuple(labels.get(transition.parent_a, ()))
+                        (other, changed)
+                        for other in tuple(labels.get(transition.parent_a, ()))
+                        if other in expanded
                     )
                 for parent_a_plan, parent_b_plan in pairs:
                     candidate = self._combine(
@@ -530,7 +638,11 @@ class CaptureAwareRoutePlanner:
             if parent_a_generation is None or parent_b_generation is None:
                 return None
             generation = 1 + max(parent_a_generation, parent_b_generation)
-            normalized = replace(producer, generation=generation)
+            normalized = (
+                producer
+                if producer.generation == generation
+                else replace(producer, generation=generation)
+            )
             required[key] = normalized
             generations[key] = generation
             return generation

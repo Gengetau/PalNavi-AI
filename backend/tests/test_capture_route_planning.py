@@ -416,6 +416,45 @@ def test_shallower_equal_step_label_does_not_prune_smaller_deep_signature() -> N
     assert not any(step.child.species.value.startswith("shallow_") for step in result.steps)
 
 
+def test_target_frontier_continues_after_captures_become_produced_states() -> None:
+    rules = (
+        _rule("w", "ox", "x", source_hash=f"{1:064x}"),
+        _rule("w", "oz", "z", source_hash=f"{2:064x}"),
+        _rule("z", "oa", "h1", source_hash=f"{3:064x}"),
+        _rule("x", "ob", "h2", source_hash=f"{4:064x}"),
+        _rule("x", "h1", "a", source_hash=f"{5:064x}"),
+        _rule("z", "h2", "b", source_hash=f"{6:064x}"),
+        _rule("a", "b", "target", source_hash=f"{7:064x}"),
+    )
+    result = CaptureAwareRoutePlanner().plan(
+        _request(
+            "target",
+            InventoryGender.MALE,
+            inventory=(
+                _owned("owned-ox", "ox", InventoryGender.FEMALE),
+                _owned("owned-oz", "oz", InventoryGender.FEMALE),
+                _owned("owned-oa", "oa", InventoryGender.FEMALE),
+                _owned("owned-ob", "ob", InventoryGender.FEMALE),
+            ),
+            candidates=(
+                _candidate("w", "w", InventoryGender.MALE),
+                _candidate("x", "x", InventoryGender.MALE),
+                _candidate("z", "z", InventoryGender.MALE),
+            ),
+        ),
+        rules,
+        _profiles("w", "x", "z", "ox", "oz", "oa", "ob", "h1", "h2", "a", "b", "target"),
+    )
+
+    assert isinstance(result, SuccessfulCaptureRouteResult)
+    assert result.cost.new_capture_count == 1
+    assert result.cost.generations == 4
+    assert result.cost.breeding_steps == 7
+    assert [item.candidate_id for item in result.capture_requirements] == ["w"]
+    assert sum(step.child.species.value == "x" for step in result.steps) == 1
+    assert sum(step.child.species.value == "z" for step in result.steps) == 1
+
+
 def test_zero_candidates_matches_owned_only_reachability_for_production_route() -> None:
     loaded = LocalPalworldBreedingDatasetRepository(default_palworld_dataset_root()).load(
         PALWORLD_DATASET_ID
