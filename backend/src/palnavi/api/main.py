@@ -2,11 +2,12 @@
 
 from fastapi import FastAPI
 
+from palnavi import __version__
 from palnavi.api.routes import router
 
 app = FastAPI(
     title="PalNavi AI",
-    summary="Deterministic foundation API for PalNavi AI",
-    version="0.1.0",
+    summary="Deterministic local API for PalNavi AI",
+    version=__version__,
 )
 app.include_router(router)
