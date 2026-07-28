@@ -498,9 +498,13 @@ class CaptureAwareRoutePlanner:
         def add(plan: _Plan) -> bool | None:
             nonlocal total_labels
             current = labels[plan.target]
-            if any(self._dominates(existing, plan) for existing in current):
+            if any(self._subsumes_equivalent_topology(existing, plan) for existing in current):
                 return False
-            retained = [existing for existing in current if not self._dominates(plan, existing)]
+            retained = [
+                existing
+                for existing in current
+                if not self._subsumes_equivalent_topology(plan, existing)
+            ]
             removed = len(current) - len(retained)
             if (
                 len(retained) + 1 > self._max_labels_per_state
@@ -562,13 +566,16 @@ class CaptureAwareRoutePlanner:
         return dict(labels), False
 
     @staticmethod
-    def _dominates(left: _Plan, right: _Plan) -> bool:
-        return (
-            left.captures.issubset(right.captures)
-            and left.generation <= right.generation
-            and len(left.producers) <= len(right.producers)
-            and left.signature <= right.signature
-        )
+    def _subsumes_equivalent_topology(left: _Plan, right: _Plan) -> bool:
+        """Deduplicate only labels whose normalized producer graph is identical.
+
+        Numeric or lexicographic dominance at one state is not compositional:
+        a locally longer topology can share producers with a later branch and
+        therefore yield a smaller final union. Identical producer signatures are
+        safe to substitute under every later union; a capture-set subset remains
+        no worse after union with any other capture set.
+        """
+        return left.signature == right.signature and left.captures.issubset(right.captures)
 
     @classmethod
     def _combine(

@@ -160,12 +160,23 @@ capture and four generations. The early return is removed, the exact
 `w/x/z` regression passes, and all branch-shaped or multi-candidate cases
 exhaust the deterministic frontier.
 
+The fourth independent review proved that numeric and lexicographic
+per-state dominance was not compositional under later producer-map union. A
+two-step local route to `s` pruned a three-step `x/y` topology, even though
+`x` and `y` were already needed by the other final parent and made the latter
+topology one step smaller after union. Search now deduplicates a label only
+when its normalized producer signature is identical and its capture set is a
+subset; every topology-distinct label survives until bounded frontier
+exhaustion. The exact `c/l0/l1/r0/r1/o0` regression returns children
+`[x,y,q,s,o,target]` at one capture, four generations, and six steps, rather
+than the locally dominated seven-step route through `a`.
+
 Immutable producer signatures, plan signatures, priorities, and producer maps
 are cached; each live parent-label pair is combined once; unchanged normalized
 producer generations are reused. These representation changes preserve the
-frontier and dominance relation. The narrow proved linear-route lower-bound
-path restores the production performance requirement without approximation:
-the real 44,851-rule one-candidate route completed in 7.74 seconds under a
+exact topology-distinct frontier. The narrow proved linear-route lower-bound
+path preserves the production performance requirement without approximation:
+the real 44,851-rule one-candidate route completed in 7.50 seconds under a
 60-second safety command.
 
 ## Validation results
@@ -174,7 +185,7 @@ Backend:
 
 ```text
 python -m pytest
-399 passed
+400 passed
 
 python -m ruff format --check .
 72 files already formatted
@@ -187,7 +198,7 @@ Success: no issues found in 49 source files
 
 timeout 60s python -m pytest \
   tests/test_capture_route_planning.py::test_one_explicit_candidate_unlocks_a_production_directed_route -q
-1 passed in 7.74s
+1 passed in 7.50s
 ```
 
 Frontend after a clean lockfile install:

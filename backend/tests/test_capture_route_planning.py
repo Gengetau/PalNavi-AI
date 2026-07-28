@@ -455,6 +455,51 @@ def test_target_frontier_continues_after_captures_become_produced_states() -> No
     assert sum(step.child.species.value == "z" for step in result.steps) == 1
 
 
+def test_topology_distinct_label_survives_for_later_producer_sharing() -> None:
+    rules = (
+        _rule("c", "l0", "a", source_hash=f"{1:064x}"),
+        _rule("a", "l1", "s", source_hash=f"{2:064x}"),
+        _rule("c", "r0", "x", source_hash=f"{3:064x}"),
+        _rule("c", "r1", "y", source_hash=f"{4:064x}"),
+        _rule("x", "y", "s", source_hash=f"{5:064x}"),
+        _rule("x", "o0", "q", source_hash=f"{6:064x}"),
+        _rule("y", "q", "o", source_hash=f"{7:064x}"),
+        _rule("s", "o", "target", source_hash=f"{8:064x}"),
+    )
+    result = CaptureAwareRoutePlanner().plan(
+        _request(
+            "target",
+            InventoryGender.MALE,
+            inventory=(
+                _owned("owned-l0", "l0", InventoryGender.FEMALE),
+                _owned("owned-l1", "l1", InventoryGender.FEMALE),
+                _owned("owned-r0", "r0", InventoryGender.FEMALE),
+                _owned("owned-r1", "r1", InventoryGender.FEMALE),
+                _owned("owned-o0", "o0", InventoryGender.FEMALE),
+            ),
+            candidates=(_candidate("c", "c", InventoryGender.MALE),),
+        ),
+        rules,
+        _profiles("c", "l0", "l1", "r0", "r1", "o0", "a", "s", "x", "y", "q", "o", "target"),
+    )
+
+    assert isinstance(result, SuccessfulCaptureRouteResult)
+    assert result.cost.new_capture_count == 1
+    assert result.cost.generations == 4
+    assert result.cost.breeding_steps == 6
+    assert [item.candidate_id for item in result.capture_requirements] == ["c"]
+    assert [step.child.species.value for step in result.steps] == [
+        "x",
+        "y",
+        "q",
+        "s",
+        "o",
+        "target",
+    ]
+    assert sum(step.child.species.value == "x" for step in result.steps) == 1
+    assert sum(step.child.species.value == "y" for step in result.steps) == 1
+
+
 def test_zero_candidates_matches_owned_only_reachability_for_production_route() -> None:
     loaded = LocalPalworldBreedingDatasetRepository(default_palworld_dataset_root()).load(
         PALWORLD_DATASET_ID
