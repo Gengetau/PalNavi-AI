@@ -81,6 +81,19 @@ The separate Breeding workspace supports:
 - immutable submitted-request snapshots, latest-request-wins cancellation, retry, and disposal
   abort behavior.
 
+The separate Capture-ranked workspace supports:
+
+- fixed-dataset `POST /api/v1/breeding/capture-ranked-routes`;
+- zero through sixteen explicit, concrete capture candidates with collision and duplicate-state
+  validation;
+- exact minimum-distinct-capture ranking before generations, breeding steps, and stable
+  source-bound tie breaks;
+- a visible statement that candidates are user supplied and catchability is not verified;
+- distinct direct-target, `gender_required`, `unreachable`, `search_limit_exceeded`, invalid,
+  transport-failure, and network states;
+- the same lazy localized suggestions and manual stable-ID fallback without changing the accepted
+  Breeding request controller.
+
 Localized names are presentation-only. Selecting a suggestion or entering one unambiguous exact
 localized name normalizes the field to its stable species ID, and only that stable ID enters the
 immutable breeding request. Catalog failure leaves an explicit manual-ID fallback and never
@@ -99,6 +112,7 @@ results that violate submitted request scope fail closed.
 The frontend does not access a game installation, game process, save, mod loader, or multiplayer
 session. It contains no game artwork, external fonts, analytics, trackers, or CDN runtime assets.
 It never persists inventory in local storage, session storage, IndexedDB, cookies, or URLs.
-It also never persists locale choice, catalog data, or species entry text.
+It also never persists capture candidates, results, locale choice, catalog data, or species entry
+text.
 Production structured breeding data is available only through the fixed same-origin read-only
 endpoint; verified knowledge prose remains unavailable.

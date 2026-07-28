@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 
 from palnavi.api.dependencies import (
     get_breeding_planning_service,
+    get_capture_route_planning_service,
     get_direct_breeding_service,
     get_gender_route_planning_service,
     get_knowledge_explanation_service,
@@ -14,6 +15,11 @@ from palnavi.api.dependencies import (
     get_species_catalog_service,
 )
 from palnavi.api.schemas import (
+    CaptureAcquisitionBoundaryResponse,
+    CaptureRequirementResponse,
+    CaptureRouteCostResponse,
+    CaptureRouteRequestBody,
+    CaptureRouteResponse,
     DatasetMetadataResponse,
     DirectBreedingPossibleResultResponse,
     DirectBreedingRequestBody,
@@ -48,6 +54,10 @@ from palnavi.api.schemas import (
 )
 from palnavi.application import (
     BreedingPlanningService,
+    CaptureRoutePlanningFailure,
+    CaptureRoutePlanningFailureKind,
+    CaptureRoutePlanningService,
+    CaptureRoutePlanningSuccess,
     DirectBreedingQueryFailure,
     DirectBreedingQueryFailureKind,
     DirectBreedingQuerySuccess,
@@ -74,6 +84,11 @@ from palnavi.application import (
     SpeciesCatalogSuccess,
 )
 from palnavi.domain.breeding import (
+    CaptureCandidate,
+    CaptureGenderRequiredResult,
+    CaptureRouteObjective,
+    CaptureRoutePlanningRequest,
+    CaptureRouteSearchLimitExceeded,
     DirectBreedingGenderRequired,
     DirectBreedingInvalid,
     DirectBreedingNotFound,
@@ -82,6 +97,7 @@ from palnavi.domain.breeding import (
     GenderRequiredRouteResult,
     GenderRoutePlanningRequest,
     GenderRouteState,
+    InvalidCaptureRouteResult,
     InvalidGenderRouteResult,
     InvalidRouteResult,
     InventoryGender,
@@ -90,8 +106,10 @@ from palnavi.domain.breeding import (
     RouteObjective,
     RoutePlanningRequest,
     SpeciesId,
+    SuccessfulCaptureRouteResult,
     SuccessfulGenderRouteResult,
     SuccessfulRouteResult,
+    UnreachableCaptureRouteResult,
     UnreachableGenderRouteResult,
     UnreachableRouteResult,
 )
@@ -105,6 +123,11 @@ from palnavi.domain.knowledge import (
 )
 
 router = APIRouter()
+
+_CAPTURE_ACQUISITION_BOUNDARY = (
+    "Capture candidates are user-supplied hypothetical individuals; "
+    "PalNavi does not verify catchability or encounter availability."
+)
 
 _RETRIEVAL_FAILURE_RESPONSES: dict[
     KnowledgeRepositoryFailureKind,
@@ -530,6 +553,181 @@ def _gender_route_state_response(state: GenderRouteState) -> GenderRouteStateRes
         required_iv_constraints=list(state.required_iv_constraints),
         generation_depth=state.generation_depth,
     )
+
+
+@router.post(
+    "/api/v1/breeding/capture-ranked-routes",
+    response_model=CaptureRouteResponse,
+    responses={
+        404: {"model": CaptureRouteResponse},
+        422: {
+            "model": CaptureRouteResponse | RequestValidationErrorResponse,
+            "description": (
+                "Palworld data validation error or FastAPI request-body validation error"
+            ),
+        },
+    },
+)
+def plan_capture_ranked_route(
+    body: CaptureRouteRequestBody,
+    response: Response,
+    service: Annotated[
+        CaptureRoutePlanningService,
+        Depends(get_capture_route_planning_service),
+    ],
+) -> CaptureRouteResponse:
+    boundary = CaptureAcquisitionBoundaryResponse(message=_CAPTURE_ACQUISITION_BOUNDARY)
+    try:
+        request = CaptureRoutePlanningRequest(
+            target_species=SpeciesId(body.target.species_id),
+            target_gender=InventoryGender(body.target.gender),
+            inventory=tuple(
+                OwnedBreedingCandidate(
+                    instance_id=item.instance_id,
+                    species=SpeciesId(item.species_id),
+                    gender=InventoryGender(item.gender),
+                )
+                for item in body.inventory
+            ),
+            capture_candidates=tuple(
+                CaptureCandidate(
+                    candidate_id=item.candidate_id,
+                    species=SpeciesId(item.species_id),
+                    gender=InventoryGender(item.gender),
+                )
+                for item in body.capture_candidates
+            ),
+            objective=CaptureRouteObjective(body.objective),
+        )
+    except ValueError:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+        return CaptureRouteResponse(
+            status="invalid",
+            dataset_id=body.dataset_id,
+            acquisition_boundary=boundary,
+            error_category="request_invalid",
+            errors=[
+                ValidationIssueResponse(
+                    code="invalid_capture_route_request",
+                    field="target_or_inventory_or_capture_candidates",
+                    message="capture-ranked route request contains invalid identifiers",
+                )
+            ],
+            message="capture-ranked route request is invalid",
+        )
+
+    outcome = service.plan(body.dataset_id, request)
+    if isinstance(outcome, CaptureRoutePlanningFailure):
+        if outcome.kind is CaptureRoutePlanningFailureKind.DATASET_NOT_FOUND:
+            response.status_code = status.HTTP_404_NOT_FOUND
+            issues = [
+                ValidationIssueResponse(
+                    code="dataset_not_found",
+                    field="dataset_id",
+                    message="requested dataset was not found",
+                )
+            ]
+        else:
+            response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+            issues = [_validation_issue_response(issue) for issue in outcome.issues]
+        return CaptureRouteResponse(
+            status="invalid",
+            dataset_id=outcome.dataset_id,
+            acquisition_boundary=boundary,
+            error_category=outcome.kind.value,
+            errors=issues,
+            message="capture-ranked route data could not be validated",
+        )
+    if not isinstance(outcome, CaptureRoutePlanningSuccess):
+        raise AssertionError("capture route service returned an unsupported result type")
+
+    result = outcome.result
+    if isinstance(result, SuccessfulCaptureRouteResult):
+        return CaptureRouteResponse(
+            status="success",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            acquisition_boundary=boundary,
+            target=_gender_route_state_response(result.target),
+            steps=[
+                GenderRouteStepResponse(
+                    order=step.order,
+                    generation=step.generation,
+                    parent_a=_gender_route_state_response(step.parent_a),
+                    parent_b=_gender_route_state_response(step.parent_b),
+                    child=_gender_route_state_response(step.child),
+                    result_kind=step.result_kind.value,
+                    source_record_hash=step.source_record_hash,
+                )
+                for step in result.steps
+            ],
+            capture_requirements=[
+                CaptureRequirementResponse(
+                    candidate_id=item.candidate_id,
+                    species_id=item.species.value,
+                    gender=cast(Literal["male", "female"], item.gender.value),
+                )
+                for item in result.capture_requirements
+            ],
+            cost=CaptureRouteCostResponse(
+                new_capture_count=result.cost.new_capture_count,
+                generations=result.cost.generations,
+                breeding_steps=result.cost.breeding_steps,
+            ),
+        )
+    if isinstance(result, CaptureGenderRequiredResult):
+        return CaptureRouteResponse(
+            status="gender_required",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            acquisition_boundary=boundary,
+            unknown_instance_ids=list(result.unknown_instance_ids),
+            message=result.reason,
+        )
+    if isinstance(result, UnreachableCaptureRouteResult):
+        return CaptureRouteResponse(
+            status="unreachable",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            acquisition_boundary=boundary,
+            target=_gender_route_state_response(result.target),
+            reachable_states=[
+                _gender_route_state_response(item) for item in result.reachable_states
+            ],
+            message=result.reason,
+        )
+    if isinstance(result, CaptureRouteSearchLimitExceeded):
+        return CaptureRouteResponse(
+            status="search_limit_exceeded",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            acquisition_boundary=boundary,
+            message=result.reason,
+        )
+    if isinstance(result, InvalidCaptureRouteResult):
+        response.status_code = status.HTTP_422_UNPROCESSABLE_CONTENT
+        return CaptureRouteResponse(
+            status="invalid",
+            dataset_id=outcome.dataset_id,
+            content_sha256=outcome.content_identity.digest,
+            gender_data_content_sha256=outcome.gender_data_identity.digest,
+            acquisition_boundary=boundary,
+            error_category="route_invalid",
+            errors=[
+                ValidationIssueResponse(
+                    code="invalid_capture_route",
+                    field="target_or_inventory_or_capture_candidates_or_rules",
+                    message=message,
+                )
+                for message in result.errors
+            ],
+            message="capture-ranked route request or graph is invalid",
+        )
+    raise AssertionError("capture route planner returned an unsupported result type")
 
 
 @router.post(

@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from "vue";
 
+import { createCaptureRouteClient } from "./api/captureRouteClient";
+import type {
+  CaptureRouteClient,
+  CaptureRouteRequest,
+} from "./api/captureRouteContract";
 import { createSpeciesCatalogClient } from "./api/breedingCatalogClient";
 import type { SpeciesCatalogClient } from "./api/breedingCatalogContract";
 import { createBreedingClient } from "./api/breedingClient";
@@ -16,22 +21,31 @@ import type {
 } from "./api/contract";
 import BreedingForm from "./components/BreedingForm.vue";
 import BreedingResultPanel from "./components/BreedingResultPanel.vue";
+import CaptureRouteForm from "./components/CaptureRouteForm.vue";
+import CaptureRouteResultPanel from "./components/CaptureRouteResultPanel.vue";
 import KnowledgeForm from "./components/KnowledgeForm.vue";
 import ResultPanel from "./components/ResultPanel.vue";
 import { useBreedingRequest } from "./composables/useBreedingRequest";
+import { useCaptureRouteRequest } from "./composables/useCaptureRouteRequest";
 import { useKnowledgeRequest } from "./composables/useKnowledgeRequest";
 
 const props = defineProps<{
   client?: KnowledgeClient;
   breedingClient?: BreedingClient;
+  captureRouteClient?: CaptureRouteClient;
   breedingCatalogClient?: SpeciesCatalogClient;
 }>();
-const activeWorkspace = ref<"knowledge" | "breeding">("knowledge");
+const activeWorkspace = ref<"knowledge" | "breeding" | "capture">(
+  "knowledge",
+);
 const knowledgeController = useKnowledgeRequest(
   props.client ?? createKnowledgeClient(),
 );
 const breedingController = useBreedingRequest(
   props.breedingClient ?? createBreedingClient(),
+);
+const captureController = useCaptureRouteRequest(
+  props.captureRouteClient ?? createCaptureRouteClient(),
 );
 const breedingCatalogClient =
   props.breedingCatalogClient ?? createSpeciesCatalogClient();
@@ -42,6 +56,29 @@ const announcedScope = (syntheticOnly: boolean): string =>
     : "Submitted scope: synthetic-only filter off.";
 
 const announcement = computed(() => {
+  if (activeWorkspace.value === "capture") {
+    const state = captureController.state.value;
+    switch (state.kind) {
+      case "idle":
+        return "Capture-ranked planner ready.";
+      case "loading":
+        return "Searching exact capture-ranked routes.";
+      case "success":
+        return `Exact route loaded with ${state.response.cost.new_capture_count} new captures.`;
+      case "gender-required":
+        return `Concrete gender is required for ${state.response.unknown_instance_ids.length} owned instances.`;
+      case "unreachable":
+        return "The target is unreachable from the explicit submitted set.";
+      case "search-limit-exceeded":
+        return "Exact search stopped at its deterministic safety bound.";
+      case "backend-invalid":
+        return "The capture-ranked service rejected the request or production data.";
+      case "http-invalid":
+        return "The capture-ranked response could not be used.";
+      case "network-error":
+        return "The capture-ranked service could not be reached.";
+    }
+  }
   if (activeWorkspace.value === "breeding") {
     const state = breedingController.state.value;
     switch (state.kind) {
@@ -106,9 +143,14 @@ function runBreeding(request: BreedingRequest): void {
   void breedingController.run(request);
 }
 
+function runCaptureRoute(request: CaptureRouteRequest): void {
+  void captureController.run(request);
+}
+
 onBeforeUnmount(() => {
   knowledgeController.dispose();
   breedingController.dispose();
+  captureController.dispose();
 });
 </script>
 
@@ -120,33 +162,41 @@ onBeforeUnmount(() => {
         {{
           activeWorkspace === "knowledge"
             ? "PALNAVI / SYNTHETIC KNOWLEDGE"
-            : "PALNAVI / VERIFIED BREEDING"
+            : activeWorkspace === "breeding"
+              ? "PALNAVI / VERIFIED BREEDING"
+              : "PALNAVI / EXPLICIT CAPTURE RANKING"
         }}
       </p>
       <h1>
         {{
           activeWorkspace === "knowledge"
             ? "Synthetic Knowledge Navigator"
-            : "Production Breeding Planner"
+            : activeWorkspace === "breeding"
+              ? "Production Breeding Planner"
+              : "Capture-ranked Route Planner"
         }}
       </h1>
     </div>
     <div
       class="safety-badge"
-      :class="{ 'verified-badge': activeWorkspace === 'breeding' }"
+      :class="{ 'verified-badge': activeWorkspace !== 'knowledge' }"
     >
       <span>
         {{
           activeWorkspace === "knowledge"
             ? "SYNTHETIC WORKSPACE"
-            : "VERIFIED DATA WORKSPACE"
+            : activeWorkspace === "breeding"
+              ? "VERIFIED DATA WORKSPACE"
+              : "USER-ASSERTED CAPTURE SET"
         }}
       </span>
       <strong>
         {{
           activeWorkspace === "knowledge"
             ? "No verified game facts loaded"
-            : "Read-only planning · manual inventory"
+            : activeWorkspace === "breeding"
+              ? "Read-only planning · manual inventory"
+              : "No catchability inference · exact ranking"
         }}
       </strong>
     </div>
@@ -173,6 +223,16 @@ onBeforeUnmount(() => {
       <span>Breeding</span>
       <small>Verified production data</small>
     </label>
+    <label :class="{ active: activeWorkspace === 'capture' }">
+      <input
+        v-model="activeWorkspace"
+        type="radio"
+        name="workspace"
+        value="capture"
+      />
+      <span>Capture-ranked</span>
+      <small>Explicit candidates only</small>
+    </label>
   </nav>
 
   <main
@@ -186,7 +246,11 @@ onBeforeUnmount(() => {
     <ResultPanel :state="knowledgeController.state.value" @retry="retry" />
   </main>
 
-  <main v-else id="main-content" class="workspace breeding-workspace">
+  <main
+    v-else-if="activeWorkspace === 'breeding'"
+    id="main-content"
+    class="workspace breeding-workspace"
+  >
     <aside class="form-panel">
       <BreedingForm
         :catalog-client="breedingCatalogClient"
@@ -196,6 +260,23 @@ onBeforeUnmount(() => {
     <BreedingResultPanel
       :state="breedingController.state.value"
       @retry="breedingController.retry"
+    />
+  </main>
+
+  <main
+    v-else
+    id="main-content"
+    class="workspace breeding-workspace capture-workspace"
+  >
+    <aside class="form-panel">
+      <CaptureRouteForm
+        :catalog-client="breedingCatalogClient"
+        @submit="runCaptureRoute"
+      />
+    </aside>
+    <CaptureRouteResultPanel
+      :state="captureController.state.value"
+      @retry="captureController.retry"
     />
   </main>
 

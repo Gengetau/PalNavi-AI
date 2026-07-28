@@ -8,6 +8,13 @@ Two read-only runtime paths use the accepted Palworld production breeding outcom
 - `POST /api/v1/breeding/gender-aware-routes` performs deterministic
   gender-capable multi-generation search.
 
+A separate `POST /api/v1/breeding/capture-ranked-routes` path accepts zero through sixteen
+explicit, user-supplied species-and-gender capture candidates. It finds an exact route minimizing
+the number of distinct candidate individuals used before generation depth, breeding-step count,
+candidate-ID order, and the full source-bound route signature. A candidate is a hypothetical
+acquisition assertion only: the endpoint does not infer catchability, encounter availability,
+location, rarity, difficulty, spheres, time, or probability.
+
 A third read-only presentation path,
 `GET /api/v1/palworld/species-catalog?dataset_id=<stable-id>`, returns the exact accepted
 localized display names and Paldeck metadata for the same 299-species snapshot. It exposes no
@@ -136,6 +143,40 @@ Route success costs contain generations and breeding-step count. They always inc
 `probability_dependent_cost_available: false` and `expected_attempts: null`; the planner does not
 invent a 50:50 distribution or a probability-weighted cost model.
 
+## Capture-ranked route request
+
+The capture-ranked endpoint preserves the concrete owned inventory shape and adds a bounded,
+explicit candidate list:
+
+```json
+{
+  "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+  "target": {"species_id": "anubis", "gender": "female"},
+  "inventory": [],
+  "capture_candidates": [
+    {
+      "candidate_id": "anubis-f",
+      "species_id": "anubis",
+      "gender": "female"
+    }
+  ],
+  "objective": "minimum_new_captures"
+}
+```
+
+Candidate IDs and species-and-gender states must each be unique, candidate IDs cannot collide
+with owned instance IDs, and candidate gender is always concrete. Unknown owned gender retains
+the machine-readable `gender_required` outcome. If the target itself is submitted as an allowed
+candidate and no zero-capture owned route exists, it returns one exact capture, zero generations,
+and zero breeding steps.
+
+Every successful response lists only submitted candidates actually used. Each requirement
+matches the submitted candidate exactly, and `new_capture_count` equals the requirement count.
+The acquisition boundary always states that candidates are user supplied and catchability is not
+verified. Exact search retains non-dominated capture-ID sets rather than collapsing equal-size
+sets; exceeding a deterministic label safety bound returns `search_limit_exceeded` and never an
+approximation.
+
 ## Manual frontend workspace
 
 The Vue interface defaults to the existing synthetic Knowledge workspace and offers a separate
@@ -151,6 +192,13 @@ display locale to `en`, and offers the exact locale set `de`, `en`, `es`, `es-MX
 inventory fields share one bounded suggestion list. Suggestions display an exact localized name
 and stable ID; selection or an unambiguous exact localized name is normalized to the stable ID
 before the request is built.
+
+The third Capture-ranked workspace is independent from the accepted Breeding workspace. It
+collects the same target and owned inventory plus no more than sixteen concrete candidates,
+displays the acquisition boundary before submission, and labels a direct-target capture
+separately. It uses the same lazy localized catalog for presentation while retaining only stable
+IDs in its immutable request. Catalog failure leaves every manual ID input enabled and never
+issues a planning request.
 
 Catalog loading is independent from route submission and the immutable Loop 013 request
 controller. A catalog failure displays an accessible warning, leaves manual stable-ID entry
@@ -173,6 +221,10 @@ snapshot, and component disposal aborts active work.
 Inventory remains in component memory only. It is not stored in local storage, session storage,
 IndexedDB, cookies, or a URL, and it is sent only to the same-origin route endpoint after explicit
 submission.
+
+Capture candidates, result data, and locale selection follow the same memory-only boundary. The
+capture workflow never contacts a model, external service, browser storage, save file, or game
+process.
 
 ## Rollback and non-goals
 

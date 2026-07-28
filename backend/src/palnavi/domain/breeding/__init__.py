@@ -1,5 +1,6 @@
 """Typed breeding models, direct lookup, and deterministic route planning."""
 
+from palnavi.domain.breeding.capture_planner import CaptureAwareRoutePlanner
 from palnavi.domain.breeding.direct import GenderAwareDirectBreedingIndex
 from palnavi.domain.breeding.gender_planner import GenderAwareRoutePlanner
 from palnavi.domain.breeding.models import (
@@ -7,6 +8,15 @@ from palnavi.domain.breeding.models import (
     BreedingRelationship,
     BreedingResultKind,
     BreedingRule,
+    CaptureCandidate,
+    CaptureGenderRequiredResult,
+    CaptureRequirement,
+    CaptureRouteCost,
+    CaptureRouteObjective,
+    CaptureRoutePlanningRequest,
+    CaptureRouteResult,
+    CaptureRouteSearchLimitExceeded,
+    CaptureRouteStatus,
     DirectBreedingGenderRequired,
     DirectBreedingInvalid,
     DirectBreedingNotFound,
@@ -23,6 +33,7 @@ from palnavi.domain.breeding.models import (
     GenderRouteState,
     GenderRouteStatus,
     GenderRouteStep,
+    InvalidCaptureRouteResult,
     InvalidGenderRouteResult,
     InvalidRouteResult,
     InventoryGender,
@@ -36,8 +47,10 @@ from palnavi.domain.breeding.models import (
     RouteStep,
     SpeciesGenderFeasibility,
     SpeciesId,
+    SuccessfulCaptureRouteResult,
     SuccessfulGenderRouteResult,
     SuccessfulRouteResult,
+    UnreachableCaptureRouteResult,
     UnreachableGenderRouteResult,
     UnreachableRouteResult,
 )
@@ -49,6 +62,16 @@ __all__ = [
     "BreedingResultKind",
     "BreedingRule",
     "BreedingRoutePlanner",
+    "CaptureAwareRoutePlanner",
+    "CaptureCandidate",
+    "CaptureGenderRequiredResult",
+    "CaptureRequirement",
+    "CaptureRouteCost",
+    "CaptureRouteObjective",
+    "CaptureRoutePlanningRequest",
+    "CaptureRouteResult",
+    "CaptureRouteSearchLimitExceeded",
+    "CaptureRouteStatus",
     "DirectBreedingGenderRequired",
     "DirectBreedingInvalid",
     "DirectBreedingNotFound",
@@ -68,6 +91,7 @@ __all__ = [
     "GenderRouteStatus",
     "GenderRouteStep",
     "InvalidRouteResult",
+    "InvalidCaptureRouteResult",
     "InvalidGenderRouteResult",
     "InventoryGender",
     "OwnedBreedingCandidate",
@@ -81,7 +105,9 @@ __all__ = [
     "SpeciesId",
     "SpeciesGenderFeasibility",
     "SuccessfulGenderRouteResult",
+    "SuccessfulCaptureRouteResult",
     "SuccessfulRouteResult",
     "UnreachableGenderRouteResult",
+    "UnreachableCaptureRouteResult",
     "UnreachableRouteResult",
 ]

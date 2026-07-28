@@ -536,7 +536,7 @@ code {
 
 .workspace-switcher {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
   width: min(90rem, 100% - 2rem);
   margin: 1rem auto 0;
@@ -669,6 +669,66 @@ code {
   line-height: 1.5;
 }
 
+.capture-boundary,
+.direct-capture-note {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border: 1px solid var(--accent);
+  background: rgb(255 209 102 / 0.07);
+}
+
+.capture-boundary p {
+  margin: 0.35rem 0 0;
+}
+
+.capture-candidate-row {
+  border-color: var(--accent);
+}
+
+.result-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.result-summary > div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem;
+  border: 1px solid var(--signal);
+  background: rgb(111 255 210 / 0.055);
+}
+
+.result-summary span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.result-summary strong {
+  color: var(--signal);
+  font-size: 1.4rem;
+}
+
+.route-list {
+  display: grid;
+  gap: 0.65rem;
+  padding-left: 1.25rem;
+}
+
+.route-list li {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  background: var(--surface-raised);
+}
+
+.route-list code {
+  color: var(--signal);
+}
+
 .route-steps {
   display: grid;
   gap: 1rem;
@@ -783,6 +843,10 @@ code {
   }
 
   .inventory-row-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .result-summary {
     grid-template-columns: minmax(0, 1fr);
   }
 

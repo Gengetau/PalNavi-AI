@@ -206,6 +206,67 @@ class GenderRouteResponse(BaseModel):
     message: str | None = None
 
 
+class CaptureCandidateInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    candidate_id: str
+    species_id: str
+    gender: Literal["male", "female"]
+
+
+class CaptureRouteRequestBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    dataset_id: str = Field(min_length=1, max_length=128)
+    target: GenderRouteTargetInput
+    inventory: list[GenderRouteInventoryInput] = Field(max_length=299)
+    capture_candidates: list[CaptureCandidateInput] = Field(max_length=16)
+    objective: Literal["minimum_new_captures"] = "minimum_new_captures"
+
+
+class CaptureRequirementResponse(BaseModel):
+    candidate_id: str
+    species_id: str
+    gender: Literal["male", "female"]
+
+
+class CaptureRouteCostResponse(BaseModel):
+    new_capture_count: int
+    generations: int
+    breeding_steps: int
+    probability_dependent_cost_available: Literal[False] = False
+    expected_attempts: None = None
+
+
+class CaptureAcquisitionBoundaryResponse(BaseModel):
+    candidates_are_user_supplied: Literal[True] = True
+    catchability_verified: Literal[False] = False
+    message: str
+
+
+class CaptureRouteResponse(BaseModel):
+    status: Literal[
+        "success",
+        "gender_required",
+        "unreachable",
+        "invalid",
+        "search_limit_exceeded",
+    ]
+    dataset_id: str
+    content_sha256: str | None = None
+    gender_data_content_sha256: str | None = None
+    target: GenderRouteStateResponse | None = None
+    steps: list[GenderRouteStepResponse] = Field(default_factory=list)
+    capture_requirements: list[CaptureRequirementResponse] = Field(default_factory=list)
+    cost: CaptureRouteCostResponse | None = None
+    acquisition_boundary: CaptureAcquisitionBoundaryResponse
+    reachable_states: list[GenderRouteStateResponse] = Field(default_factory=list)
+    unknown_instance_ids: list[str] = Field(default_factory=list)
+    error_category: str | None = None
+    errors: list[ValidationIssueResponse] = Field(default_factory=list)
+    message: str | None = None
+
+
 class SpeciesCatalogRecordResponse(BaseModel):
     species_id: str
     paldeck_number: int
