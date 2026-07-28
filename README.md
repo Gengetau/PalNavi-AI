@@ -1,11 +1,11 @@
 # PalNavi AI
 
-PalNavi AI is a local-first, version-aware Palworld assistant. Its long-term focus is
-explainable planning that combines verified game data with a player's own context.
+PalNavi AI is a local-first, version-aware Palworld assistant. It provides explainable
+planning that combines verified game data with a player's manually supplied context.
 
-This repository currently contains a **foundation prototype**. It proves that breeding
-routes can be calculated from a validated, versioned dataset by a deterministic typed
-domain service and exposed through a small local API. It also provides deterministic local
+This repository contains the source-based **PalNavi AI 1.0.0-rc.1 release candidate**.
+It calculates breeding routes from a validated, versioned dataset through deterministic
+typed domain services and a local API. It also provides deterministic local
 knowledge retrieval and an optional retrieval-first, citation-grounded explanation endpoint
 through provider-neutral, non-streaming model adapters. The explanation path remains disconnected
 from route planning. A reviewed Palworld v1 static breeding dataset is activated for
@@ -16,6 +16,16 @@ route costs and all other deterministic native-field supplement values remain un
 The application does not contain broad model
 orchestration, game-process access, save parsing, or production-searchable Palworld knowledge
 prose.
+
+The candidate is local and source-based: it is not a final `v1.0.0` release, installer,
+signed binary, or remote deployment. Run the offline release check from the repository root:
+
+```powershell
+python scripts/verify_v1_release_candidate.py
+```
+
+See [the v1 acceptance package](docs/v1-acceptance.md) for exact setup, run, verification,
+representative scenarios, supported-data boundaries, residual risks, and rollback steps.
 
 ## What is implemented
 

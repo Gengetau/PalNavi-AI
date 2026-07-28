@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "palnavi"
-version = "0.1.0"
-description = "Deterministic foundation services for PalNavi AI"
-readme = {text = "Deterministic foundation services for PalNavi AI.", content-type = "text/plain"}
+version = "1.0.0rc1"
+description = "Deterministic local services for PalNavi AI"
+readme = {text = "Deterministic local services for PalNavi AI.", content-type = "text/plain"}
 requires-python = ">=3.12"
 dependencies = [
     "anyio>=4.4,<5",

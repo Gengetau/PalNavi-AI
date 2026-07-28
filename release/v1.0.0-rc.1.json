@@ -1,0 +1,131 @@
+{
+  "schema": "palnavi-release-candidate/v1",
+  "program_id": "palnavi-ai-v1",
+  "product": {
+    "name": "PalNavi AI",
+    "public_version": "1.0.0-rc.1",
+    "python_distribution": "palnavi",
+    "python_package_version": "1.0.0rc1",
+    "release_stage": "release-candidate"
+  },
+  "distribution": {
+    "mode": "source-checkout",
+    "deployment": "local-advisory",
+    "remote_deployment": false,
+    "installer": false,
+    "signed_binary": false,
+    "final_release": false
+  },
+  "runtime": {
+    "python": ">=3.12",
+    "node": "^22.18.0 || >=24.12.0",
+    "npm": ">=11.9.0 <12",
+    "api_module": "palnavi.api.main:app",
+    "frontend_package": "frontend"
+  },
+  "supported_data": {
+    "dataset_id": "palworld-pc-steam-v1.0.1-palcalc-8b7e2f779e47",
+    "content_identity": {
+      "algorithm": "sha256",
+      "digest": "b7fbe9b7395d2aef6758ff162da8fb738cf1fcd3ec5c7d50133c3d5edafdd30b"
+    },
+    "pal_records": 299,
+    "breeding_outcomes": 44851,
+    "source_snapshot": "v1.0.0",
+    "independently_verified_compatible_patch": "v1.0.1",
+    "presentation_locales": [
+      "de",
+      "en",
+      "es",
+      "es-MX",
+      "fr",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "pl",
+      "pt-BR",
+      "ru",
+      "th",
+      "tr",
+      "vi",
+      "zh-Hans",
+      "zh-Hant"
+    ],
+    "production_knowledge_prose": false
+  },
+  "api_surface": {
+    "/api/v1/breeding/capture-ranked-routes": [
+      "post"
+    ],
+    "/api/v1/breeding/direct": [
+      "post"
+    ],
+    "/api/v1/breeding/gender-aware-routes": [
+      "post"
+    ],
+    "/api/v1/breeding/routes": [
+      "post"
+    ],
+    "/api/v1/knowledge/explain": [
+      "post"
+    ],
+    "/api/v1/knowledge/search": [
+      "post"
+    ],
+    "/api/v1/palworld/species-catalog": [
+      "get"
+    ],
+    "/health": [
+      "get"
+    ]
+  },
+  "supported_capabilities": [
+    "versioned structured data with provenance",
+    "deterministic synthetic breeding routes",
+    "production direct breeding lookup",
+    "production gender-aware routes from manual owned inventory",
+    "production minimum-new-capture routes from explicit user candidates",
+    "localized presentation catalog with stable submitted IDs",
+    "synthetic local knowledge search",
+    "optional retrieval-first citation-grounded synthetic explanation",
+    "official-source registry and bounded metadata-only fingerprinting",
+    "local FastAPI and standalone Vue source workflows"
+  ],
+  "unsupported_capabilities": [
+    "production Palworld knowledge prose",
+    "catchability or encounter availability",
+    "map locations or capture difficulty",
+    "probability-weighted breeding attempts",
+    "cake, incubation, or elapsed-time costs",
+    "passive-skill or individual-value planning",
+    "automatic game or save integration",
+    "gameplay or multiplayer automation",
+    "remote deployment",
+    "installer or signed binary"
+  ],
+  "verification": {
+    "entrypoint": "scripts/verify_v1_release_candidate.py",
+    "network_required": false,
+    "commands": [
+      "python scripts/verify_v1_release_candidate.py",
+      "cd backend && python -m pytest",
+      "cd backend && python -m ruff format --check .",
+      "cd backend && python -m ruff check .",
+      "cd backend && python -m mypy src",
+      "cd frontend && npm ci",
+      "cd frontend && npm run test:unit:no-network",
+      "cd frontend && npm run type-check",
+      "cd frontend && npm run build",
+      "cd frontend && npm audit --audit-level=high",
+      "git diff --check"
+    ]
+  },
+  "acceptance": {
+    "document": "docs/v1-acceptance.md",
+    "codex_report": "reports/codex/loop-016-v1-release-candidate-codex-report.md",
+    "receipt_contract": "agent-loop-business-receipt/v2",
+    "exact_head_bound_by_receipt": true,
+    "human_owner_decision_required": true
+  }
+}
